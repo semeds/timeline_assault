@@ -7,7 +7,6 @@ import GameObject.GameObject;
 import GameObject.SpriteSheet;
 import Utils.AirGroundState;
 import Utils.Direction;
-
 import java.util.ArrayList;
 
 public abstract class Player extends GameObject {
@@ -65,6 +64,14 @@ public abstract class Player extends GameObject {
         if (levelState == LevelState.RUNNING) {
             applyGravity();
 
+            // check if the player is trying to fall through a platform
+            if (airGroundState == AirGroundState.GROUND && Keyboard.isKeyDown(Key.DOWN)) {
+                // make sure that player can fall through platform
+                if (isOnFallThroughPlatform()) {
+                    airGroundState = AirGroundState.AIR;
+                }
+            }
+
             // update player's state and current actions, which includes things like determining how much it should move each frame and if its walking or jumping
             do {
                 previousPlayerState = playerState;
@@ -94,6 +101,18 @@ public abstract class Player extends GameObject {
         else if (levelState == LevelState.PLAYER_DEAD) {
             updatePlayerDead();
         }
+    }
+
+    // check if the player is on a platform that can be fallen through
+    protected boolean isOnFallThroughPlatform() {
+        // This method should check the current tile or platform player is standing on 
+        //it would something like:
+        
+        /* 
+        MapTile currentTile = getCurrentTile();
+        return currentTile != null && currentTile.getTileType() == TileType.PLATFORM;
+        */
+        return true; //delete this line
     }
 
     // add gravity to player, which is a downward force
