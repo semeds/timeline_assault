@@ -10,13 +10,14 @@ import Level.*;
 import NPCs.Walrus;
 import Tilesets.CommonTileset;
 import Utils.Direction;
+
 import java.util.ArrayList;
 
 // Represents a test map to be used in a level
-public class TestMap extends Map {
+public class Map1 extends Map {
 
-    public TestMap() {
-        super("test_map.txt", new CommonTileset());
+    public Map1() {
+        super("map1.txt", new CommonTileset());
         this.playerStartPosition = getMapTile(2, 11).getLocation();
     }
 
