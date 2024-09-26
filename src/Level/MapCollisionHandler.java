@@ -1,5 +1,7 @@
 package Level;
 
+import Engine.Key;
+import Engine.Keyboard;
 import GameObject.GameObject;
 import Utils.Direction;
 import Utils.Point;
@@ -9,11 +11,15 @@ import Utils.Point;
 public class MapCollisionHandler {
 
     // x axis collision logic
-    // determines if a collision occurred with another entity on the map, and calculates where gameobject should be placed to resolve the collision
-    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckX(GameObject gameObject, Map map, Direction direction) {
+    // determines if a collision occurred with another entity on the map, and
+    // calculates where gameobject should be placed to resolve the collision
+    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckX(GameObject gameObject, Map map,
+            Direction direction) {
         // check map tiles in surrounding radius for potential collision
-        int numberOfTilesToCheck = Math.max(gameObject.getBounds().getHeight() / map.getTileset().getScaledSpriteHeight(), 1);
-        float edgeBoundX = direction == Direction.LEFT ? gameObject.getBounds().getX1() : gameObject.getBounds().getX2();
+        int numberOfTilesToCheck = Math
+                .max(gameObject.getBounds().getHeight() / map.getTileset().getScaledSpriteHeight(), 1);
+        float edgeBoundX = direction == Direction.LEFT ? gameObject.getBounds().getX1()
+                : gameObject.getBounds().getX2();
         Point tileIndex = map.getTileIndexByPosition(edgeBoundX, gameObject.getBounds().getY1());
         MapTile entityCollidedWith = null;
         for (int i = -1; i <= numberOfTilesToCheck + 1; i++) {
@@ -35,7 +41,8 @@ public class MapCollisionHandler {
 
         // check active enhanced map tiles for potential collision
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
-            if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
+            if (!gameObject.equals(enhancedMapTile)
+                    && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
                 float adjustedPositionX = gameObject.getX();
                 if (direction == Direction.RIGHT) {
@@ -54,10 +61,13 @@ public class MapCollisionHandler {
     }
 
     // y axis collision logic
-    // determines if a collision occurred with another entity on the map, and calculates where gameobject should be placed to resolve the collision
-    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckY(GameObject gameObject, Map map, Direction direction) {
+    // determines if a collision occurred with another entity on the map, and
+    // calculates where gameobject should be placed to resolve the collision
+    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionCheckY(GameObject gameObject, Map map,
+            Direction direction) {
         // check map tiles in surrounding radius for potential collision
-        int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(), 1);
+        int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(),
+                1);
         float edgeBoundY = direction == Direction.UP ? gameObject.getBounds().getY() : gameObject.getBounds().getY2();
         Point tileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX1(), edgeBoundY);
         MapTile entityCollidedWith = null;
@@ -79,7 +89,8 @@ public class MapCollisionHandler {
 
         // check active enhanced map tiles for potential collision
         for (EnhancedMapTile enhancedMapTile : map.getActiveEnhancedMapTiles()) {
-            if (!gameObject.equals(enhancedMapTile) && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
+            if (!gameObject.equals(enhancedMapTile)
+                    && hasCollidedWithMapEntity(gameObject, enhancedMapTile, direction)) {
                 entityCollidedWith = enhancedMapTile;
                 float adjustedPositionY = gameObject.getY();
                 if (direction == Direction.DOWN) {
@@ -97,41 +108,62 @@ public class MapCollisionHandler {
         return new MapCollisionCheckResult(null, null);
     }
 
-    // based on tile type, perform logic to determine if a collision did occur with an intersecting tile or not
+    public static boolean isDownKeyPressed() {
+        // Check if the DOWN key is pressed
+        return Keyboard.isKeyDown(Key.DOWN);
+    }
+
+    // based on tile type, perform logic to determine if a collision did occur with
+    // an intersecting tile or not
     private static boolean hasCollidedWithMapEntity(GameObject gameObject, MapEntity mapEntity, Direction direction) {
         // if entity that is being checked for collision against is a map tile
         // collision is determined based on tile type
         if (mapEntity instanceof MapTile) {
-            MapTile mapTile = (MapTile)mapEntity;
+            MapTile mapTile = (MapTile) mapEntity;
             switch (mapTile.getTileType()) {
                 case PASSABLE:
                     return false;
                 case NOT_PASSABLE:
                     return gameObject.intersects(mapTile);
                 case JUMP_THROUGH_PLATFORM:
+                    // Check if the player is standing on the platform and pressing the down key
+                    if (Math.round(gameObject.getBounds().getY2()) == Math.round(mapTile.getBounds().getY1())) {
+                        if (Keyboard.isKeyDown(Key.DOWN)) {
+                            // Move the player just below the platform to simulate falling through
+                            gameObject.setY(gameObject.getY() + 30); // Adjust this value as needed
+                            return false; // No collision, allow falling through
+                        }
+                    }
+                    // If the player is moving downward and intersects the platform, allow them to
+                    // land
                     return direction == Direction.DOWN && gameObject.intersects(mapTile) &&
                             Math.round(gameObject.getBounds().getY2()) == Math.round(mapTile.getBounds().getY1());
                 case WATER:
                     return false;
                 case SLOPE:
-                    // slopes have special collision logic that is handled elsewhere -- they are technically not considered "solid" by the game
+                    // slopes have special collision logic that is handled elsewhere -- they are
+                    // technically not considered "solid" by the game
                     return false;
                 default:
                     return false;
             }
         }
 
-        // for all other cases other than MapTile, let game object subclass (enhanced map tile, etc.) handle the intersection logic
+        // for all other cases other than MapTile, let game object subclass (enhanced
+        // map tile, etc.) handle the intersection logic
         else {
             return mapEntity.intersects(gameObject);
         }
     }
 
-    // special collision logic handling for detecting collision with slopes in the y direction
+    // special collision logic handling for detecting collision with slopes in the y
+    // direction
     public static MapCollisionCheckResult getAdjustedPositionAfterCollisionSlopeCheckY(GameObject gameObject, Map map) {
-        int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(), 1);
+        int numberOfTilesToCheck = Math.max(gameObject.getBounds().getWidth() / map.getTileset().getScaledSpriteWidth(),
+                1);
         boolean needsSlopeCheck = false;
-        Point tileIndex = map.getTileIndexByPosition((gameObject.getBounds().getX1() + gameObject.getBounds().getX2()) / 2, gameObject.getBounds().getY2());
+        Point tileIndex = map.getTileIndexByPosition(
+                (gameObject.getBounds().getX1() + gameObject.getBounds().getX2()) / 2, gameObject.getBounds().getY2());
         for (int i = -1; i <= numberOfTilesToCheck + 1; i++) {
             MapTile mapTile = map.getMapTile(Math.round(tileIndex.x) + i, Math.round(tileIndex.y));
             if (mapTile != null && mapTile.getTileType() == TileType.SLOPE) {
@@ -148,7 +180,8 @@ public class MapCollisionHandler {
                     int xLocationInTile = xBound - Math.round(currentTile.getX());
                     int yLocationInTile = yBound - Math.round(currentTile.getY());
                     int counter = 0;
-                    if (xLocationInTile >= 0 && xLocationInTile < currentTile.getLayout().getBounds()[0].length && yLocationInTile >= 0 && yLocationInTile < currentTile.getLayout().getBounds().length) {
+                    if (xLocationInTile >= 0 && xLocationInTile < currentTile.getLayout().getBounds()[0].length
+                            && yLocationInTile >= 0 && yLocationInTile < currentTile.getLayout().getBounds().length) {
                         while (currentTile.getLayout().getBounds()[yLocationInTile - counter][xLocationInTile] == 1) {
                             counter++;
                             if (yLocationInTile - counter < 0) {
@@ -160,8 +193,10 @@ public class MapCollisionHandler {
                             int targetSlopeLocationIndex = yLocationInTile - counter;
                             float targetSlopeYLocation = currentTileYLocation + targetSlopeLocationIndex;
                             float boundsDifference = gameObject.getY2() - gameObject.getBounds().getY2();
-                            float targetYLocation = targetSlopeYLocation - (gameObject.getHeight() - 1) + boundsDifference;
-                            return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), currentTile);
+                            float targetYLocation = targetSlopeYLocation - (gameObject.getHeight() - 1)
+                                    + boundsDifference;
+                            return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation),
+                                    currentTile);
                         }
                     }
                 }
@@ -171,7 +206,8 @@ public class MapCollisionHandler {
     }
 
     // get proximity status to where game object is in relation to a slope
-    public static SlopeProximityStatus getCurrentSlopeProximityStatus(GameObject gameObject, Map map, Direction xDirection) {
+    public static SlopeProximityStatus getCurrentSlopeProximityStatus(GameObject gameObject, Map map,
+            Direction xDirection) {
         SlopeProximityStatus slopeProximityStatus = SlopeProximityStatus.NONE;
 
         // check for left side slopes
@@ -181,40 +217,45 @@ public class MapCollisionHandler {
                 if (currentTile.getLayout().getDirection() == Direction.LEFT) {
                     int xLocationInTile = Math.round(gameObject.getBounds().getX2()) - Math.round(currentTile.getX());
                     int yLocationInTile = Math.round(gameObject.getBounds().getY2()) - Math.round(currentTile.getY());
-                    if (currentTile.getLayout().getBounds()[yLocationInTile][xLocationInTile] == 0 && currentTile.getLayout().getBounds()[yLocationInTile + 1][xLocationInTile] == 1) {
+                    if (currentTile.getLayout().getBounds()[yLocationInTile][xLocationInTile] == 0
+                            && currentTile.getLayout().getBounds()[yLocationInTile + 1][xLocationInTile] == 1) {
                         slopeProximityStatus = SlopeProximityStatus.IN_SLOPE_LEFT;
                     }
                 }
             }
             if (slopeProximityStatus == SlopeProximityStatus.NONE) {
-                Point currentTile2p = map.getTileIndexByPosition(gameObject.getBounds().getX2(), gameObject.getBounds().getY2());
+                Point currentTile2p = map.getTileIndexByPosition(gameObject.getBounds().getX2(),
+                        gameObject.getBounds().getY2());
                 currentTile = map.getMapTile(Math.round(currentTile2p.x), Math.round(currentTile2p.y + 1));
                 if (currentTile != null && currentTile.getTileType() == TileType.SLOPE) {
                     if (currentTile.getLayout().getDirection() == Direction.LEFT) {
-                        if (currentTile.getLayout().getBounds()[0][currentTile.getLayout().getBounds()[0].length - 1] == 1 && currentTile.getBounds().getY1() == gameObject.getBounds().getY2() + 1) {
+                        if (currentTile.getLayout().getBounds()[0][currentTile.getLayout().getBounds()[0].length
+                                - 1] == 1 && currentTile.getBounds().getY1() == gameObject.getBounds().getY2() + 1) {
                             slopeProximityStatus = SlopeProximityStatus.ON_TOP_OF_SLOPE_LEFT;
                         }
                     }
                 }
             }
-        }
-        else if (xDirection == Direction.RIGHT) {
+        } else if (xDirection == Direction.RIGHT) {
             MapTile currentTile = map.getTileByPosition(gameObject.getBounds().getX(), gameObject.getBounds().getY2());
             if (currentTile != null && currentTile.getTileType() == TileType.SLOPE) {
                 if (currentTile.getLayout().getDirection() == Direction.RIGHT) {
                     int xLocationInTile = Math.round(gameObject.getBounds().getX()) - Math.round(currentTile.getX());
                     int yLocationInTile = Math.round(gameObject.getBounds().getY2()) - Math.round(currentTile.getY());
-                    if (currentTile.getLayout().getBounds()[yLocationInTile][xLocationInTile] == 0 && currentTile.getLayout().getBounds()[yLocationInTile + 1][xLocationInTile] == 1) {
+                    if (currentTile.getLayout().getBounds()[yLocationInTile][xLocationInTile] == 0
+                            && currentTile.getLayout().getBounds()[yLocationInTile + 1][xLocationInTile] == 1) {
                         slopeProximityStatus = SlopeProximityStatus.IN_SLOPE_RIGHT;
                     }
                 }
             }
             if (slopeProximityStatus == SlopeProximityStatus.NONE) {
-                Point currentTile2p = map.getTileIndexByPosition(gameObject.getBounds().getX(), gameObject.getBounds().getY2());
+                Point currentTile2p = map.getTileIndexByPosition(gameObject.getBounds().getX(),
+                        gameObject.getBounds().getY2());
                 currentTile = map.getMapTile(Math.round(currentTile2p.x), Math.round(currentTile2p.y + 1));
                 if (currentTile != null && currentTile.getTileType() == TileType.SLOPE) {
                     if (currentTile.getLayout().getDirection() == Direction.RIGHT) {
-                        if (currentTile.getLayout().getBounds()[0][0] == 1 && currentTile.getBounds().getY1() == gameObject.getBounds().getY2() + 1) {
+                        if (currentTile.getLayout().getBounds()[0][0] == 1
+                                && currentTile.getBounds().getY1() == gameObject.getBounds().getY2() + 1) {
                             slopeProximityStatus = SlopeProximityStatus.ON_TOP_OF_SLOPE_RIGHT;
                         }
                     }
@@ -225,7 +266,8 @@ public class MapCollisionHandler {
     }
 
     // special logic for adjusting game object location when going down a slope
-    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionSlopeCheckX(GameObject gameObject, Map map, SlopeProximityStatus slopeProximityStatus) {
+    public static MapCollisionCheckResult getAdjustedPositionAfterCollisionSlopeCheckX(GameObject gameObject, Map map,
+            SlopeProximityStatus slopeProximityStatus) {
         // adjust y position if moving down a slope
         if (slopeProximityStatus == SlopeProximityStatus.IN_SLOPE_LEFT) {
             MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX2(), gameObject.getBounds().getY2());
@@ -233,13 +275,15 @@ public class MapCollisionHandler {
             int yLocationInTile = Math.round(gameObject.getBounds().getY2()) - Math.round(slopeTile.getY());
             int counter = 0;
             if (slopeTile.getLayout() == null) { // this means you are leaving the slope with this newest x update
-                Point newTileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX2(), gameObject.getBounds().getY2());
+                Point newTileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX2(),
+                        gameObject.getBounds().getY2());
                 MapTile newMapTile = map.getMapTile(Math.round(newTileIndex.x), Math.round(newTileIndex.y) + 1);
                 float boundsDifference = gameObject.getY2() - gameObject.getBounds().getY2();
                 float targetYLocation = newMapTile.getBounds().getY() - (gameObject.getHeight()) + boundsDifference;
                 return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), null);
             }
-            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
+            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length
+                    && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
                 while (slopeTile.getLayout().getBounds()[yLocationInTile + counter][xLocationInTile] == 0) {
                     counter++;
                     if (yLocationInTile + counter > slopeTile.getLayout().getBounds().length - 1) {
@@ -255,14 +299,15 @@ public class MapCollisionHandler {
                     return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), null);
                 }
             }
-        }
-        else if (slopeProximityStatus == SlopeProximityStatus.ON_TOP_OF_SLOPE_LEFT) {
-            MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX2(), gameObject.getBounds().getY2() + 1);
+        } else if (slopeProximityStatus == SlopeProximityStatus.ON_TOP_OF_SLOPE_LEFT) {
+            MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX2(),
+                    gameObject.getBounds().getY2() + 1);
 
             int xLocationInTile = Math.round(gameObject.getBounds().getX2()) - Math.round(slopeTile.getX());
             int yLocationInTile = Math.round(gameObject.getBounds().getY2() + 1) - Math.round(slopeTile.getY());
             int counter = 0;
-            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
+            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length
+                    && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
                 while (slopeTile.getLayout().getBounds()[yLocationInTile + counter][xLocationInTile] == 0) {
                     counter++;
                     if (yLocationInTile + counter > slopeTile.getLayout().getBounds().length - 1) {
@@ -278,20 +323,21 @@ public class MapCollisionHandler {
                     return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), null);
                 }
             }
-        }
-        else if (slopeProximityStatus == SlopeProximityStatus.IN_SLOPE_RIGHT) {
+        } else if (slopeProximityStatus == SlopeProximityStatus.IN_SLOPE_RIGHT) {
             MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX(), gameObject.getBounds().getY2());
             int xLocationInTile = Math.round(gameObject.getBounds().getX()) - Math.round(slopeTile.getX());
             int yLocationInTile = Math.round(gameObject.getBounds().getY2()) - Math.round(slopeTile.getY());
             int counter = 0;
             if (slopeTile.getLayout() == null) { // this means you are leaving the slope with this newest x update
-                Point newTileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX(), gameObject.getBounds().getY2());
+                Point newTileIndex = map.getTileIndexByPosition(gameObject.getBounds().getX(),
+                        gameObject.getBounds().getY2());
                 MapTile newMapTile = map.getMapTile(Math.round(newTileIndex.x), Math.round(newTileIndex.y) + 1);
                 float boundsDifference = gameObject.getY2() - gameObject.getBounds().getY2();
                 float targetYLocation = newMapTile.getBounds().getY() - (gameObject.getHeight()) + boundsDifference;
                 return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), null);
             }
-            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
+            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length
+                    && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
                 while (slopeTile.getLayout().getBounds()[yLocationInTile + counter][xLocationInTile] == 0) {
                     counter++;
                     if (yLocationInTile + counter > slopeTile.getLayout().getBounds().length - 1) {
@@ -307,14 +353,15 @@ public class MapCollisionHandler {
                     return new MapCollisionCheckResult(new Point(gameObject.getX(), targetYLocation), null);
                 }
             }
-        }
-        else if (slopeProximityStatus == SlopeProximityStatus.ON_TOP_OF_SLOPE_RIGHT) {
-            MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX(), gameObject.getBounds().getY2() + 1);
+        } else if (slopeProximityStatus == SlopeProximityStatus.ON_TOP_OF_SLOPE_RIGHT) {
+            MapTile slopeTile = map.getTileByPosition(gameObject.getBounds().getX(),
+                    gameObject.getBounds().getY2() + 1);
 
             int xLocationInTile = Math.round(gameObject.getBounds().getX()) - Math.round(slopeTile.getX());
             int yLocationInTile = Math.round(gameObject.getBounds().getY2() + 1) - Math.round(slopeTile.getY());
             int counter = 0;
-            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
+            if (xLocationInTile >= 0 && xLocationInTile < slopeTile.getLayout().getBounds()[0].length
+                    && yLocationInTile >= 0 && yLocationInTile < slopeTile.getLayout().getBounds().length) {
                 while (slopeTile.getLayout().getBounds()[yLocationInTile + counter][xLocationInTile] == 0) {
                     counter++;
                     if (yLocationInTile + counter > slopeTile.getLayout().getBounds().length - 1) {
