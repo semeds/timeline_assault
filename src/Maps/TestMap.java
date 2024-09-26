@@ -8,6 +8,7 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
+import NPCs.Weapons;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 
@@ -61,6 +62,9 @@ public class TestMap extends Map {
 
         Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
         npcs.add(walrus);
+
+        Weapons shotgun = new Weapons(getMapTile(0, 12).getLocation().subtractY(1));
+        npcs.add(shotgun);
 
         return npcs;
     }
