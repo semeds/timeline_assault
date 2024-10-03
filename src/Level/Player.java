@@ -18,6 +18,7 @@ public abstract class Player extends GameObject {
     protected float jumpDegrade = 0;
     protected float terminalVelocityY = 0;
     protected float momentumYIncrease = 0;
+    protected int hitPoints = 3;
 
     // values used to handle player movement
     protected float jumpForce = 0;
@@ -45,6 +46,7 @@ public abstract class Player extends GameObject {
 
     // flags
     protected boolean isInvincible = false; // if true, player cannot be hurt by enemies (good for testing)
+    protected boolean canDoubleJump = true; // if true, player can double jump.
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
         super(spriteSheet, x, y, startingAnimationName);
@@ -212,6 +214,7 @@ public abstract class Player extends GameObject {
                     jumpForce = 0;
                 }
             }
+            canDoubleJump = true; // reset double jump availability when on ground
         }
 
         // if player is in air (currently in a jump) and has more jumpForce, continue
@@ -236,6 +239,13 @@ public abstract class Player extends GameObject {
             // over time
             if (moveAmountY > 0) {
                 increaseMomentum();
+            }
+
+            // handle double jumping
+            if (Keyboard.isKeyDown(JUMP_KEY) && !keyLocker.isKeyLocked(JUMP_KEY) && canDoubleJump) {
+                keyLocker.lockKey(JUMP_KEY);
+                jumpForce = jumpHeight; // reset jump force for the double jump
+                canDoubleJump = false;
             }
         }
 
@@ -324,7 +334,10 @@ public abstract class Player extends GameObject {
         if (!isInvincible) {
             // if map entity is an enemy, kill player on touch
             if (mapEntity instanceof Enemy) {
-                levelState = LevelState.PLAYER_DEAD;
+                hitPoints--;
+                if (hitPoints <= 0) {
+                    levelState = LevelState.PLAYER_DEAD;
+                }
             }
         }
     }
