@@ -8,6 +8,7 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
+import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 
@@ -58,10 +59,17 @@ public class Map1 extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
-
+    
+        // Adding the Walrus NPC
         Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
         npcs.add(walrus);
-
+    
+        // Adding the WeaponPickup NPC
+        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(3, 11).getLocation(), this);
+        npcs.add(weaponPickup); 
+    
         return npcs;
     }
+      
+
 }
