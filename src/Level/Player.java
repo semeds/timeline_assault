@@ -44,8 +44,12 @@ public abstract class Player extends GameObject {
     protected Key MOVE_RIGHT_KEY = Key.RIGHT;
     protected Key CROUCH_KEY = Key.DOWN;
 
-    // flags
+    // Invincibility variables
     protected boolean isInvincible = false; // if true, player cannot be hurt by enemies (good for testing)
+    private long invincibilityStartTime;
+    private static final long INVINCIBILITY_DURATION = 1000;
+
+    // flag
     protected boolean canDoubleJump = true; // if true, player can double jump.
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
@@ -107,6 +111,10 @@ public abstract class Player extends GameObject {
         // if player has lost level
         else if (levelState == LevelState.PLAYER_DEAD) {
             updatePlayerDead();
+        }
+
+        if (isInvincible && (System.currentTimeMillis() - invincibilityStartTime) >= INVINCIBILITY_DURATION) {
+            isInvincible = false;
         }
     }
 
@@ -337,6 +345,10 @@ public abstract class Player extends GameObject {
                 hitPoints--;
                 if (hitPoints <= 0) {
                     levelState = LevelState.PLAYER_DEAD;
+                } else {
+                    // Start invincibility timer
+                    isInvincible = true;
+                    invincibilityStartTime = System.currentTimeMillis();
                 }
             }
         }

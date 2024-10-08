@@ -8,7 +8,6 @@ import GameObject.ImageEffect;
 import Level.TileType;
 import Level.Tileset;
 import Utils.SlopeTileLayoutUtils;
-
 import java.util.ArrayList;
 
 // This class represents a "common" tileset of standard tiles defined in the CommonTileset.png file
@@ -64,6 +63,8 @@ public class CommonTileset extends Tileset {
         MapTileBuilder sunTile = new MapTileBuilder(sunFrames);
 
         mapTiles.add(sunTile);
+
+
 
         // tree trunk with full hole
         Frame treeTrunkWithFullHoleFrame = new FrameBuilder(getSubImage(2, 2))

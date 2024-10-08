@@ -9,9 +9,8 @@ import Level.Enemy;
 import Level.MapEntity;
 import Level.Player;
 import Utils.AirGroundState;
-import Utils.Direction;
 import Utils.Point;
-
+import Utils.Direction;
 import java.util.HashMap;
 
 // This class is for the black bug enemy
@@ -68,7 +67,7 @@ public class BugEnemy extends Enemy {
     }
 
     @Override
-    public void onEndCollisionCheckX(boolean hasCollided, Direction direction,  MapEntity entityCollidedWith) {
+    public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
         // if bug has collided into something while walking forward,
         // it turns around (changes facing direction)
         if (hasCollided) {
@@ -85,7 +84,8 @@ public class BugEnemy extends Enemy {
     @Override
     public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
         // if bug is colliding with the ground, change its air ground state to GROUND
-        // if it is not colliding with the ground, it means that it's currently in the air, so its air ground state is changed to AIR
+        // if it is not colliding with the ground, it means that it's currently in the
+        // air, so its air ground state is changed to AIR
         if (direction == Direction.DOWN) {
             if (hasCollided) {
                 airGroundState = AirGroundState.GROUND;
@@ -97,30 +97,32 @@ public class BugEnemy extends Enemy {
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("WALK_LEFT", new Frame[] {
-                    new FrameBuilder(spriteSheet.getSprite(0, 0), 8)
-                            .withScale(2)
-                            .withBounds(6, 6, 12, 7)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0, 1), 8)
-                            .withScale(2)
-                            .withBounds(6, 6, 12, 7)
-                            .build()
-            });
+        return new HashMap<String, Frame[]>() {
+            {
+                put("WALK_LEFT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0), 8)
+                                .withScale(2)
+                                .withBounds(6, 6, 12, 7)
+                                .build(),
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 8)
+                                .withScale(2)
+                                .withBounds(6, 6, 12, 7)
+                                .build()
+                });
 
-            put("WALK_RIGHT", new Frame[] {
-                    new FrameBuilder(spriteSheet.getSprite(0, 0), 8)
-                            .withScale(2)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(6, 6, 12, 7)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0, 1), 8)
-                            .withScale(2)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(6, 6, 12, 7)
-                            .build()
-            });
-        }};
+                put("WALK_RIGHT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0), 8)
+                                .withScale(2)
+                                .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                                .withBounds(6, 6, 12, 7)
+                                .build(),
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 8)
+                                .withScale(2)
+                                .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                                .withBounds(6, 6, 12, 7)
+                                .build()
+                });
+            }
+        };
     }
 }

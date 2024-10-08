@@ -11,20 +11,20 @@ import Utils.Point;
 // Represents the map that is used as a background for the main menu and credits menu screen
 public class TitleScreenMap extends Map {
 
-    private Sprite cat;
+    private Sprite joe;
 
     public TitleScreenMap() {
-        super("title_screen_map.txt", new CommonTileset());
-        Point catLocation = getMapTile(6, 8).getLocation().subtractX(24).subtractY(6);
-        cat = new Sprite(ImageLoader.loadSubImage("Cat.png", Colors.MAGENTA, 0, 0, 24, 24));
-        cat.setScale(3);
-        cat.setLocation(catLocation.x, catLocation.y);
+        super("titl_screen_map.txt", new CommonTileset());
+        Point joeLocation = getMapTile(6, 8).getLocation().subtractX(24).subtractY(6);
+        joe = new Sprite(ImageLoader.loadSubImage("Joe.png", Colors.MAGENTA, 0, 0, 24, 24));
+        joe.setScale(3);
+        joe.setLocation(joeLocation.x, joeLocation.y);
     }
 
     @Override
     public void draw(GraphicsHandler graphicsHandler) {
         super.draw(graphicsHandler);
-        cat.draw(graphicsHandler);
+        joe.draw(graphicsHandler);
     }
 
 }
