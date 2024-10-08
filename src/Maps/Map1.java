@@ -11,7 +11,6 @@ import NPCs.Walrus;
 import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
-
 import java.util.ArrayList;
 
 // Represents a test map to be used in a level

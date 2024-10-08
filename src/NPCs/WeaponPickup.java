@@ -11,51 +11,73 @@ import Level.NPC;
 import Level.Player;
 import Level.Map;
 import Utils.Point;
-
 import java.util.HashMap;
 
-// This class is for the WeaponPickup NPC (Shotgun)
 public class WeaponPickup extends NPC {
-    private boolean isActive; 
-    private Map mapReference; 
+    private boolean isActive;
+    private Map mapReference;
+    private static boolean showOverlay; // Persistent overlay flag
+    private static Frame weaponFrame; // Frame for weapon image
 
     public WeaponPickup(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("shotgun.png"), 40, 40), "DEFAULT");
-        isActive = true; 
-        this.mapReference = map; 
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("NewShotty.png"), 40, 40), "DEFAULT");
+        isActive = true;
+        this.mapReference = map;
+
+        // Initialize the overlay and frame only once
+        if (weaponFrame == null) {
+            weaponFrame = new FrameBuilder(new SpriteSheet(ImageLoader.load("NewShotty.png"), 40, 40).getSprite(0, 0))
+                    .withScale(5)
+                    .withBounds(1, 1, 38, 38)
+                    .build();
+        }
+
+        // Initially set showOverlay to false
+        showOverlay = false;
     }
 
     public void update(Player player) {
         super.update();
 
+        // Check for interaction and set the overlay to true
         if (isActive && intersects(player)) {
             if (Keyboard.isKeyDown(Key.SPACE)) {
-                isActive = false; 
-                removeFromMap();  
+                isActive = false; // Remove the weapon from the map
+                removeFromMap();
+                showOverlay = true; // Enable the overlay to be drawn
             }
         }
     }
 
     private void removeFromMap() {
         mapReference.getNPCs().remove(this);
-        System.out.println("WeaponPickup removed from the map.");
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
+        // Draw the NPC only if its active
         if (isActive) {
             super.draw(graphicsHandler);
+        }
+
+        // Always draw the overlay if the weapon has been picked up
+        if (showOverlay) {
+            int overlayX = 24; // X coordinate for the overlay (bottom-left corner)
+            int overlayY = 550; // Y coordinate for the overlay (bottom-left corner)
+            graphicsHandler.drawImage(weaponFrame.getImage(), overlayX, overlayY);
         }
     }
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("DEFAULT", new Frame[] {
-                    new FrameBuilder(spriteSheet.getSprite(0, 0))
-                            .withScale(2)
-                            .withBounds(1, 1, 38, 38) 
-                            .build()
-            });
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("DEFAULT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0))
+                                .withScale(2)
+                                .withBounds(1, 1, 38, 38)
+                                .build()
+                });
+            }
+        };
     }
 }

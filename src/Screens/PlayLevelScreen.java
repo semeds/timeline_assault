@@ -1,6 +1,8 @@
 package Screens;
 
+import Enemies.DinosaurEnemy;
 import Engine.GraphicsHandler;
+import Engine.ImageLoader;
 import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
@@ -8,8 +10,9 @@ import Level.Map;
 import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
-//import Players.Cat;
 import Players.Joe;
+import Utils.Direction;
+import Utils.Point;
 //import Players.Weapons;
 
 // This class is for when the platformer game is actually being played
@@ -22,6 +25,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     protected LevelClearedScreen levelClearedScreen;
     protected LevelLoseScreen levelLoseScreen;
     protected boolean levelCompletedStateChangeStart;
+    private boolean isWeaponPickedUp = false;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -32,7 +36,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.map = new TestMap();
 
         // setup player
-        //this.player = new Cat(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
+        // this.player = new Cat(map.getPlayerStartPosition().x,
+        // map.getPlayerStartPosition().y);
         this.player = new Joe(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
         this.player.setMap(map);
         this.player.addListener(this);
@@ -41,12 +46,27 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         levelLoseScreen = new LevelLoseScreen(this);
 
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
+
+        Point[] spawnLocations = {
+                new Point(100, 200),
+                new Point(100, 200),
+                new Point(100, 200),
+                new Point(100, 200)
+        };
+
+        // Loop that creates and adds multiple enemies to the map
+        for (Point location : spawnLocations) {
+            DinosaurEnemy dinosaur = new DinosaurEnemy(location, new Point(location.x + 100, location.y),
+                    Direction.RIGHT);
+            map.addEnemy(dinosaur);
+        }
     }
 
     public void update() {
         // based on screen state, perform specific actions
         switch (playLevelScreenState) {
-            // if level is "running" update player and map to keep game logic for the platformer level going
+            // if level is "running" update player and map to keep game logic for the
+            // platformer level going
             case RUNNING:
                 player.update();
                 map.update(player);
@@ -64,7 +84,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-            // wait on level lose screen to make a decision (either resets level or sends player back to main menu)
+            // wait on level lose screen to make a decision (either resets level or sends
+            // player back to main menu)
             case LEVEL_LOSE:
                 levelLoseScreen.update();
                 break;
@@ -77,6 +98,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 map.draw(graphicsHandler);
                 player.draw(graphicsHandler);
+
+                if (isWeaponPickedUp) {
+                    int overlayX = 24;
+                    int overlayY = 550;
+                    graphicsHandler.drawImage(ImageLoader.load("NewShotty.png"), overlayX, overlayY);
+                }
                 break;
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
