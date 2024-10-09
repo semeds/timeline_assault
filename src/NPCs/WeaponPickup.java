@@ -16,24 +16,14 @@ import java.util.HashMap;
 public class WeaponPickup extends NPC {
     private boolean isActive;
     private Map mapReference;
-    private static boolean showOverlay; // Persistent overlay flag
+    public static boolean showOverlay = false; // Persistent overlay flag
     private static Frame weaponFrame; // Frame for weapon image
 
     public WeaponPickup(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("NewShotty.png"), 40, 40), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("SG.png"), 38, 14), "DEFAULT");
         isActive = true;
         this.mapReference = map;
 
-        // Initialize the overlay and frame only once
-        if (weaponFrame == null) {
-            weaponFrame = new FrameBuilder(new SpriteSheet(ImageLoader.load("NewShotty.png"), 40, 40).getSprite(0, 0))
-                    .withScale(5)
-                    .withBounds(1, 1, 38, 38)
-                    .build();
-        }
-
-        // Initially set showOverlay to false
-        showOverlay = false;
     }
 
     public void update(Player player) {

@@ -2,7 +2,8 @@ package Engine;
 
 import javax.swing.*;
 import java.awt.Graphics;
-import Engine.WeaponOverlay; // Import the WeaponOverlay class
+import NPCs.WeaponPickup;
+//import Engine.WeaponOverlay; // Import the WeaponOverlay class
 
 /*
  * The JFrame that holds the GamePanel
@@ -20,7 +21,9 @@ public class GameWindow {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Draw the weapon overlay here
-                weaponOverlay.draw(g);
+                if (WeaponPickup.showOverlay) {
+                    weaponOverlay.draw(g); 
+            } 
             }
         };
 
