@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public abstract class Player extends GameObject {
 
-    
     // values that affect player movement
     // these should be set in a subclass
     protected float walkSpeed = 0;
@@ -71,17 +70,6 @@ public abstract class Player extends GameObject {
         // if player is currently playing through level (has not won or lost)
         if (levelState == LevelState.RUNNING) {
             applyGravity();
-
-            /*
-             * // check if the player is trying to fall through a platform
-             * if (airGroundState == AirGroundState.GROUND && Keyboard.isKeyDown(Key.DOWN))
-             * {
-             * // make sure that player can fall through platform
-             * if (isOnFallThroughPlatform()) {
-             * airGroundState = AirGroundState.AIR;
-             * }
-             * }
-             */
 
             // update player's state and current actions, which includes things like
             // determining how much it should move each frame and if its walking or jumping
@@ -440,6 +428,10 @@ public abstract class Player extends GameObject {
 
     public void addListener(PlayerListener listener) {
         listeners.add(listener);
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
     }
 
     // Uncomment this to have game draw player's bounds to make it easier to
