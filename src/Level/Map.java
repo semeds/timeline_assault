@@ -272,6 +272,11 @@ public abstract class Map {
         return new ArrayList<>();
     }
 
+    // // list of collectibles defined to be a part of the map, should be overridden in a subclass
+    // protected ArrayList<NPC> loadCollectibles() {
+    //     return new ArrayList<>();
+    // }
+
     public Camera getCamera() {
         return camera;
     }

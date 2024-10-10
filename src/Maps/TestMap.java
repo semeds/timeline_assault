@@ -12,6 +12,7 @@ import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import java.util.ArrayList;
+import Collectibles.Coin;
 
 // Represents a test map to be used in a level
 public class TestMap extends Map {
@@ -66,7 +67,9 @@ public class TestMap extends Map {
         // Adding the WeaponPickup NPC
         WeaponPickup weaponPickup = new WeaponPickup(getMapTile(3, 11).getLocation(), this);
         npcs.add(weaponPickup); 
-    
+
+        Coin coin = new Coin(getMapTile(10,11).getLocation(), this);
+        npcs.add(coin);
         return npcs;
     }
     

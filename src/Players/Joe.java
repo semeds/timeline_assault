@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class Joe extends Player {
     public Joe(float x, float y) {
-        super(new SpriteSheet(ImageLoader.load("joe.png"), 24, 24), x, y, "STAND_RIGHT");
+        super(new SpriteSheet(ImageLoader.load("test.png"), 24, 24), x, y, "STAND_RIGHT");
         gravity = .5f;
         terminalVelocityY = 6f;
         jumpHeight = 14.5f;
