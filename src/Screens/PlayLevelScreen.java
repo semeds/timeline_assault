@@ -54,7 +54,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         Point[] spawnLocations = {
                 new Point(450, 530),
                 new Point(600, 530),
-                new Point(800, 435),
+                // new Point(800, 435),
 
         };
 
