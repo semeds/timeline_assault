@@ -65,7 +65,7 @@ public class TestMap extends Map {
         npcs.add(walrus);
     
         // Adding the WeaponPickup NPC
-        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(3, 11).getLocation(), this);
+        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(16,7).getLocation(), this);
         npcs.add(weaponPickup); 
 
         Coin coin = new Coin(getMapTile(10,11).getLocation(), this);
