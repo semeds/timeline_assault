@@ -1,3 +1,4 @@
+
 package Screens;
 
 import Engine.*;
@@ -5,7 +6,7 @@ import Game.GameState;
 import Game.ScreenCoordinator;
 import SpriteFont.SpriteFont;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 
 // This is the class for the main menu screen
 public class MenuScreen extends Screen {
@@ -91,7 +92,7 @@ public class MenuScreen extends Screen {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        graphicsHandler.drawImage(backgroundImage, 20, 20, null);
+        //graphicsHandler.drawImage(backgroundImage, 20, 20, null);
         playGame.draw(graphicsHandler);
         credits.draw(graphicsHandler);
         graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,

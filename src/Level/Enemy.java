@@ -2,7 +2,6 @@ package Level;
 
 import GameObject.Frame;
 import GameObject.SpriteSheet;
-
 import java.util.HashMap;
 
 // This class is a base class for all enemies in the game -- all enemies should extend from it
@@ -39,6 +38,8 @@ public class Enemy extends MapEntity {
             touchedPlayer(player);
         }
     }
+
+    
 
     // A subclass can override this method to specify what it does when it touches the player
     public void touchedPlayer(Player player) {

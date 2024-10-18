@@ -5,16 +5,15 @@ import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.SpriteSheet;
-import Level.NPC;
 import Level.Map;
+import Level.NPC;
 import Level.Player;
 import Utils.Point;
-
 import java.util.HashMap;
 
 //class that handles coincollection and the likes
 public class Coin extends NPC {
-   
+
     protected Map mapPosition;
 
     public Coin(Point location, Map map) {
@@ -23,12 +22,12 @@ public class Coin extends NPC {
         this.mapPosition = map;
     }
 
-    //for player intersection
+    // for player intersection
     public void update(Player player) {
         super.update();
 
-        if(intersects(player)) {
-            collectCoin();
+        if (intersects(player)) {
+            // collectCoin();
         }
     }
 
@@ -44,13 +43,15 @@ public class Coin extends NPC {
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("DEFAULT", new Frame[] {
-                    new FrameBuilder(spriteSheet.getSprite(0, 0))
-                            .withScale(2)
-                            .withBounds(1, 1, 38, 38) 
-                            .build()
-            });
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("DEFAULT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0))
+                                .withScale(2)
+                                .withBounds(1, 1, 38, 38)
+                                .build()
+                });
+            }
+        };
     }
 }

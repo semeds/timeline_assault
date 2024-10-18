@@ -6,6 +6,7 @@ import Engine.ImageLoader;
 import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
+import Level.Enemy;
 import Level.Map;
 import Level.Player;
 import Level.PlayerListener;
@@ -70,6 +71,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         hp1Image = ImageLoader.load("OneHeart.png");
     }
 
+    private boolean playerCollidesWith(Enemy enemy) {
+        return player.getBounds().intersects(enemy.getBounds());
+    }
+
     public void update() {
         // based on screen state, perform specific actions
         switch (playLevelScreenState) {
@@ -78,6 +83,18 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             case RUNNING:
                 player.update();
                 map.update(player);
+
+                // Check collision between player and each enemy
+            for (Enemy enemy : map.getActiveEnemies()) {
+                if (enemy instanceof DinosaurEnemy) {
+                    DinosaurEnemy dinosaur = (DinosaurEnemy) enemy;
+
+                    if (playerCollidesWith(dinosaur)) {
+                        // Hurt the enemy when the player collides with it
+                        dinosaur.hurtEnemy(player);
+                    }
+                }
+            }
                 break;
             // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
