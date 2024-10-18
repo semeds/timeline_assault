@@ -17,6 +17,7 @@ public class WeaponPickup extends NPC {
     private boolean isActive;
     private Map mapReference;
     public static boolean showOverlay = false; // Persistent overlay flag
+    public static boolean weaponPickedUp = false; // Flag to indicate weapon is picked up
     private static Frame weaponFrame; // Frame for weapon image
 
     public WeaponPickup(Point location, Map map) {
@@ -35,6 +36,8 @@ public class WeaponPickup extends NPC {
                 isActive = false; // Remove the weapon from the map
                 removeFromMap();
                 showOverlay = true; // Enable the overlay to be drawn
+                weaponPickedUp = true; //  fireball shooting
+
             }
         }
     }
