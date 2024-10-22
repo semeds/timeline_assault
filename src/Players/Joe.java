@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Joe extends Player {
+        // fireball storing, rate, and direction
     private ArrayList<Fireball> fireballs = new ArrayList<>(); // store fired fireballs
     private int fireballCooldown = 0; // controls fire rate
     private boolean facingRight = true; // Made to track direction Joe is facing
@@ -45,7 +46,7 @@ public class Joe extends Player {
         if (WeaponPickup.weaponPickedUp) {
             if (Keyboard.isKeyDown(Key.SPACE) && fireballCooldown == 0) {
                 shootFireball();
-                fireballCooldown = 30; // Example cooldown (30 frames)
+                fireballCooldown = 30;
             }
 
             // cooldown
@@ -68,6 +69,7 @@ public class Joe extends Player {
         if (WeaponPickup.weaponPickedUp) {
             for (Fireball fireball : fireballs) {
                 fireball.draw(graphicsHandler);
+                
             }
         }
     }
@@ -83,6 +85,7 @@ public class Joe extends Player {
         // Fireballs shoot in direction player is facing
         float movementSpeed = facingRight ? fireballSpeed : -fireballSpeed;
         Fireball fireball = new Fireball(fireballStart, movementSpeed, fireballLifetime);
+        fireball.setMap(map);
 
         fireballs.add(fireball);
     }

@@ -8,13 +8,15 @@ import Level.Enemy;
 import Level.MapEntity;
 import Level.MapEntityStatus;
 import Level.Player;
-import Players.Joe; // Import Joe to check if the player is Joe
+import Players.Joe;
 import Utils.Direction;
 import Utils.Point;
 
 import java.util.HashMap;
 
 public class Fireball extends Enemy {
+    // fireball variables 
+
     private float movementSpeed;
     private int existenceFrames;
 

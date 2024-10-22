@@ -27,7 +27,7 @@ public class Coin extends NPC {
         super.update();
 
         if (intersects(player)) {
-            // collectCoin();
+             collectCoin();
         }
     }
 
