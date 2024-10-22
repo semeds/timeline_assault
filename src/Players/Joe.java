@@ -88,6 +88,7 @@ public class Joe extends Player {
         fireball.setMap(map);
 
         fireballs.add(fireball);
+        map.addProjectile(fireball);
     }
 
     @Override

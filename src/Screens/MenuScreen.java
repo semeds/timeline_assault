@@ -26,13 +26,13 @@ public class MenuScreen extends Screen {
 
     @Override
     public void initialize() {
-        playGame = new SpriteFont("PLAY GAME", 200, 123, "Arial", 30, new Color(49, 207, 240));
+        playGame = new SpriteFont("PLAY GAME", 300, 123, "Times New Roman", 30, new Color(49, 207, 240));
         playGame.setOutlineColor(Color.black);
         playGame.setOutlineThickness(3);
-        credits = new SpriteFont("CREDITS", 200, 223, "Arial", 30, new Color(49, 207, 240));
+        credits = new SpriteFont("CREDITS", 300, 223, "Arial", 30, new Color(49, 207, 240));
         credits.setOutlineColor(Color.black);
         credits.setOutlineThickness(3);
-        backgroundImage = ImageLoader.load("TwoHearts.png");
+        backgroundImage = ImageLoader.load("TitleScreen.png");
         keyPressTimer = 0;
         menuItemSelected = -1;
         keyLocker.lockKey(Key.SPACE);
@@ -92,7 +92,7 @@ public class MenuScreen extends Screen {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        //graphicsHandler.drawImage(backgroundImage, 20, 20, null);
+        graphicsHandler.drawImage(backgroundImage, 300, 223);
         playGame.draw(graphicsHandler);
         credits.draw(graphicsHandler);
         graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,

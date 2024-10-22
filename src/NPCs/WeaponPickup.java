@@ -36,7 +36,7 @@ public class WeaponPickup extends NPC {
                 isActive = false; // Remove the weapon from the map
                 removeFromMap();
                 showOverlay = true; // Enable the overlay to be drawn
-                weaponPickedUp = true; //  fireball shooting
+                weaponPickedUp = true; // fireball shooting
 
             }
         }

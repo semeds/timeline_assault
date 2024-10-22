@@ -15,7 +15,7 @@ import Utils.Point;
 import java.util.HashMap;
 
 public class Fireball extends Enemy {
-    // fireball variables 
+    // fireball variables
 
     private float movementSpeed;
     private int existenceFrames;
@@ -47,7 +47,7 @@ public class Fireball extends Enemy {
         }
     }
 
-    @Override
+    // @Override
     public void touchedPlayer(Player player) {
         if (!(player instanceof Joe)) {
             super.touchedPlayer(player);
@@ -55,15 +55,26 @@ public class Fireball extends Enemy {
         }
     }
 
+    public void touchedEntity(MapEntity entity) {
+        if (entity instanceof Enemy) {
+            ((Enemy) entity).takeDamage();
+        }
+
+        // Remove the fireball after it touches any entity
+        this.mapEntityStatus = MapEntityStatus.REMOVED;
+    }
+
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("DEFAULT", new Frame[]{
-                    new FrameBuilder(spriteSheet.getSprite(0, 0))
-                            .withScale(3)
-                            .withBounds(1, 1, 5, 5)
-                            .build()
-            });
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("DEFAULT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0))
+                                .withScale(3)
+                                .withBounds(1, 1, 5, 5)
+                                .build()
+                });
+            }
+        };
     }
 }

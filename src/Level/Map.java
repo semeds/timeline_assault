@@ -27,6 +27,8 @@ public abstract class Map {
     // the tile map (map tiles that make up the entire map image)
     protected MapTile[] mapTiles;
 
+    private List<MapEntity> projectiles = new ArrayList<>();
+
     // width and height of the map in terms of the number of tiles width-wise and
     // height-wise
     protected int width;
@@ -188,6 +190,21 @@ public abstract class Map {
         Coin coin = new Coin(new Point((int) x, (int) y), this);
         coin.setMap(this);
         getNPCs().add(coin);
+    }
+
+    // Method to add a projectile to the map
+    public void addProjectile(MapEntity projectile) {
+        projectiles.add(projectile);
+    }
+
+    // Method to remove a projectile from the map
+    public void removeProjectile(MapEntity projectile) {
+        projectiles.remove(projectile);
+    }
+
+    // Method to get all projectiles in the map
+    public List<MapEntity> getProjectiles() {
+        return projectiles;
     }
 
     // Method to remove the enemies from the map

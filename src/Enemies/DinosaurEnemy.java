@@ -7,6 +7,7 @@ import GameObject.Frame;
 import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.Enemy;
+import Level.LevelState;
 import Level.MapEntity;
 import Level.Player;
 import Utils.AirGroundState;
@@ -26,12 +27,15 @@ public class DinosaurEnemy extends Enemy {
     protected Point startLocation;
     protected Point endLocation;
 
-    protected float movementSpeed = 1f;
+    protected float movementSpeed = 0.5f;
     private Direction startFacingDirection;
     protected Direction facingDirection;
     protected AirGroundState airGroundState;
 
-    private int hitPoints = 1;
+    // Invincibility variables
+    protected boolean isInvincible = false; // if true, player cannot be hurt by enemies (good for testing)
+    private long invincibilityStartTime;
+    private static final long INVINCIBILITY_DURATION = 1000;
 
     // timer is used to determine how long dinosaur freezes in place before shooting
     // fireball
@@ -50,27 +54,8 @@ public class DinosaurEnemy extends Enemy {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.startFacingDirection = facingDirection;
+        this.hitPoints = 2;
         this.initialize();
-    }
-
-    // Method to hurt the enemy - Basically copied hurtPlayrt()
-    public void hurtEnemy(Player player) {
-        if (hitPoints > 0) {
-            hitPoints--;
-
-            // Enemy Death
-            if (hitPoints <= 0) {
-                die();
-            }
-        }
-    }
-
-    public void die() {
-        // Write the loot dropping logic here
-        if (map != null) { // Ensure the map is assigned to this enemy
-            map.spawnCoin(this.getX(), this.getY());
-            map.removeEnemy(this);
-        }
     }
 
     @Override

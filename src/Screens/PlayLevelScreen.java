@@ -1,6 +1,7 @@
 package Screens;
 
 import Enemies.DinosaurEnemy;
+import Enemies.Fireball;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import Engine.Screen;
@@ -8,6 +9,7 @@ import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Enemy;
 import Level.Map;
+import Level.MapEntity;
 import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
@@ -76,6 +78,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     }
 
     public void update() {
+
         // based on screen state, perform specific actions
         switch (playLevelScreenState) {
             // if level is "running" update player and map to keep game logic for the
@@ -85,16 +88,22 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 map.update(player);
 
                 // Check collision between player and each enemy
-            for (Enemy enemy : map.getActiveEnemies()) {
-                if (enemy instanceof DinosaurEnemy) {
-                    DinosaurEnemy dinosaur = (DinosaurEnemy) enemy;
+                for (Enemy enemy : map.getActiveEnemies()) {
+                    enemy.update(player);
+                    if (playerCollidesWith(enemy)) {
+                        // Both player and enemy take daamge when they touch
 
-                    if (playerCollidesWith(dinosaur)) {
-                        // Hurt the enemy when the player collides with it
-                        dinosaur.hurtEnemy(player);
+                        player.hurtPlayer(enemy);
+                        enemy.touchedPlayer(player);
+                    }
+                    for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
+                        MapEntity projectile = map.getProjectiles().get(i);
+                        if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
+                            ((Fireball) projectile).touchedEntity(enemy); // Handle interaction
+                            map.removeProjectile(projectile);
+                        }
                     }
                 }
-            }
                 break;
             // if level has been completed, bring up level cleared screen
             case LEVEL_COMPLETED:
