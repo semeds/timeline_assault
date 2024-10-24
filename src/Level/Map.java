@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 import Level.Player;
 import NPCs.WeaponPickup;
-import Screens.LevelClearedScreen;
+
 
 /*
     This class is for defining a map that is used for a specific level
