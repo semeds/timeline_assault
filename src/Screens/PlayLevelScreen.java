@@ -14,6 +14,7 @@ import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
 import Players.Joe;
+import Players.ArmedJoe; //for joe with the shotty in the inventory
 import Utils.Direction;
 import Utils.Point;
 import java.awt.Graphics2D;
