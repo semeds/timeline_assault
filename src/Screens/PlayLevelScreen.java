@@ -19,7 +19,8 @@ import Utils.Point;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-//import Players.Weapons;
+import NPCs.WeaponPickup;
+import Engine.WeaponOverlay;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
@@ -35,16 +36,18 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private Image hp2Image;
     private Image hp1Image;
     private boolean isWeaponPickedUp = false;
+    private WeaponOverlay weaponOverlay;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
+        weaponOverlay = new WeaponOverlay();
     }
 
     public void initialize() {
-        // define/setup map
+        resetWeaponStatus();
+
         this.map = new TestMap();
 
-        // setup player
         this.player = new Joe(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
         this.player.setMap(map);
         this.player.addListener(this);
@@ -57,11 +60,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         Point[] spawnLocations = {
                 new Point(450, 530),
                 new Point(600, 530),
-                // new Point(800, 435),
-
         };
 
-        // Loop that creates and adds multiple enemies to the map
         for (Point location : spawnLocations) {
             DinosaurEnemy dinosaur = new DinosaurEnemy(location, new Point(location.x + 150, location.y),
                     Direction.RIGHT);
@@ -79,33 +79,32 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     public void update() {
 
-        // based on screen state, perform specific actions
         switch (playLevelScreenState) {
-            // if level is "running" update player and map to keep game logic for the
-            // platformer level going
             case RUNNING:
                 player.update();
                 map.update(player);
 
-                // Check collision between player and each enemy
                 for (Enemy enemy : map.getActiveEnemies()) {
                     enemy.update(player);
                     if (playerCollidesWith(enemy)) {
-                        // Both player and enemy take daamge when they touch
-
                         player.hurtPlayer(enemy);
                         enemy.touchedPlayer(player);
                     }
                     for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
                         MapEntity projectile = map.getProjectiles().get(i);
                         if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
-                            ((Fireball) projectile).touchedEntity(enemy); // Handle interaction
+                            ((Fireball) projectile).touchedEntity(enemy);
                             map.removeProjectile(projectile);
                         }
                     }
                 }
+
+                if (WeaponPickup.showOverlay) {
+                    isWeaponPickedUp = true;
+                }
+
                 break;
-            // if level has been completed, bring up level cleared screen
+
             case LEVEL_COMPLETED:
                 if (levelCompletedStateChangeStart) {
                     screenTimer = 130;
@@ -118,28 +117,24 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-            // wait on level lose screen to make a decision (either resets level or sends
-            // player back to main menu)
+
             case LEVEL_LOSE:
                 levelLoseScreen.update();
+                resetWeaponStatus();
                 break;
         }
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        // based on screen state, draw appropriate graphics
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
                 player.draw(graphicsHandler);
 
                 if (isWeaponPickedUp) {
-                    int overlayX = 24;
-                    int overlayY = 550;
-                    graphicsHandler.drawImage(ImageLoader.load("NewShotty.png"), overlayX, overlayY);
+                    weaponOverlay.draw(graphicsHandler.getGraphics());
                 }
 
-                // Call drawHitpoints to render the player's health
                 drawHitpoints(graphicsHandler);
                 break;
             case LEVEL_COMPLETED:
@@ -172,22 +167,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             int originalWidth = hitpointImage.getWidth(null);
             int originalHeight = hitpointImage.getHeight(null);
 
-            if (originalWidth > 0 && originalHeight > 0) { // Ensure dimensions are valid
+            if (originalWidth > 0 && originalHeight > 0) {
 
                 BufferedImage bufferedImage = new BufferedImage(originalWidth, originalHeight,
                         BufferedImage.TYPE_INT_ARGB);
                 Graphics2D bGr = bufferedImage.createGraphics();
 
-                if (bGr != null) { // Check if Graphics2D is successfully created
+                if (bGr != null) {
                     bGr.drawImage(hitpointImage, 0, 0, null);
                     bGr.dispose();
 
-                    // Remove the background from the image
                     int blackRGB = 0xFF000000;
                     for (int y = 0; y < originalHeight; y++) {
                         for (int x = 0; x < originalWidth; x++) {
                             if (bufferedImage.getRGB(x, y) == blackRGB) {
-                                bufferedImage.setRGB(x, y, 0x00FFFFFF); // set to transparent
+                                bufferedImage.setRGB(x, y, 0x00FFFFFF);
                             }
                         }
                     }
@@ -195,7 +189,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     int scaledWidth = (int) (originalWidth * 0.25);
                     int scaledHeight = (int) (originalHeight * 0.25);
 
-                    // Draw the image
                     graphicsHandler.drawImage(bufferedImage, 700, 12, scaledWidth, scaledHeight);
                 }
             }
@@ -229,8 +222,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         screenCoordinator.setGameState(GameState.MENU);
     }
 
-    // This enum represents the different states this screen can be in
     private enum PlayLevelScreenState {
         RUNNING, LEVEL_COMPLETED, LEVEL_LOSE
+    }
+
+    private void resetWeaponStatus() {
+        WeaponPickup.showOverlay = false;
+        WeaponPickup.weaponPickedUp = false;
+        isWeaponPickedUp = false;
     }
 }
