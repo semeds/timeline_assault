@@ -49,19 +49,19 @@ public class TestMap extends Map {
 
         // Define Wave 1: Add a few ZombieEnemies
         ArrayList<Enemy> wave1 = new ArrayList<>();
-        wave1.add(new ZombieEnemy(new Point(50, 100), new Point(300, 100), Direction.RIGHT));
-        wave1.add(new ZombieEnemy(new Point(150, 150), new Point(400, 150), Direction.LEFT));
+        wave1.add(new ZombieEnemy(new Point(450, 530), new Point(300, 530), Direction.RIGHT));
+        wave1.add(new ZombieEnemy(new Point(600, 530), new Point(400, 530), Direction.LEFT));
         waves.add(wave1);
 
         // Define Wave 2: Add more ZombieEnemies
         ArrayList<Enemy> wave2 = new ArrayList<>();
-        wave2.add(new ZombieEnemy(new Point(100, 200), new Point(500, 200), Direction.RIGHT));
+        wave2.add(new ZombieEnemy(new Point(100, 530), new Point(200, 530), Direction.RIGHT));
         waves.add(wave2);
 
         // Define Wave 3: Add even more ZombieEnemies
         ArrayList<Enemy> wave3 = new ArrayList<>();
-        wave3.add(new ZombieEnemy(new Point(200, 300), new Point(600, 300), Direction.RIGHT));
-        wave3.add(new ZombieEnemy(new Point(250, 350), new Point(650, 350), Direction.LEFT));
+        wave3.add(new ZombieEnemy(new Point(200, 530), new Point(400, 530), Direction.RIGHT));
+        wave3.add(new ZombieEnemy(new Point(250, 530), new Point(350, 530), Direction.LEFT));
         waves.add(wave3);
 
         return waves;

@@ -58,8 +58,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
 
         Point[] spawnLocations = {
-                new Point(450, 530),
-                new Point(600, 530),
+                // new Point(450, 530),
+                // new Point(600, 530),
         };
 
         for (Point location : spawnLocations) {
