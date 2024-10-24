@@ -26,6 +26,8 @@ import java.util.Scanner;
 public abstract class Map {
     // the tile map (map tiles that make up the entire map image)
     protected MapTile[] mapTiles;
+    protected ArrayList<ArrayList<Enemy>> enemyWaves = new ArrayList<>(); // Store enemy waves
+    private int currentWave = 0;
 
     private List<MapEntity> projectiles = new ArrayList<>();
 
@@ -84,17 +86,29 @@ public abstract class Map {
         this.playerStartPosition = new Point(0, 0);
     }
 
+
+    protected abstract ArrayList<ArrayList<Enemy>> loadEnemyWaves();
+
     // sets up map by reading in the map file to create the tile map
     // loads in enemies, enhanced map tiles, and npcs
     // and instantiates a Camera
     public void setupMap() {
+        this.enemies = new ArrayList<>();
+        this.enemyWaves = loadEnemyWaves();
         this.animatedMapTiles = new ArrayList<>();
 
         loadMapFile();
 
-        this.enemies = loadEnemies();
-        for (Enemy enemy : this.enemies) {
-            enemy.setMap(this);
+        
+        //this.enemies = loadEnemies();
+        //for (Enemy enemy : this.enemies) {
+        //    enemy.setMap(this);
+        //} 
+        
+
+        //Load the first wave
+        if (!enemyWaves.isEmpty()) {
+            loadNextWave();
         }
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
@@ -108,6 +122,24 @@ public abstract class Map {
         }
 
         this.camera = new Camera(0, 0, tileset.getScaledSpriteWidth(), tileset.getScaledSpriteHeight(), this);
+    }
+
+    public void loadNextWave() {
+        if (currentWave < enemyWaves.size()) {
+            ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
+            currentWave++;
+
+            for (Enemy enemy : nextWave) {
+                addEnemy(enemy);
+            }
+        } else {
+            // game completed
+        }
+    }
+
+    // Check if all active enemies are dead
+    public boolean isWaveComplete() {
+        return getActiveEnemies().isEmpty(); // No active enemies means the wave is complete
     }
 
     // reads in a map file to create the map's tilemap
@@ -387,6 +419,10 @@ public abstract class Map {
         if (adjustCamera) {
             adjustMovementY(player);
             adjustMovementX(player);
+        }
+        // If the current wave is complete, load the next one
+        if (isWaveComplete() && currentWave < enemyWaves.size()) {
+            loadNextWave();
         }
         camera.update(player);
     }

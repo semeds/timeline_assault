@@ -55,15 +55,16 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
 
         Point[] spawnLocations = {
-                new Point(450, 530),
-                new Point(600, 530),
+                // new Point(450, 530),
+                // new Point(600, 530),
                 // new Point(800, 435),
 
         };
 
         // Loop that creates and adds multiple enemies to the map
         for (Point location : spawnLocations) {
-            DinosaurEnemy dinosaur = new DinosaurEnemy(location, new Point(location.x + 150, location.y),
+            DinosaurEnemy dinosaur = new DinosaurEnemy(location, new Point(location.x +
+                    150, location.y),
                     Direction.RIGHT);
             map.addEnemy(dinosaur);
         }
@@ -71,6 +72,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         hp3Image = ImageLoader.load("ThreeHearts.png");
         hp2Image = ImageLoader.load("TwoHearts.png");
         hp1Image = ImageLoader.load("OneHeart.png");
+
     }
 
     private boolean playerCollidesWith(Enemy enemy) {
@@ -92,7 +94,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     enemy.update(player);
                     if (playerCollidesWith(enemy)) {
                         // Both player and enemy take daamge when they touch
-
                         player.hurtPlayer(enemy);
                         enemy.touchedPlayer(player);
                     }
@@ -126,6 +127,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
     }
 
+    @Override
     public void draw(GraphicsHandler graphicsHandler) {
         // based on screen state, draw appropriate graphics
         switch (playLevelScreenState) {

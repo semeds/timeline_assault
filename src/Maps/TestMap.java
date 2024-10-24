@@ -1,7 +1,6 @@
 package Maps;
 
-import Enemies.BugEnemy;
-import Enemies.DinosaurEnemy;
+import Collectibles.Coin;
 import Enemies.ZombieEnemy;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
@@ -12,8 +11,8 @@ import NPCs.Walrus;
 import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
+import Utils.Point;
 import java.util.ArrayList;
-import Collectibles.Coin;
 
 // Represents a test map to be used in a level
 public class TestMap extends Map {
@@ -23,20 +22,49 @@ public class TestMap extends Map {
         this.playerStartPosition = getMapTile(2, 11).getLocation();
     }
 
+    /*
+     * @Override
+     * public ArrayList<Enemy> loadEnemies() {
+     * ArrayList<Enemy> enemies = new ArrayList<>();
+     * 
+     * BugEnemy bugEnemy = new BugEnemy(getMapTile(16,
+     * 10).getLocation().subtractY(25), Direction.LEFT);
+     * enemies.add(bugEnemy);
+     * 
+     * DinosaurEnemy dinosaurEnemy = new DinosaurEnemy(getMapTile(19,
+     * 1).getLocation().addY(2), getMapTile(22, 1).getLocation().addY(2),
+     * Direction.RIGHT);
+     * enemies.add(dinosaurEnemy);
+     * 
+     * ZombieEnemy zombieEnemy = new ZombieEnemy(getMapTile(0,10).getLocation(),
+     * getMapTile(22,9).getLocation(), Direction.RIGHT);
+     * enemies.add(zombieEnemy);
+     * 
+     * return enemies;
+     * }
+     */
     @Override
-    public ArrayList<Enemy> loadEnemies() {
-        ArrayList<Enemy> enemies = new ArrayList<>();
+    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
+        ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
 
-        BugEnemy bugEnemy = new BugEnemy(getMapTile(16, 10).getLocation().subtractY(25), Direction.LEFT);
-        enemies.add(bugEnemy);
+        // Define Wave 1: Add a few ZombieEnemies
+        ArrayList<Enemy> wave1 = new ArrayList<>();
+        wave1.add(new ZombieEnemy(new Point(50, 100), new Point(300, 100), Direction.RIGHT));
+        wave1.add(new ZombieEnemy(new Point(150, 150), new Point(400, 150), Direction.LEFT));
+        waves.add(wave1);
 
-        DinosaurEnemy dinosaurEnemy = new DinosaurEnemy(getMapTile(19, 1).getLocation().addY(2), getMapTile(22, 1).getLocation().addY(2), Direction.RIGHT);
-        enemies.add(dinosaurEnemy);
+        // Define Wave 2: Add more ZombieEnemies
+        ArrayList<Enemy> wave2 = new ArrayList<>();
+        wave2.add(new ZombieEnemy(new Point(100, 200), new Point(500, 200), Direction.RIGHT));
+        waves.add(wave2);
 
-        ZombieEnemy zombieEnemy = new ZombieEnemy(getMapTile(0,10).getLocation(), getMapTile(22,9).getLocation(), Direction.RIGHT);
-        enemies.add(zombieEnemy);
+        // Define Wave 3: Add even more ZombieEnemies
+        ArrayList<Enemy> wave3 = new ArrayList<>();
+        wave3.add(new ZombieEnemy(new Point(200, 300), new Point(600, 300), Direction.RIGHT));
+        wave3.add(new ZombieEnemy(new Point(250, 350), new Point(650, 350), Direction.LEFT));
+        waves.add(wave3);
 
-        return enemies;
+        return waves;
     }
 
     @Override
@@ -49,9 +77,8 @@ public class TestMap extends Map {
                 getMapTile(27, 6).getLocation(),
                 TileType.JUMP_THROUGH_PLATFORM,
                 3,
-                new Rectangle(0, 6,16,4),
-                Direction.RIGHT
-        );
+                new Rectangle(0, 6, 16, 4),
+                Direction.RIGHT);
         enhancedMapTiles.add(hmp);
 
         EndLevelBox endLevelBox = new EndLevelBox(getMapTile(32, 7).getLocation());
@@ -63,19 +90,18 @@ public class TestMap extends Map {
     @Override
     public ArrayList<NPC> loadNPCs() {
         ArrayList<NPC> npcs = new ArrayList<>();
-    
+
         // Adding the Walrus NPC
         Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
         npcs.add(walrus);
-    
-        // Adding the WeaponPickup NPC
-        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(16,7).getLocation(), this);
-        npcs.add(weaponPickup); 
 
-        Coin coin = new Coin(getMapTile(10,11).getLocation(), this);
+        // Adding the WeaponPickup NPC
+        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(16, 7).getLocation(), this);
+        npcs.add(weaponPickup);
+
+        Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
         npcs.add(coin);
         return npcs;
     }
-    
 
 }
