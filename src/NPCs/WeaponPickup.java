@@ -9,6 +9,7 @@ import GameObject.Frame;
 import GameObject.SpriteSheet;
 import Level.NPC;
 import Level.Player;
+import Players.ArmedJoe;
 import Level.Map;
 import Utils.Point;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class WeaponPickup extends NPC {
                 removeFromMap();
                 showOverlay = true; // Enable the overlay to be drawn
                 weaponPickedUp = true; // fireball shooting
-
+               // ArmedJoe armed = new ArmedJoe(x,y);
             }
         }
     }

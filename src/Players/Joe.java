@@ -74,8 +74,8 @@ public class Joe extends Player {
                 }
         }
 
-        // Method thats shoots fireballs
-        private void shootFireball() {
+    // Method thats shoots fireballs
+    public void shootFireball() {
 
                 // Trying to position fireball to come directly from joe
                 Point fireballStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
