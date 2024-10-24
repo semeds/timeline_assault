@@ -1,8 +1,8 @@
 package Engine;
 
 import javax.swing.*;
-import java.awt.Graphics;
-import NPCs.WeaponPickup;
+// import java.awt.Graphics;
+// import NPCs.WeaponPickup;
 //import Engine.WeaponOverlay; // Import the WeaponOverlay class
 
 /*
@@ -12,19 +12,19 @@ import NPCs.WeaponPickup;
 public class GameWindow {
     private JFrame gameWindow;
     private GamePanel gamePanel;
-    private WeaponOverlay weaponOverlay; // Add an instance of WeaponOverlay
+    //private WeaponOverlay weaponOverlay; // Add an instance of WeaponOverlay
 
     public GameWindow() {
         gameWindow = new JFrame("Game");
         gamePanel = new GamePanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+           // @Override
+           // protected void paintComponent(Graphics g) {
+           //     super.paintComponent(g);
                 // Draw the weapon overlay here
-                if (WeaponPickup.showOverlay) {
-                    weaponOverlay.draw(g); 
-            } 
-            }
+               // if (WeaponPickup.showOverlay) {
+                 //   weaponOverlay.draw(g); 
+           // } 
+           // }
         };
 
         gamePanel.setFocusable(true);
@@ -37,7 +37,7 @@ public class GameWindow {
         gameWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // it'd be nice if this actually worked more than 1/3rd of the time
 
         // Initialize the weapon overlay
-        weaponOverlay = new WeaponOverlay();
+      //  weaponOverlay = new WeaponOverlay();
 
         gamePanel.setupGame();
     }
