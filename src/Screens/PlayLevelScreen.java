@@ -14,7 +14,7 @@ import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
 import Players.Joe;
-import Players.ArmedJoe; //for joe with the shotty in the inventory
+import Players.ArmedJoe; // for joe with the shotty in the inventory
 import Utils.Direction;
 import Utils.Point;
 import java.awt.Graphics2D;
@@ -49,6 +49,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
         this.map = new TestMap();
 
+        // Start the player as normal Joe
         this.player = new Joe(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
         this.player.setMap(map);
         this.player.addListener(this);
@@ -79,9 +80,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     }
 
     public void update() {
-
         switch (playLevelScreenState) {
             case RUNNING:
+                // Check if the weapon has been picked up and switch Joe to ArmedJoe
+                if (!isWeaponPickedUp && WeaponPickup.weaponPickedUp) {
+                    // Weapon is picked up for the first time, switch to ArmedJoe
+                    switchToArmedJoe();
+                    isWeaponPickedUp = true;
+                }
+
                 player.update();
                 map.update(player);
 
@@ -124,6 +131,21 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 resetWeaponStatus();
                 break;
         }
+    }
+
+    private void switchToArmedJoe() {
+        // Store the current position of Joe
+        float currentX = player.getX();
+        float currentY = player.getY();
+
+        // Instantiate ArmedJoe at the same position
+        ArmedJoe armedJoe = new ArmedJoe(currentX, currentY);
+        armedJoe.setMap(map);
+        armedJoe.addListener(this);
+
+        // Now set the player to ArmedJoe
+        player = armedJoe;
+        armedJoe.update();
     }
 
     public void draw(GraphicsHandler graphicsHandler) {

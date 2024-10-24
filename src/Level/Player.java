@@ -53,6 +53,13 @@ public abstract class Player extends GameObject {
     // flag
     protected boolean canDoubleJump = true; // if true, player can double jump.
 
+    // Inside the Player class
+public boolean isShooting() {
+    // Check if the spacebar (or whichever key you want for shooting) is being pressed
+    return Keyboard.isKeyDown(Key.SPACE);  // Assuming Key.SPACE corresponds to the spacebar
+}
+
+
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
         super(spriteSheet, x, y, startingAnimationName);
         facingDirection = Direction.RIGHT;
