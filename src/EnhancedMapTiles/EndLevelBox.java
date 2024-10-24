@@ -1,3 +1,4 @@
+
 package EnhancedMapTiles;
 
 import Builders.FrameBuilder;
@@ -21,28 +22,30 @@ public class EndLevelBox extends EnhancedMapTile {
     @Override
     public void update(Player player) {
         super.update(player);
-        if (intersects(player)) {
-            player.completeLevel();
-        }
+        // if (intersects(player)) {
+        // player.completeLevel();
+        // }
     }
 
     @Override
     public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        return new HashMap<String, Frame[]>() {{
-            put("DEFAULT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(0, 0), 40)
-                        .withScale(3)
-                        .withBounds(1, 1, 14, 14)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0, 1), 40)
-                        .withScale(3)
-                        .withBounds(1, 1, 14, 14)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0, 2), 40)
-                        .withScale(3)
-                        .withBounds(1, 1, 14, 14)
-                        .build()
-            });
-        }};
+        return new HashMap<String, Frame[]>() {
+            {
+                put("DEFAULT", new Frame[] {
+                        new FrameBuilder(spriteSheet.getSprite(0, 0), 40)
+                                .withScale(3)
+                                .withBounds(1, 1, 14, 14)
+                                .build(),
+                        new FrameBuilder(spriteSheet.getSprite(0, 1), 40)
+                                .withScale(3)
+                                .withBounds(1, 1, 14, 14)
+                                .build(),
+                        new FrameBuilder(spriteSheet.getSprite(0, 2), 40)
+                                .withScale(3)
+                                .withBounds(1, 1, 14, 14)
+                                .build()
+                });
+            }
+        };
     }
 }

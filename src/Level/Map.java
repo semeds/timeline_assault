@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import Level.Player;
+import NPCs.WeaponPickup;
+import Screens.LevelClearedScreen;
 
 /*
     This class is for defining a map that is used for a specific level
@@ -71,6 +74,8 @@ public abstract class Map {
     // map tiles in map that are animated
     protected ArrayList<MapTile> animatedMapTiles;
 
+    protected Player player;
+
     public List<MapEntity> entities = new ArrayList<>();
 
     public Map(String mapFileName, Tileset tileset) {
@@ -86,7 +91,6 @@ public abstract class Map {
         this.playerStartPosition = new Point(0, 0);
     }
 
-
     protected abstract ArrayList<ArrayList<Enemy>> loadEnemyWaves();
 
     // sets up map by reading in the map file to create the tile map
@@ -99,16 +103,14 @@ public abstract class Map {
 
         loadMapFile();
 
-        
-        //this.enemies = loadEnemies();
-        //for (Enemy enemy : this.enemies) {
-        //    enemy.setMap(this);
-        //} 
-        
+        // this.enemies = loadEnemies();
+        // for (Enemy enemy : this.enemies) {
+        // enemy.setMap(this);
+        // }
 
-        //Load the first wave
-        if (!enemyWaves.isEmpty()) {
-            loadNextWave();
+        // Load the first wave
+        if (!enemyWaves.isEmpty() && !WeaponPickup.weaponPickedUp) {
+            loadNextWave(player);
         }
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
@@ -124,7 +126,7 @@ public abstract class Map {
         this.camera = new Camera(0, 0, tileset.getScaledSpriteWidth(), tileset.getScaledSpriteHeight(), this);
     }
 
-    public void loadNextWave() {
+    public void loadNextWave(Player player) {
         if (currentWave < enemyWaves.size()) {
             ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
             currentWave++;
@@ -133,7 +135,12 @@ public abstract class Map {
                 addEnemy(enemy);
             }
         } else {
-            // game completed
+            if (isWaveComplete()) {
+                // ScreenManager.setCurrentScreen(new LevelClearedScreen()); // Switch to the
+                // level cleared screen
+                System.out.println("Game complete!!");
+            }
+
         }
     }
 
@@ -422,7 +429,7 @@ public abstract class Map {
         }
         // If the current wave is complete, load the next one
         if (isWaveComplete() && currentWave < enemyWaves.size()) {
-            loadNextWave();
+            loadNextWave(player);
         }
         camera.update(player);
     }
