@@ -129,7 +129,7 @@ public class ZombieEnemy extends Enemy {
             put("STAND_RIGHT", new Frame[] {
                 new FrameBuilder(spriteSheet.getSprite(0,0))
                         .withScale(1)
-                        .withBounds(4,2,5,13)
+                        .withBounds(20,20,20,20)
                         .build()
                 });
 
@@ -137,42 +137,42 @@ public class ZombieEnemy extends Enemy {
                     new FrameBuilder(spriteSheet.getSprite(0,0))
                         .withScale(1)
                         .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(4,2,5,13)
+                        .withBounds(20,20,20,20)
                         .build()
                 });
 
             put("WALK_RIGHT", new Frame[] {
                     new FrameBuilder(spriteSheet.getSprite(0,1),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,2),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,3),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,4),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,5),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,6),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,7),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,8),25)
                             .withScale(1)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build()
                  });
 
@@ -180,42 +180,42 @@ public class ZombieEnemy extends Enemy {
                     new FrameBuilder(spriteSheet.getSprite(0,1),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,2),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,3),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,4),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,5),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,6),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,7),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,8),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(4,2,5,13)
+                            .withBounds(20,20,20,20)
                             .build()
                 });
             }
