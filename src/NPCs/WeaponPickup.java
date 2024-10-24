@@ -32,7 +32,7 @@ public class WeaponPickup extends NPC {
 
         // Check for interaction and set the overlay to true
         if (isActive && intersects(player)) {
-            if (Keyboard.isKeyDown(Key.SPACE)) {
+            if (Keyboard.isKeyDown(Key.SHIFT)) {
                 isActive = false; // Remove the weapon from the map
                 removeFromMap();
                 showOverlay = true; // Enable the overlay to be drawn
