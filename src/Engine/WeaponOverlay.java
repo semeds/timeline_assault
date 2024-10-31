@@ -24,4 +24,21 @@ public class WeaponOverlay {
     public void draw(Graphics g) {
         g.drawImage(shotgunImage, x, y, width, height, null);
     }
+
+    // Getter methods for position and dimensions
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

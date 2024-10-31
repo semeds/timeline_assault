@@ -14,7 +14,7 @@ import Level.Player;
 import Level.PlayerListener;
 import Maps.TestMap;
 import Players.Joe;
-import Players.ArmedJoe; // for joe with the shotty in the inventory
+import Players.ArmedJoe;
 import Utils.Direction;
 import Utils.Point;
 import java.awt.Graphics2D;
@@ -22,6 +22,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import NPCs.WeaponPickup;
 import Engine.WeaponOverlay;
+import java.awt.Color;
+import java.awt.Font;
+import Engine.Key;
+import Engine.Keyboard;
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
     protected ScreenCoordinator screenCoordinator;
@@ -38,6 +42,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private Image hp1Image;
     private boolean isWeaponPickedUp = false;
     private WeaponOverlay weaponOverlay;
+    private int currentAmmo = 15; // Tracks current bullets
+    private static final int MAX_AMMO = 15; // Maximum ammo in a magazine
+    private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
+    private boolean reloading = false; // Flag to indicate if reload is in progress
+    private int reloadTimer = 0; // Timer for reload delay
+    private static final int RELOAD_DELAY = 60; // Reload delay in frames (approx. 1 second)
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -46,7 +56,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     public void initialize() {
         resetWeaponStatus();
-
         this.map = new TestMap();
 
         // Start the player as normal Joe
@@ -74,7 +83,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         hp3Image = ImageLoader.load("ThreeHearts.png");
         hp2Image = ImageLoader.load("TwoHearts.png");
         hp1Image = ImageLoader.load("OneHeart.png");
-
     }
 
     private boolean playerCollidesWith(Enemy enemy) {
@@ -84,15 +92,37 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public void update() {
         switch (playLevelScreenState) {
             case RUNNING:
-                // Check if the weapon has been picked up and switch Joe to ArmedJoe
                 if (!isWeaponPickedUp && WeaponPickup.weaponPickedUp) {
-                    // Weapon is picked up for the first time, switch to ArmedJoe
                     switchToArmedJoe();
                     isWeaponPickedUp = true;
                 }
 
                 player.update();
                 map.update(player);
+
+                if (reloading) {
+                    // Increment the reload timer while reloading
+                    reloadTimer++;
+                    if (reloadTimer >= RELOAD_DELAY) {
+                        finishReload(); // Complete the reload after delay
+                    }
+                } else {
+                    // Shoot when SPACE is pressed and ammo is available
+                    if (isWeaponPickedUp && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
+                        currentAmmo--; // Reduce ammo by 1
+                        canShoot = false; // Prevents holding SPACE for multiple shots
+                    }
+
+                    // Reset canShoot when SPACE is released
+                    if (!Keyboard.isKeyDown(Key.SPACE)) {
+                        canShoot = true;
+                    }
+
+                    // Initiate reload if "R" is pressed
+                    if (isWeaponPickedUp && Keyboard.isKeyDown(Key.R)) {
+                        startReload();
+                    }
+                }
 
                 for (Enemy enemy : map.getActiveEnemies()) {
                     enemy.update(player);
@@ -136,18 +166,25 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     }
 
     private void switchToArmedJoe() {
-        // Store the current position of Joe
         float currentX = player.getX();
         float currentY = player.getY();
 
-        // Instantiate ArmedJoe at the same position
         ArmedJoe armedJoe = new ArmedJoe(currentX, currentY);
         armedJoe.setMap(map);
         armedJoe.addListener(this);
 
-        // Now set the player to ArmedJoe
         player = armedJoe;
         armedJoe.update();
+    }
+
+    private void startReload() {
+        reloading = true;
+        reloadTimer = 0; // Start the reload timer
+    }
+
+    private void finishReload() {
+        reloading = false;
+        currentAmmo = MAX_AMMO; // Reset ammo to maximum
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
@@ -158,6 +195,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
                 if (isWeaponPickedUp) {
                     weaponOverlay.draw(graphicsHandler.getGraphics());
+                    drawAmmoCount(graphicsHandler); // Draw ammo count next to overlay
                 }
 
                 drawHitpoints(graphicsHandler);
@@ -169,6 +207,19 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 levelLoseScreen.draw(graphicsHandler);
                 break;
         }
+    }
+
+    private void drawAmmoCount(GraphicsHandler graphicsHandler) {
+        Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.BOLD, 14));
+
+        // Position the text slightly to the right of the weapon overlay
+        int ammoX = weaponOverlay.getX() + weaponOverlay.getWidth() + 10;
+        int ammoY = weaponOverlay.getY() + weaponOverlay.getHeight() / 2;
+
+        // Draw the ammo count as "currentAmmo/MAX_AMMO"
+        g2d.drawString(currentAmmo + "/" + MAX_AMMO, ammoX, ammoY);
     }
 
     private void drawHitpoints(GraphicsHandler graphicsHandler) {
@@ -193,7 +244,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             int originalHeight = hitpointImage.getHeight(null);
 
             if (originalWidth > 0 && originalHeight > 0) {
-
                 BufferedImage bufferedImage = new BufferedImage(originalWidth, originalHeight,
                         BufferedImage.TYPE_INT_ARGB);
                 Graphics2D bGr = bufferedImage.createGraphics();
@@ -255,5 +305,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         WeaponPickup.showOverlay = false;
         WeaponPickup.weaponPickedUp = false;
         isWeaponPickedUp = false;
+        currentAmmo = MAX_AMMO; // Reset ammo when level resets
+        reloading = false; // Reset reload status
+        reloadTimer = 0; // Reset timer
     }
 }
