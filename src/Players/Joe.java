@@ -46,28 +46,31 @@ public class Joe extends Player {
             facingRight = false;
         }
 
-        // Handle reloading process
-        if (reloading) {
-            reloadTimer++;
-            if (reloadTimer >= RELOAD_DELAY) {
-                finishReload(); // Complete reload after delay
-            }
-        } else {
-            // Shoot if SPACE is pressed, ammo is available, and Joe is not reloading
-            if (Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
-                shootFireball();
-                currentAmmo--; // Decrease ammo by 1 for each shot
-                canShoot = false; // Prevent continuous shooting
-            }
+        // Only allow shooting and reloading if the weapon has been picked up
+        if (WeaponPickup.weaponPickedUp) {
+            if (reloading) {
+                // Increment the reload timer while reloading
+                reloadTimer++;
+                if (reloadTimer >= RELOAD_DELAY) {
+                    finishReload(); // Complete the reload after delay
+                }
+            } else {
+                // Shoot if SPACE is pressed, ammo is available, and Joe is not reloading
+                if (Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
+                    shootFireball();
+                    currentAmmo--; // Decrease ammo by 1 for each shot
+                    canShoot = false; // Prevent continuous shooting
+                }
 
-            // Reset canShoot when SPACE is released
-            if (!Keyboard.isKeyDown(Key.SPACE)) {
-                canShoot = true;
-            }
+                // Reset canShoot when SPACE is released
+                if (!Keyboard.isKeyDown(Key.SPACE)) {
+                    canShoot = true;
+                }
 
-            // Initiate reload when R is pressed
-            if (Keyboard.isKeyDown(Key.R)) {
-                startReload();
+                // Initiate reload when R is pressed
+                if (Keyboard.isKeyDown(Key.R)) {
+                    startReload();
+                }
             }
         }
 

@@ -25,7 +25,7 @@ public class WeaponOverlay {
         g.drawImage(shotgunImage, x, y, width, height, null);
     }
 
-    // Getter methods for position and dimensions
+    // Getter methods for position/dimensions
     public int getX() {
         return x;
     }

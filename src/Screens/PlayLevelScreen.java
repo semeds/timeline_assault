@@ -42,12 +42,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private Image hp1Image;
     private boolean isWeaponPickedUp = false;
     private WeaponOverlay weaponOverlay;
-    private int currentAmmo = 15; // Tracks current bullets
-    private static final int MAX_AMMO = 15; // Maximum ammo in a magazine
+    private int currentAmmo = 15; //  current bullets
+    private static final int MAX_AMMO = 15; //  ammo in a magazine
     private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
     private boolean reloading = false; // Flag to indicate if reload is in progress
-    private int reloadTimer = 0; // Timer for reload delay
-    private static final int RELOAD_DELAY = 60; // Reload delay in frames (approx. 1 second)
+    private int reloadTimer = 0; //  reload delay
+    private static final int RELOAD_DELAY = 60; // Reload delay in frames
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -101,16 +101,16 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 map.update(player);
 
                 if (reloading) {
-                    // Increment the reload timer while reloading
+                    // reload timer while reloading
                     reloadTimer++;
                     if (reloadTimer >= RELOAD_DELAY) {
-                        finishReload(); // Complete the reload after delay
+                        finishReload(); // Complete reload after delay
                     }
                 } else {
-                    // Shoot when SPACE is pressed and ammo is available
+                    // Shoot when SPACE is pressed / if ammo is available
                     if (isWeaponPickedUp && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
                         currentAmmo--; // Reduce ammo by 1
-                        canShoot = false; // Prevents holding SPACE for multiple shots
+                        canShoot = false; // Prevents holding SPACE for shots
                     }
 
                     // Reset canShoot when SPACE is released
