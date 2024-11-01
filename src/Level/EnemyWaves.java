@@ -1,3 +1,4 @@
+/* 
 import Enemies.ZombieEnemy;
 import Level.Enemy;
 import Utils.Direction;
@@ -37,3 +38,4 @@ public class EnemyWaves extends Map {
         return waves;
     }
 }
+*/
