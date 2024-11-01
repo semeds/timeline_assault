@@ -356,6 +356,14 @@ public boolean isShooting() {
         levelState = LevelState.LEVEL_COMPLETED;
     }
 
+
+
+    public void increaseHealth() {
+        if (hitPoints < 3) {
+            hitPoints++;
+        }
+    }
+
     // if player has beaten level, this will be the update cycle
     public void updateLevelCompleted() {
         // if player is not on ground, player should fall until it touches the ground

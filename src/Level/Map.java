@@ -90,14 +90,14 @@ public abstract class Map {
         this.playerStartPosition = new Point(0, 0);
     }
 
-    protected abstract ArrayList<ArrayList<Enemy>> loadEnemyWaves();
+    
 
     // sets up map by reading in the map file to create the tile map
     // loads in enemies, enhanced map tiles, and npcs
     // and instantiates a Camera
     public void setupMap() {
         this.enemies = new ArrayList<>();
-        this.enemyWaves = loadEnemyWaves();
+        
         this.animatedMapTiles = new ArrayList<>();
 
         loadMapFile();
