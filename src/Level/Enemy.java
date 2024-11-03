@@ -3,6 +3,8 @@ package Level;
 import GameObject.Frame;
 import GameObject.SpriteSheet;
 import java.util.HashMap;
+import java.util.Random;
+
 
 // This class is a base class for all enemies in the game -- all enemies should extend from it
 public class Enemy extends MapEntity {
@@ -87,9 +89,18 @@ public class Enemy extends MapEntity {
     }
 
     public void die() {
+        Random random = new Random();
+        int chance = random.nextInt(10);
+
         // Write the loot dropping logic here
         if (map != null) { // Ensure the map is assigned to this enemy
-            map.spawnCoin(this.getX(), this.getY());
+            if (chance < 2 /*make 7*/) {
+                // 70% chance for this option
+                map.spawnCoin(this.getX(), this.getY());
+            } else {
+                // 30% chance for this option
+                map.spawnpowerup(this.getX(), this.getY());
+            }
             map.removeEnemy(this);
         }
     }

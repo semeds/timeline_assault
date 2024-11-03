@@ -1,6 +1,10 @@
 package Level;
 
 import Collectibles.Coin;
+import Collectibles.HP;
+import Collectibles.InstaKill;
+import Collectibles.Invincibility;
+import Collectibles.SpeedBoost;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
@@ -14,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 import Level.Player;
 import NPCs.WeaponPickup;
+import java.util.Random;
 
 
 /*
@@ -103,10 +108,10 @@ public abstract class Map {
 
         loadMapFile();
 
-        // this.enemies = loadEnemies();
-        // for (Enemy enemy : this.enemies) {
-        // enemy.setMap(this);
-        // }
+        this.enemies = loadEnemies();
+        for (Enemy enemy : this.enemies) {
+        enemy.setMap(this);
+        }
 
         // Load the first wave
         if (!enemyWaves.isEmpty() && !WeaponPickup.weaponPickedUp) {
@@ -229,6 +234,34 @@ public abstract class Map {
         Coin coin = new Coin(new Point((int) x, (int) y), this);
         coin.setMap(this);
         getNPCs().add(coin);
+    }
+
+    public void spawnpowerup(float x, float y) {
+        HP hp = new HP(new Point((int) x, (int) y), this);
+        InstaKill instakill = new InstaKill(new Point((int) x, (int) y), this);
+        Invincibility invincibility = new Invincibility(new Point((int) x, (int) y), this);
+        SpeedBoost speedboost = new SpeedBoost(new Point((int) x, (int) y), this);
+
+        Random random = new Random();
+        int chance = random.nextInt(10);
+        if (chance >= 0 && chance <= 2) {
+            //25% Chance of HP
+            hp.setMap(this);
+            getNPCs().add(hp);
+        } else if (chance >= 3 && chance <= 5) {
+            //25% chance of speed boost
+            speedboost.setMap(this);
+            getNPCs().add(speedboost);
+        } else if (chance >= 6 && chance <= 7) {
+           //20% chance of invincibility
+           invincibility.setMap(this);
+           getNPCs().add(invincibility);
+        } else {  
+           //20% chance of instakill
+           instakill.setMap(this);
+           getNPCs().add(instakill);
+        }
+
     }
 
     // Method to add a projectile to the map

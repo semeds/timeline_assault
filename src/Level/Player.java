@@ -48,16 +48,26 @@ public abstract class Player extends GameObject {
     // Invincibility variables
     protected boolean isInvincible = false; // if true, player cannot be hurt by enemies (good for testing)
     private long invincibilityStartTime;
+    private long pwinvincibilityStartTime;
     private static final long INVINCIBILITY_DURATION = 1000;
+    private static final long PWINVINCIBILITY_DURATION = 10000;
+
+    // SpeedBoost variables
+    private boolean speedBoostActive = false;
+    private long speedBoostStartTime;
+    private static final int SPEED_BOOST_DURATION = 5000; // 5 seconds
+    private float normalSpeed;
+    private float boostedSpeed = 10.0f;
+
 
     // flag
     protected boolean canDoubleJump = true; // if true, player can double jump.
 
     // Inside the Player class
-public boolean isShooting() {
+    public boolean isShooting() {
     // Check if the spacebar (or whichever key you want for shooting) is being pressed
     return Keyboard.isKeyDown(Key.SPACE);  // Assuming Key.SPACE corresponds to the spacebar
-}
+    }
 
 
     public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
@@ -70,6 +80,7 @@ public boolean isShooting() {
         levelState = LevelState.RUNNING;
     }
 
+    @Override
     public void update() {
         moveAmountX = 0;
         moveAmountY = 0;
@@ -112,6 +123,17 @@ public boolean isShooting() {
 
         if (isInvincible && (System.currentTimeMillis() - invincibilityStartTime) >= INVINCIBILITY_DURATION) {
             isInvincible = false;
+        }
+        
+        // Check if speed boost duration has expired
+        if (speedBoostActive && System.currentTimeMillis() - speedBoostStartTime > SPEED_BOOST_DURATION) {
+            speedBoostActive = false;
+            walkSpeed = normalSpeed;  // Revert to normal speed
+        }
+
+        // Check if invincibility power up duration has expired
+        if (isInvincible && System.currentTimeMillis() - pwinvincibilityStartTime > PWINVINCIBILITY_DURATION) {
+            isInvincible = false;  // End invincibility after 10 seconds
         }
     }
 
@@ -357,10 +379,28 @@ public boolean isShooting() {
     }
 
 
-
+    //HP powerup
     public void increaseHealth() {
         if (hitPoints < 3) {
             hitPoints++;
+        }
+    }
+
+    //speedboost powerup
+    public void activateSpeedBoost() {
+        if (!speedBoostActive) {
+            speedBoostActive = true;
+            speedBoostStartTime = System.currentTimeMillis();
+            normalSpeed = walkSpeed;  // Save the original speed
+            walkSpeed = boostedSpeed;  // Apply the boosted speed
+        }
+    }
+
+    //invincibility powerup
+    public void activateInvincibility() {
+        if (!isInvincible) {
+            isInvincible = true;
+            pwinvincibilityStartTime = System.currentTimeMillis();
         }
     }
 
