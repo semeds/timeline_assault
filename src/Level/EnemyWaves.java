@@ -1,3 +1,5 @@
+package Level;
+
 import Enemies.ZombieEnemy;
 import Level.Enemy;
 import Utils.Direction;
