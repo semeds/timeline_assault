@@ -1,9 +1,7 @@
 package Maps;
-import java.util.ArrayList;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import GameObject.Sprite;
-import Level.Enemy;
 import Level.Map;
 import Tilesets.CommonTileset;
 import Utils.Colors;
@@ -27,7 +25,8 @@ public class TitleScreenMap extends Map {
         super.draw(graphicsHandler);
         joe.draw(graphicsHandler);
     }
-
+}
+/* 
     @Override
     protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
         // TODO Auto-generated method stub
@@ -35,3 +34,4 @@ public class TitleScreenMap extends Map {
     }
 
 }
+*/

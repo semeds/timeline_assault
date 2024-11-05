@@ -102,15 +102,11 @@ public abstract class Map {
 
         loadMapFile();
 
-        // this.enemies = loadEnemies();
-        // for (Enemy enemy : this.enemies) {
-        // enemy.setMap(this);
-        // }
+        this.enemies = loadEnemies();
+        for (Enemy enemy : this.enemies) {
+         enemy.setMap(this);
+         }
 
-        // Load the first wave
-        if (!enemyWaves.isEmpty() && !WeaponPickup.weaponPickedUp) {
-            loadNextWave(player);
-        }
 
         this.enhancedMapTiles = loadEnhancedMapTiles();
         for (EnhancedMapTile enhancedMapTile : this.enhancedMapTiles) {
@@ -125,23 +121,6 @@ public abstract class Map {
         this.camera = new Camera(0, 0, tileset.getScaledSpriteWidth(), tileset.getScaledSpriteHeight(), this);
     }
 
-    public void loadNextWave(Player player) {
-        if (currentWave < enemyWaves.size()) {
-            ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
-            currentWave++;
-
-            for (Enemy enemy : nextWave) {
-                addEnemy(enemy);
-            }
-        } else {
-            if (isWaveComplete()) {
-                // ScreenManager.setCurrentScreen(new LevelClearedScreen()); // Switch to the
-                // level cleared screen
-                System.out.println("Game complete!!");
-            }
-
-        }
-    }
 
     // Check if all active enemies are dead
     public boolean isWaveComplete() {
@@ -425,10 +404,6 @@ public abstract class Map {
         if (adjustCamera) {
             adjustMovementY(player);
             adjustMovementX(player);
-        }
-        // If the current wave is complete, load the next one
-        if (isWaveComplete() && currentWave < enemyWaves.size()) {
-            loadNextWave(player);
         }
         camera.update(player);
     }

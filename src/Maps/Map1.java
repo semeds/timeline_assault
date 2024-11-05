@@ -69,12 +69,4 @@ public class Map1 extends Map {
     
         return npcs;
     }
-
-    @Override
-    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadEnemyWaves'");
-    }
-      
-
 }
