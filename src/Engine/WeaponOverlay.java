@@ -5,24 +5,24 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class WeaponOverlay {
-    private Image shotgunImage;
+    private Image pistolImage;
     private int x, y;
     private int width, height; 
 
     public WeaponOverlay() {
-        shotgunImage = new ImageIcon("Resources/TransparentShottyOverlay.png").getImage();
+        pistolImage = new ImageIcon("Resources/Transparent.APistol.png").getImage();
         
         // Position set to the bottom-left corner 
-        x = -20;  
-        y = 525; 
+        x = 16;  
+        y = 533; 
 
         // 4x scale of image
-        width = 38 * 4;  
-        height = 14 * 4; 
+        width = 62;  
+        height = 50; 
     }
 
     public void draw(Graphics g) {
-        g.drawImage(shotgunImage, x, y, width, height, null);
+        g.drawImage(pistolImage, x, y, width, height, null);
     }
 
     // Getter methods for position/dimensions
