@@ -1,4 +1,4 @@
-package Game;
+package Game; 
 
 import Engine.GameWindow;
 import Engine.ScreenManager;

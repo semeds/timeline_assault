@@ -14,10 +14,10 @@ import Utils.Direction;
 import java.util.ArrayList;
 
 // Represents a test map to be used in a level
-public class Map1 extends Map {
+public class Map2 extends Map {
 
-    public Map1() {
-        super("map1.txt", new CommonTileset());
+    public Map2() {
+        super("map2.txt", new CommonTileset());
         this.playerStartPosition = getMapTile(2, 11).getLocation();
     }
 
@@ -69,4 +69,4 @@ public class Map1 extends Map {
     
         return npcs;
     }
-}
+} 

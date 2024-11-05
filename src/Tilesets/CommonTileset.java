@@ -291,6 +291,262 @@ public class CommonTileset extends Tileset {
 
 
 
+//Map2 code:
+
+         //Sky map2
+         Frame BlueSkyFrame = new FrameBuilder(getSubImage(5, 0))
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder BlueSkyTile = new MapTileBuilder(BlueSkyFrame)
+        .withTileType(TileType.PASSABLE); // Make this tile passable
+        mapTiles.add(BlueSkyTile);
+
+        //Dirt Block m2
+        Frame Dirt2Frame = new FrameBuilder(getSubImage(5, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Dirt2Tile = new MapTileBuilder(Dirt2Frame)
+                .withTileType(TileType.NOT_PASSABLE); // Make this tile not passable
+        mapTiles.add(Dirt2Tile);
+
+        //street block
+        Frame RoadFrame = new FrameBuilder(getSubImage(5, 2))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder RoadTile = new MapTileBuilder(RoadFrame)
+                .withTileType(TileType.NOT_PASSABLE); // Make this tile not passable
+        mapTiles.add(RoadTile);
+
+        //Lamp head
+        Frame LamplightFrame = new FrameBuilder(getSubImage(5, 3))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder LamplightTile = new MapTileBuilder(LamplightFrame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(LamplightTile);
+
+        //lamp body
+        Frame LampBodyFrame = new FrameBuilder(getSubImage(6, 3))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder LampBodyTile = new MapTileBuilder(LampBodyFrame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(LampBodyTile);
+
+        //lamp bottom
+        Frame LampBottomFrame = new FrameBuilder(getSubImage(7, 3))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder LampBottomTile = new MapTileBuilder(LampBottomFrame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(LampBottomTile);
+
+        //city building 1
+        Frame CityBuilding1Frame = new FrameBuilder(getSubImage(5, 4))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder CityBuilding1Tile = new MapTileBuilder(CityBuilding1Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(CityBuilding1Tile);
+
+        //city building 2
+        Frame CityBuilding2Frame = new FrameBuilder(getSubImage(5, 5))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder CityBuilding2Tile = new MapTileBuilder(CityBuilding2Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(CityBuilding2Tile);
+
+        //city building 3
+        Frame CityBuilding3Frame = new FrameBuilder(getSubImage(6, 4))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder CityBuilding3Tile = new MapTileBuilder(CityBuilding3Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(CityBuilding3Tile);
+
+        //city building 4
+        Frame CityBuilding4Frame = new FrameBuilder(getSubImage(6, 5))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder CityBuilding4Tile = new MapTileBuilder(CityBuilding4Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(CityBuilding4Tile);
+
+        //house 1
+        Frame House1Frame = new FrameBuilder(getSubImage(6, 0))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder House1Tile = new MapTileBuilder(House1Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(House1Tile);
+
+        //house 1 p2
+        Frame House2Frame = new FrameBuilder(getSubImage(7, 0))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder House2Tile = new MapTileBuilder(House2Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(House2Tile);
+
+        //house 2 
+        Frame House3Frame = new FrameBuilder(getSubImage(6, 1))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder House3Tile = new MapTileBuilder(House3Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(House3Tile);
+
+        //house 2 p2
+        Frame House4Frame = new FrameBuilder(getSubImage(7, 1))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder House4Tile = new MapTileBuilder(House4Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(House4Tile);
+
+        //Firehydren top
+        Frame Firehydren1Frame = new FrameBuilder(getSubImage(6, 2))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder Firehydren1Tile = new MapTileBuilder(Firehydren1Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(Firehydren1Tile);
+
+        //Firehydren bottom
+        Frame Firehydren2Frame = new FrameBuilder(getSubImage(7, 2))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder Firehydren2Tile = new MapTileBuilder(Firehydren2Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(Firehydren2Tile);
+
+        //Tree top1
+
+        Frame TreeTop1Frame = new FrameBuilder(getSubImage(7, 4))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder TreeTop1Tile = new MapTileBuilder(TreeTop1Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(TreeTop1Tile);
+
+        //Tree top2
+
+        Frame TreeTop2Frame = new FrameBuilder(getSubImage(7, 5))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder TreeTop2Tile = new MapTileBuilder(TreeTop2Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(TreeTop2Tile);
+
+        //tree mid1
+        Frame TreeMid1Frame = new FrameBuilder(getSubImage(8, 3))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder TreeTile = new MapTileBuilder(TreeMid1Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(TreeTile);
+
+        //Tree mid2
+        Frame Treemid2Frame = new FrameBuilder(getSubImage(8, 4))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder Treemid2Tile = new MapTileBuilder(Treemid2Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(Treemid2Tile);
+
+        //Tree mid 3
+        Frame Treemid3Frame = new FrameBuilder(getSubImage(8, 5))  
+        .withScale(tileScale)
+        .build();
+
+        MapTileBuilder Treemid3Tile = new MapTileBuilder(Treemid3Frame)
+        .withTileType(TileType.PASSABLE);  // Make it passable to act as background
+        mapTiles.add(Treemid3Tile);
+
+        //TreeBottom m2
+        Frame TreeBottomm2Frame = new FrameBuilder(getSubImage(9, 4))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder TreeBottomm2Tile = new MapTileBuilder(TreeBottomm2Frame)
+                .withTileType(TileType.PASSABLE); // Make this tile passable
+        mapTiles.add(TreeBottomm2Tile);
+
+        //Left platform m2
+        Frame Leftm2platformFrame = new FrameBuilder(getSubImage(8, 0))
+                .withScale(tileScale)
+                .withBounds(0, 6, 16, 4)
+                .build();
+
+        MapTileBuilder Leftm2platformTile = new MapTileBuilder(Leftm2platformFrame)
+                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+        mapTiles.add(Leftm2platformTile);
+
+        //Middle platform m2
+        Frame Middlem2platformFrame = new FrameBuilder(getSubImage(8, 1))
+                .withScale(tileScale)
+                .withBounds(0, 6, 16, 4)
+                .build();
+
+        MapTileBuilder Middlem2platformTile = new MapTileBuilder(Middlem2platformFrame)
+                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+        mapTiles.add(Middlem2platformTile);
+
+        //Right platform m2
+        Frame Rightm2platformFrame = new FrameBuilder(getSubImage(8, 2))
+                .withScale(tileScale)
+                .withBounds(0, 6, 16, 4)
+                .build();
+
+        MapTileBuilder Rightm2platformTile = new MapTileBuilder(Rightm2platformFrame)
+                .withTileType(TileType.JUMP_THROUGH_PLATFORM);
+
+        mapTiles.add(Rightm2platformTile);
+
+        //Cloud1 m2
+        Frame Cloud1m2Frame = new FrameBuilder(getSubImage(9, 0))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Cloud1m2Tile = new MapTileBuilder(Cloud1m2Frame)
+                .withTileType(TileType.PASSABLE); // Make this tile passable
+        mapTiles.add(Cloud1m2Tile);
+
+        //Cloud2 m2
+        Frame Cloud2m2Frame = new FrameBuilder(getSubImage(9, 1))
+                .withScale(tileScale)
+                .build();
+
+        MapTileBuilder Cloud2m2Tile = new MapTileBuilder(Cloud2m2Frame)
+                .withTileType(TileType.PASSABLE); // Make this tile passable
+        mapTiles.add(Cloud2m2Tile);
+
+
+        
         return mapTiles;
     }
 }
+

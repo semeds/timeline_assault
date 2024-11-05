@@ -1,5 +1,4 @@
 package Maps;
-
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import GameObject.Sprite;
@@ -26,5 +25,13 @@ public class TitleScreenMap extends Map {
         super.draw(graphicsHandler);
         joe.draw(graphicsHandler);
     }
+}
+/* 
+    @Override
+    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'loadEnemyWaves'");
+    }
 
 }
+*/
