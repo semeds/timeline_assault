@@ -5,6 +5,7 @@ import Collectibles.HP;
 import Collectibles.InstaKill;
 import Collectibles.Invincibility;
 import Collectibles.SpeedBoost;
+import Collectibles.MaxAmmo;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
@@ -239,7 +240,7 @@ public abstract class Map {
     public void spawnpowerup(float x, float y) {
         HP hp = new HP(new Point((int) x, (int) y), this);
         InstaKill instakill = new InstaKill(new Point((int) x, (int) y), this);
-        Invincibility invincibility = new Invincibility(new Point((int) x, (int) y), this);
+        MaxAmmo maxammo = new MaxAmmo(new Point((int) x, (int) y), this);
         SpeedBoost speedboost = new SpeedBoost(new Point((int) x, (int) y), this);
 
         Random random = new Random();
@@ -253,13 +254,13 @@ public abstract class Map {
             speedboost.setMap(this);
             getNPCs().add(speedboost);
         } else if (chance >= 6 && chance <= 7) {
-           //20% chance of invincibility
-           invincibility.setMap(this);
-           getNPCs().add(invincibility);
+           //20% chance of maxammo
+            maxammo.setMap(this);
+            getNPCs().add(maxammo);
         } else {  
            //20% chance of instakill
-           instakill.setMap(this);
-           getNPCs().add(instakill);
+            instakill.setMap(this);
+            getNPCs().add(instakill);
         }
 
     }

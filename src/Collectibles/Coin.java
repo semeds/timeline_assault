@@ -27,13 +27,13 @@ public class Coin extends NPC {
         super.update();
 
         if (intersects(player)) {
-             collectCoin();
+             collectCoin(player);
         }
     }
 
-    private void collectCoin() {
+    private void collectCoin(Player player) {
+        player.incrementCoinCount();
         mapPosition.getNPCs().remove(this);
-
     }
 
     @Override

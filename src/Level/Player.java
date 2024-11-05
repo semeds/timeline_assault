@@ -59,6 +59,7 @@ public abstract class Player extends GameObject {
     private float normalSpeed;
     private float boostedSpeed = 10.0f;
 
+    private int coinCount = 0; 
 
     // flag
     protected boolean canDoubleJump = true; // if true, player can double jump.
@@ -131,10 +132,12 @@ public abstract class Player extends GameObject {
             walkSpeed = normalSpeed;  // Revert to normal speed
         }
 
+        /* 
         // Check if invincibility power up duration has expired
         if (isInvincible && System.currentTimeMillis() - pwinvincibilityStartTime > PWINVINCIBILITY_DURATION) {
             isInvincible = false;  // End invincibility after 10 seconds
         }
+        */
     }
 
     // add gravity to player, which is a downward force
@@ -396,12 +399,23 @@ public abstract class Player extends GameObject {
         }
     }
 
-    //invincibility powerup
+    /* 
+    //invincibility powerup 
     public void activateInvincibility() {
         if (!isInvincible) {
             isInvincible = true;
             pwinvincibilityStartTime = System.currentTimeMillis();
         }
+    }
+    */
+
+    //coin pickup
+    public void incrementCoinCount() {
+        coinCount++;
+    }
+
+    public int getCoinCount() {
+        return coinCount; 
     }
 
     // if player has beaten level, this will be the update cycle
