@@ -103,7 +103,8 @@ public class CommonTileset extends Tileset {
 
         MapTileBuilder leftSlopeTile = new MapTileBuilder(leftSlopeFrame)
                 .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createLeft45SlopeLayout(spriteWidth, (int) tileScale));
+                .withTileLayout(SlopeTileLayoutUtils.createRight45SlopeLayout(spriteWidth, (int) tileScale));
+
 
         mapTiles.add(leftSlopeTile);
 
@@ -114,7 +115,8 @@ public class CommonTileset extends Tileset {
 
         MapTileBuilder rightSlopeTile = new MapTileBuilder(rightSlopeFrame)
                 .withTileType(TileType.SLOPE)
-                .withTileLayout(SlopeTileLayoutUtils.createRight45SlopeLayout(spriteWidth, (int) tileScale));
+                .withTileLayout(SlopeTileLayoutUtils.createLeft45SlopeLayout(spriteWidth, (int) tileScale));
+
 
         mapTiles.add(rightSlopeTile);
         

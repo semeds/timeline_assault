@@ -117,6 +117,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
 
+                
                 for (Enemy enemy : map.getActiveEnemies()) {
                     enemy.update(player);
                     if (playerCollidesWith(enemy)) {
