@@ -22,7 +22,7 @@ public class WeaponPickup extends NPC {
     private static Frame weaponFrame; // Frame for weapon image
 
     public WeaponPickup(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("shotty.png"), 38, 14), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("apocalypse_pistol.png"), 40, 40), "DEFAULT");
         isActive = true;
         this.mapReference = map;
 
@@ -67,7 +67,7 @@ public class WeaponPickup extends NPC {
             {
                 put("DEFAULT", new Frame[] {
                         new FrameBuilder(spriteSheet.getSprite(0, 0))
-                                .withScale(2)
+                                .withScale(1.3f)
                                 .withBounds(1, 1, 38, 38)
                                 .build()
                 });

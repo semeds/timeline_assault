@@ -40,12 +40,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private Image hp3Image;
     private Image hp2Image;
     private Image hp1Image;
+    private Image coinImage;
+
     private boolean isWeaponPickedUp = false;
     private WeaponOverlay weaponOverlay;
-    private int currentAmmo = 15; //  current bullets
-    private static final int MAX_AMMO = 15; //  ammo in a magazine
+    private int coinCount = 0; 
+    public static int currentAmmo = 15; //  current bullets
+    public static final int MAX_AMMO = 15; //  ammo in a magazine
     private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
-    private boolean reloading = false; // Flag to indicate if reload is in progress
+    public static boolean reloading = false; // Flag to indicate if reload is in progress
     private int reloadTimer = 0; //  reload delay
     private static final int RELOAD_DELAY = 60; // Reload delay in frames
 
@@ -68,21 +71,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
         this.playLevelScreenState = PlayLevelScreenState.RUNNING;
 
-        Point[] spawnLocations = {
-                // new Point(450, 530),
-                // new Point(600, 530),
-        };
-
-        for (Point location : spawnLocations) {
-            DinosaurEnemy dinosaur = new DinosaurEnemy(location, new Point(location.x +
-                    150, location.y),
-                    Direction.RIGHT);
-            map.addEnemy(dinosaur);
-        }
-
         hp3Image = ImageLoader.load("ThreeHearts.png");
         hp2Image = ImageLoader.load("TwoHearts.png");
         hp1Image = ImageLoader.load("OneHeart.png");
+        coinImage = ImageLoader.load("coinForCount.png");
+        
     }
 
     private boolean playerCollidesWith(Enemy enemy) {
@@ -182,10 +175,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         reloadTimer = 0; // Start the reload timer
     }
 
-    private void finishReload() {
+    public static void finishReload() {
         reloading = false;
         currentAmmo = MAX_AMMO; // Reset ammo to maximum
     }
+
 
     public void draw(GraphicsHandler graphicsHandler) {
         switch (playLevelScreenState) {
@@ -199,6 +193,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 }
 
                 drawHitpoints(graphicsHandler);
+                drawCoinCount(graphicsHandler);
+                drawCoinForCount(graphicsHandler);
                 break;
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
@@ -220,6 +216,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
         // Draw the ammo count as "currentAmmo/MAX_AMMO"
         g2d.drawString(currentAmmo + "/" + MAX_AMMO, ammoX, ammoY);
+    }
+
+
+    private void drawCoinCount(GraphicsHandler graphicsHandler) {
+        Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.BOLD, 20));
+        String coinCount = " :" + player.getCoinCount();
+        g2d.drawString(coinCount, 730, 65);
     }
 
     private void drawHitpoints(GraphicsHandler graphicsHandler) {
@@ -265,6 +270,38 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     int scaledHeight = (int) (originalHeight * 0.25);
 
                     graphicsHandler.drawImage(bufferedImage, 700, 12, scaledWidth, scaledHeight);
+                }
+            }
+        }
+    }
+    private void drawCoinForCount(GraphicsHandler graphicsHandler) {
+        Image coinpicture = coinImage;
+        
+        if (coinpicture != null) {
+            int originalWidth = coinpicture.getWidth(null);
+            int originalHeight = coinpicture.getHeight(null);
+
+            if (originalWidth > 0 && originalHeight > 0) {
+                BufferedImage bufferedImage = new BufferedImage(originalWidth, originalHeight,
+                        BufferedImage.TYPE_INT_ARGB);
+                Graphics2D bGr = bufferedImage.createGraphics();
+
+                if (bGr != null) {
+                    bGr.drawImage(coinImage, 0, 0, null);
+                    bGr.dispose();
+
+                    int whiteRGB = 0xFFFFFFFF;
+                    for (int y = 0; y < originalHeight; y++) {
+                        for (int x = 0; x < originalWidth; x++) {
+                            if (bufferedImage.getRGB(x, y) == whiteRGB) {
+                                bufferedImage.setRGB(x, y, 0x00FFFFFF);
+                            }
+                        }
+                    }
+                    int scaledWidth = (int) (originalWidth * 0.075);
+                    int scaledHeight = (int) (originalHeight * 0.075);
+
+                    graphicsHandler.drawImage(bufferedImage, 710, 47, scaledWidth, scaledHeight);
                 }
             }
         }

@@ -41,13 +41,14 @@ public class FrameBuilder {
     }
 
     public FrameBuilder withScale(float scale) {
-        if (this.scale >= 0) {
+        if (scale >= 0) {
             this.scale = scale;
         } else {
-            this.scale = 1;
+            this.scale = 1f;
         }
         return this;
     }
+    
 
     public FrameBuilder withImageEffect(ImageEffect imageEffect) {
         this.imageEffect = imageEffect;

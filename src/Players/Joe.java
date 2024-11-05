@@ -19,12 +19,12 @@ import java.util.HashMap;
 public class Joe extends Player {
     private ArrayList<Fireball> fireballs = new ArrayList<>(); // Store fired fireballs
     private boolean facingRight = true; // Track direction Joe is facing
-    private int currentAmmo = 15; // Tracks current bullets
-    private static final int MAX_AMMO = 15; // Maximum ammo in a magazine
-    private boolean canShoot = true; // Prevents holding space to shoot continuously
-    private boolean reloading = false; // Indicates if reload is in progress
-    private int reloadTimer = 0; // Timer for reload delay
-    private static final int RELOAD_DELAY = 60; // Reload delay in frames (approx. 1 second)
+    private int currentAmmo = 15; // Tracks  bullets
+    private static final int MAX_AMMO = 15; // ammo in a magazine
+    private boolean canShoot = true; // Prevents continuous shooting
+    private boolean reloading = false; // reload is in progress
+    private int reloadTimer = 0; // reload delay
+    private static final int RELOAD_DELAY = 60; // Reload delay in frames
 
     public Joe(float x, float y) {
         super(new SpriteSheet(ImageLoader.load("test.png"), 24, 24), x, y, "STAND_RIGHT");
@@ -46,20 +46,20 @@ public class Joe extends Player {
             facingRight = false;
         }
 
-        // Only allow shooting and reloading if the weapon has been picked up
+        //  allow shooting/reloading if  weapon has been picked up
         if (WeaponPickup.weaponPickedUp) {
             if (reloading) {
-                // Increment the reload timer while reloading
+                // reload timer while reloading
                 reloadTimer++;
                 if (reloadTimer >= RELOAD_DELAY) {
-                    finishReload(); // Complete the reload after delay
+                    finishReload(); // Complete reload after delay
                 }
             } else {
                 // Shoot if SPACE is pressed, ammo is available, and Joe is not reloading
                 if (Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
                     shootFireball();
-                    currentAmmo--; // Decrease ammo by 1 for each shot
-                    canShoot = false; // Prevent continuous shooting
+                    currentAmmo--; // decrease ammo by 1 for each shot
+                    canShoot = false; // Prevents continuous shooting
                 }
 
                 // Reset canShoot when SPACE is released
