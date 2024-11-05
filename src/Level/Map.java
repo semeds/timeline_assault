@@ -21,6 +21,7 @@ import NPCs.WeaponPickup;
 import java.util.Random;
 
 
+
 /*
     This class is for defining a map that is used for a specific level
     The map class handles/manages a lot of different things, including:
@@ -83,6 +84,8 @@ public abstract class Map {
 
     public List<MapEntity> entities = new ArrayList<>();
 
+    protected EnemyWave enemyWave;
+
     public Map(String mapFileName, Tileset tileset) {
         this.mapFileName = mapFileName;
         this.tileset = tileset;
@@ -94,6 +97,7 @@ public abstract class Map {
         this.xMidPoint = ScreenManager.getScreenWidth() / 2;
         this.yMidPoint = (ScreenManager.getScreenHeight() / 2);
         this.playerStartPosition = new Point(0, 0);
+        this.enemyWave = new EnemyWave(player);
     }
 
     
@@ -268,6 +272,15 @@ public abstract class Map {
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
     }
+
+// Wave system:
+    // Start a new wave on the map
+    public void startWave(Player player) {
+        enemyWave = new EnemyWave(player); // Create a new wave
+        enemyWave.startWave();
+    }
+
+
 
     public String getMapFileName() {
         return mapFileName;
@@ -446,6 +459,11 @@ public abstract class Map {
             adjustMovementX(player);
         }
         camera.update(player);
+
+        // Update enemies in the active wave
+        for (Enemy enemy : enemyWave.getEnemies()) {
+            enemy.update(player);  // Update each enemy
+        }
     }
 
     // based on the player's current X position (which in a level can potentially be
@@ -524,6 +542,9 @@ public abstract class Map {
 
     public void draw(GraphicsHandler graphicsHandler) {
         camera.draw(graphicsHandler);
+        for (Enemy enemy : enemyWave.getEnemies()) {
+            enemy.draw(graphicsHandler);  // Draw each enemy in the wave
+        }
     }
 
     public int getEndBoundX() {

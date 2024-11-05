@@ -1,7 +1,6 @@
 package Maps;
 
 import Collectibles.Coin;
-import Enemies.ZombieEnemy;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
@@ -11,7 +10,6 @@ import NPCs.Walrus;
 import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
-import Utils.Point;
 import java.util.ArrayList;
 
 // Represents a test map to be used in a level

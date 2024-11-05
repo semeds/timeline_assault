@@ -8,6 +8,7 @@ import Engine.Screen;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Enemy;
+import Level.EnemyWave;
 import Level.Map;
 import Level.MapEntity;
 import Level.Player;
@@ -20,6 +21,8 @@ import Utils.Point;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import NPCs.WeaponPickup;
 import Engine.WeaponOverlay;
 import java.awt.Color;
@@ -51,6 +54,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public static boolean reloading = false; // Flag to indicate if reload is in progress
     private int reloadTimer = 0; //  reload delay
     private static final int RELOAD_DELAY = 60; // Reload delay in frames
+
+    private int currentWave = 0;
+    private boolean waveActive = false;
+    private EnemyWave enemyWave;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -93,6 +100,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 player.update();
                 map.update(player);
 
+                map.startWave(player);
+                //updateEnemies();
+                if (map.isWaveComplete()) {
+                    map.startWave(player);
+                }
+
                 if (reloading) {
                     // reload timer while reloading
                     reloadTimer++;
@@ -115,25 +128,6 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     if (isWeaponPickedUp && Keyboard.isKeyDown(Key.R)) {
                         startReload();
                     }
-                }
-
-                for (Enemy enemy : map.getActiveEnemies()) {
-                    enemy.update(player);
-                    if (playerCollidesWith(enemy)) {
-                        player.hurtPlayer(enemy);
-                        enemy.touchedPlayer(player);
-                    }
-                    for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
-                        MapEntity projectile = map.getProjectiles().get(i);
-                        if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
-                            ((Fireball) projectile).touchedEntity(enemy);
-                            map.removeProjectile(projectile);
-                        }
-                    }
-                }
-
-                if (WeaponPickup.showOverlay) {
-                    isWeaponPickedUp = true;
                 }
 
                 break;
@@ -169,6 +163,35 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         player = armedJoe;
         armedJoe.update();
     }
+
+    /* 
+    private void updateEnemies() {
+        ArrayList<Enemy> enemiesToRemove = new ArrayList<>();
+
+        for (Enemy enemy : enemyWave.getEnemies()) {
+            enemy.update(player);
+
+            // Check collision with player
+            if (playerCollidesWith(enemy)) {
+                player.hurtPlayer(enemy);
+                enemy.touchedPlayer(player);
+            }
+
+            // Check for projectile collisions
+            for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
+                MapEntity projectile = map.getProjectiles().get(i);
+                if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
+                    ((Fireball) projectile).touchedEntity(enemy);
+                    map.removeProjectile(projectile);
+                    enemiesToRemove.add(enemy);  // Mark enemy for removal if hit by a projectile
+                }
+            }
+        }
+
+        // Remove defeated enemies
+        enemyWave.getEnemies().removeAll(enemiesToRemove);
+    }
+    */
 
     private void startReload() {
         reloading = true;
