@@ -107,7 +107,7 @@ public class Enemy extends MapEntity {
             facingDirection = Direction.RIGHT;
         }
 
-        // For if/when enemies can move vertically
+        // For if enemies can move vertically
         /* 
         float playerY = player.getY();
         if (playerY < this.getY()) {

@@ -245,11 +245,12 @@ public abstract class Map {
 
         Random random = new Random();
         int chance = random.nextInt(10);
-        if (chance >= 0 && chance <= 2) {
+        if (/* chance >= 0 && */ chance <= 2) {
             //25% Chance of HP
             hp.setMap(this);
             getNPCs().add(hp);
-        } else if (chance >= 3 && chance <= 5) {
+         
+        }/*else if (chance >= 3 && chance <= 5) {
             //25% chance of speed boost
             speedboost.setMap(this);
             getNPCs().add(speedboost);
@@ -257,7 +258,7 @@ public abstract class Map {
            //20% chance of maxammo
             maxammo.setMap(this);
             getNPCs().add(maxammo);
-        } else {  
+        }*/ else {  
            //20% chance of instakill
             instakill.setMap(this);
             getNPCs().add(instakill);

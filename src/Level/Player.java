@@ -48,9 +48,9 @@ public abstract class Player extends GameObject {
     // Invincibility variables
     protected boolean isInvincible = false; // if true, player cannot be hurt by enemies (good for testing)
     private long invincibilityStartTime;
-    private long pwinvincibilityStartTime;
+    //private long pwinvincibilityStartTime;
     private static final long INVINCIBILITY_DURATION = 1000;
-    private static final long PWINVINCIBILITY_DURATION = 10000;
+    //private static final long PWINVINCIBILITY_DURATION = 10000;
 
     // SpeedBoost variables
     private boolean speedBoostActive = false;
@@ -58,6 +58,11 @@ public abstract class Player extends GameObject {
     private static final int SPEED_BOOST_DURATION = 5000; // 5 seconds
     private float normalSpeed;
     private float boostedSpeed = 10.0f;
+
+    //InstaKill variables
+    private boolean instaKillMode = false;
+    private long instaKillStartTime;
+    private static final long INSTA_KILL_DURATION = 10000; // 10 seconds
 
     private int coinCount = 0; 
 
@@ -79,6 +84,16 @@ public abstract class Player extends GameObject {
         playerState = PlayerState.STANDING;
         previousPlayerState = playerState;
         levelState = LevelState.RUNNING;
+    }
+
+    public void activateInstaKill() {
+        instaKillMode = true;
+        instaKillStartTime = System.currentTimeMillis();
+        
+        // Set all active enemies' hitPoints to 1
+        for (Enemy enemy : map.getActiveEnemies()) {
+            enemy.hitPoints = 1;
+        }
     }
 
     @Override
@@ -138,6 +153,19 @@ public abstract class Player extends GameObject {
             isInvincible = false;  // End invincibility after 10 seconds
         }
         */
+
+        // Check if insta-kill mode duration has expired
+        if (instaKillMode && (System.currentTimeMillis() - instaKillStartTime >= INSTA_KILL_DURATION)) {
+            instaKillMode = false; // End insta-kill mode after 10 seconds
+        }
+
+        // Continuously set active enemies' hitPoints to 1 while insta-kill mode is active
+        if (instaKillMode) {
+            for (Enemy enemy : map.getActiveEnemies()) {
+                enemy.hitPoints = 1; // Keep hitPoints at 1 for all enemies on screen
+            }
+        }
+
     }
 
     // add gravity to player, which is a downward force
