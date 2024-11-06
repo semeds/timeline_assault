@@ -1,6 +1,7 @@
 package Maps;
 
 import Collectibles.Coin;
+import Enemies.ZombieEnemy;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
@@ -10,6 +11,7 @@ import NPCs.Walrus;
 import NPCs.WeaponPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
+import Utils.Point;
 import java.util.ArrayList;
 
 // Represents a test map to be used in a level
@@ -41,7 +43,31 @@ public class TestMap extends Map {
      * return enemies;
      * }
      */
+    @Override
+    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
     
+        ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
+
+        // Define Wave 1: Add a few ZombieEnemies
+        ArrayList<Enemy> wave1 = new ArrayList<>();
+        wave1.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.RIGHT));
+        wave1.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.LEFT));
+        waves.add(wave1);
+
+        // Define Wave 2: Add more ZombieEnemies
+        ArrayList<Enemy> wave2 = new ArrayList<>();
+        wave2.add(new ZombieEnemy(new Point(100, 523), new Point(200, 523), Direction.RIGHT));
+        waves.add(wave2);
+
+        // Define Wave 3: Add even more ZombieEnemies
+        ArrayList<Enemy> wave3 = new ArrayList<>();
+        wave3.add(new ZombieEnemy(new Point(200, 523), new Point(400, 523), Direction.RIGHT));
+        wave3.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.LEFT));
+        waves.add(wave3);
+
+        return waves;
+    }
+
     @Override
     public ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
         ArrayList<EnhancedMapTile> enhancedMapTiles = new ArrayList<>();

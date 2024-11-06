@@ -64,7 +64,7 @@ public class Map2 extends Map {
         npcs.add(walrus);
     
         // Adding the WeaponPickup NPC
-        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(7, 15).getLocation(), this);
+        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(9, 15).getLocation(), this);
         npcs.add(weaponPickup); 
     
         return npcs;
