@@ -4,12 +4,12 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
-public class WeaponOverlay {
+public class APistolOverlay {
     private Image pistolImage;
     private int x, y;
     private int width, height; 
 
-    public WeaponOverlay() {
+    public APistolOverlay() {
         pistolImage = new ImageIcon("Resources/Transparent.APistol.png").getImage();
         
         // Position set to the bottom-left corner 
