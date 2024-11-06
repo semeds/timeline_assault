@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.print.DocFlavor.READER;
+
 import NPCs.WeaponPickup;
 import java.util.Random;
 
@@ -84,7 +87,8 @@ public abstract class Map {
 
     public List<MapEntity> entities = new ArrayList<>();
 
-    protected EnemyWave enemyWave;
+    private EnemyWave enemyWave;
+    private boolean waveActive = false;
 
     public Map(String mapFileName, Tileset tileset) {
         this.mapFileName = mapFileName;
@@ -97,18 +101,21 @@ public abstract class Map {
         this.xMidPoint = ScreenManager.getScreenWidth() / 2;
         this.yMidPoint = (ScreenManager.getScreenHeight() / 2);
         this.playerStartPosition = new Point(0, 0);
-        this.enemyWave = new EnemyWave(player);
-    }
+        enemyWave = new EnemyWave(null);
 
+    }
     
 
     // sets up map by reading in the map file to create the tile map
     // loads in enemies, enhanced map tiles, and npcs
     // and instantiates a Camera
     public void setupMap() {
-        this.enemies = new ArrayList<>();
+        this.enemies = loadEnemies();
         
         this.animatedMapTiles = new ArrayList<>();
+        for (Enemy enemy : this.enemies) {
+            enemy.setMap(this); // Assign the map to each enemy when initializing
+        }
 
         loadMapFile();
 
@@ -272,15 +279,6 @@ public abstract class Map {
     public void removeEnemy(Enemy enemy) {
         enemies.remove(enemy);
     }
-
-// Wave system:
-    // Start a new wave on the map
-    public void startWave(Player player) {
-        enemyWave = new EnemyWave(player); // Create a new wave
-        enemyWave.startWave();
-    }
-
-
 
     public String getMapFileName() {
         return mapFileName;
@@ -453,6 +451,23 @@ public abstract class Map {
         this.adjustCamera = adjustCamera;
     }
 
+    public void startWave(Player player) {
+        if (enemyWave == null) {
+            enemyWave = new EnemyWave(player);
+        }
+
+        enemyWave.startWave();
+        waveActive = true;
+
+        if (waveActive) {
+            ArrayList<Enemy> activeEnemies = enemyWave.getEnemies();
+            activeEnemies.removeIf(enemy -> enemy.isDefeated()); // Remove defeated enemies
+            if (activeEnemies.isEmpty()) {
+                waveActive = false; // End wave if all enemies are defeated
+            }
+        }
+    }
+
     public void update(Player player) {
         if (adjustCamera) {
             adjustMovementY(player);
@@ -543,7 +558,7 @@ public abstract class Map {
     public void draw(GraphicsHandler graphicsHandler) {
         camera.draw(graphicsHandler);
         for (Enemy enemy : enemyWave.getEnemies()) {
-            enemy.draw(graphicsHandler);  // Draw each enemy in the wave
+            enemy.draw(graphicsHandler);
         }
     }
 
@@ -554,4 +569,9 @@ public abstract class Map {
     public int getEndBoundY() {
         return endBoundY;
     }
+
+    public EnemyWave getEnemyWave() {
+        return enemyWave;
+    }
 }
+

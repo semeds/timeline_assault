@@ -20,6 +20,7 @@ public class EnemyWave {
 
     public void startWave() {
         waveNumber++;
+        enemies.clear();
 
         int enemyCount = Math.min(baseEnemyCount + waveNumber, maxEnemyCount);
         for (int i = 0; i < enemyCount; i++) {
@@ -34,5 +35,9 @@ public class EnemyWave {
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public boolean isWaveComplete() {
+        return enemies.isEmpty();
     }
 }
