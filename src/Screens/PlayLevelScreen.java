@@ -58,6 +58,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private int currentWave = 0;
     private boolean waveActive = false;
     private EnemyWave enemyWave;
+    private Boolean waveInProgress = false;
 
     public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
         this.screenCoordinator = screenCoordinator;
@@ -82,6 +83,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         hp2Image = ImageLoader.load("TwoHearts.png");
         hp1Image = ImageLoader.load("OneHeart.png");
         coinImage = ImageLoader.load("coinForCount.png");
+
+        map.startWave(player);
+        waveInProgress = true;
         
     }
 
@@ -100,10 +104,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 player.update();
                 map.update(player);
 
-                map.startWave(player);
-                //updateEnemies();
-                if (map.isWaveComplete()) {
+                // Start the next wave if the current wave is complete
+                if (waveInProgress && map.isWaveComplete()) {
+                    waveInProgress = false;
                     map.startWave(player);
+                    waveInProgress = true;
                 }
 
                 if (reloading) {

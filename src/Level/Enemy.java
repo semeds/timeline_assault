@@ -117,4 +117,8 @@ public class Enemy extends MapEntity {
         }
         */
     }
+
+    public boolean isDefeated() {
+        return hitPoints <= 0;
+    }
 }

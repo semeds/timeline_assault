@@ -24,13 +24,13 @@ public class Map1 extends Map {
     @Override
     public ArrayList<Enemy> loadEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
-
+        /* 
         BugEnemy bugEnemy = new BugEnemy(getMapTile(16, 10).getLocation().subtractY(25), Direction.LEFT);
         enemies.add(bugEnemy);
 
         DinosaurEnemy dinosaurEnemy = new DinosaurEnemy(getMapTile(19, 1).getLocation().addY(2), getMapTile(22, 1).getLocation().addY(2), Direction.RIGHT);
         enemies.add(dinosaurEnemy);
-
+        */
         return enemies;
     }
 
@@ -64,7 +64,7 @@ public class Map1 extends Map {
         npcs.add(walrus);
     
         // Adding the WeaponPickup NPC
-        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(7, 15).getLocation(), this);
+        WeaponPickup weaponPickup = new WeaponPickup(getMapTile(7, 13).getLocation(), this);
         npcs.add(weaponPickup); 
     
         return npcs;

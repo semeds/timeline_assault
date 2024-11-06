@@ -62,12 +62,14 @@ public class Camera extends Rectangle {
     // update map entities currently a part of the update/draw cycle
     // active entities are calculated each frame using the loadActiveEntity methods below
     public void updateMapEntities(Player player) {
-        activeEnemies = loadActiveEnemies();
+        ArrayList<Enemy> activeEnemies = map.getEnemyWave().getEnemies();
         activeEnhancedMapTiles = loadActiveEnhancedMapTiles();
         activeNPCs = loadActiveNPCs();
 
         for (Enemy enemy : activeEnemies) {
-            enemy.update(player);
+            if (isMapEntityActive(enemy)) {
+                enemy.update(player);
+            }
         }
 
         for (EnhancedMapTile enhancedMapTile : activeEnhancedMapTiles) {
@@ -154,6 +156,13 @@ public class Camera extends Rectangle {
     public void draw(GraphicsHandler graphicsHandler) {
         drawMapTiles(graphicsHandler);
         drawMapEntities(graphicsHandler);
+        
+        ArrayList<Enemy> activeEnemies = map.getEnemyWave().getEnemies();
+        for (Enemy enemy : activeEnemies) {
+            if (containsDraw(enemy)) {
+                enemy.draw(graphicsHandler);
+            }
+        }
     }
 
     // draws visible map tiles to the screen
