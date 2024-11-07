@@ -26,7 +26,7 @@ public class AAsaultRiflePickup extends NPC {
 
 
    public AAsaultRiflePickup(Point location, Map map) {
-       super(location.x, location.y, new SpriteSheet(ImageLoader.load("apocalypse_ar.png"), 40, 40), "DEFAULT");
+       super(location.x, location.y, new SpriteSheet(ImageLoader.load("apocalypse_ar.png"), 50, 50), "DEFAULT");
        isActive = true;
        this.mapReference = map;
 
