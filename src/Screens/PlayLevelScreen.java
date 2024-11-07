@@ -13,7 +13,6 @@ import Level.Map;
 import Level.MapEntity;
 import Level.Player;
 import Level.PlayerListener;
-import Maps.TestMap;
 import Players.Joe;
 import Players.ArmedJoe;
 import Utils.Direction;
@@ -32,6 +31,7 @@ import java.awt.Color;
 import java.awt.Font;
 import Engine.Key;
 import Engine.Keyboard;
+import Maps.*;
 
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -81,6 +81,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private int shotgunCooldownTimer = 0; // Timer to control firing rate for shotgun
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
+   private boolean isMap1Loaded = false;
 
    public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
@@ -91,8 +92,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    public void initialize() {
-       resetWeaponStatus();
-       this.map = new TestMap();
+        resetWeaponStatus();
+        if (!isMap1Loaded) {
+            this.map = new TestMap(); // Start with TestMap
+        } else {
+            this.map = new Map1(); // Switch to Map1 after TestMap
+        }
 
 
        // Start the player as normal Joe
@@ -113,6 +118,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
        hp1Image = ImageLoader.load("OneHeart.png");
 
        coinImage = ImageLoader.load("coinForCount.png");
+
+       map.setupMap();
    }
 
 
@@ -149,12 +156,17 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
   
                player.update();
                map.update(player);
+
+               if (map.isWaveComplete() && map instanceof TestMap && !isMap1Loaded) {
+                System.out.println("All waves in TestMap are complete. Switching to Map1...");
+                onLevelCompleted(); // Manually trigger level completion
+            }
+
   
                // Handle reloading and shooting
                if (reloading) {
                    reloadTimer++;
-                   System.out.println("Reloading... Timer: " + reloadTimer); // Debug statement
-              
+                   
                    if (reloadTimer >= RELOAD_DELAY) {
                        finishReload();
                        reloadTimer = 0; // Reset the timer after reloading
@@ -442,10 +454,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
    @Override
    public void onLevelCompleted() {
-       if (playLevelScreenState != PlayLevelScreenState.LEVEL_COMPLETED) {
-           playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
-           levelCompletedStateChangeStart = true;
-       }
+        if (!isMap1Loaded) {
+            System.out.println("Level Complete! Switching to Map1...");
+            isMap1Loaded = true;
+            initialize(); // Reinitialize to load Map1
+        } else {
+            System.out.println("All levels completed!");
+            // Optionally, add logic here to show an end screen or go back to the menu
+        }
    }
 
 
