@@ -149,11 +149,13 @@ public int getShotgunAmmo() {
            currentAmmo--;
            canShoot = false;
        } else if (isAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0
-               && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-           shootFireball(240);
-           assaultRifleAmmo--;
-           fireCooldownTimer = 0;
-       }
+       && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+   shootFireball(240); // Fire a projectile with a 240-frame lifetime
+   assaultRifleAmmo--; // Reduce ammo count by 1
+   PlayLevelScreen.assaultRifleAmmo = assaultRifleAmmo; // Sync display ammo count for assault rifle
+   fireCooldownTimer = 0; // Reset cooldown timer
+}
+
       
        else if (isShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0
        && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
