@@ -10,7 +10,9 @@ import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.Player;
 import Enemies.Fireball; // Import the Fireball class
-import NPCs.WeaponPickup; // Import the WeaponPickup to check if weapon was picked up
+import NPCs.AAsaultRiflePickup;
+import NPCs.APistolPickup;
+import NPCs.AShotgunPickup;
 import Utils.Point;
 
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class ArmedJoe extends Player {
         }
 
         // This only allows the gun to shoot if the weapon was picked up
-        if (WeaponPickup.weaponPickedUp) {
+        if (AAsaultRiflePickup.weaponPickedUp) {
             if (Keyboard.isKeyDown(Key.SPACE) && fireballCooldown == 0) {
                 shootFireball();
                 fireballCooldown = 30;
@@ -67,7 +69,7 @@ public class ArmedJoe extends Player {
         super.draw(graphicsHandler);
 
         // Draws fireballs if weapon was picked up
-        if (WeaponPickup.weaponPickedUp) {
+        if (AAsaultRiflePickup.weaponPickedUp) {
             for (Fireball fireball : fireballs) {
                 fireball.draw(graphicsHandler);
             }

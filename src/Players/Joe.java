@@ -46,6 +46,24 @@ public class Joe extends Player {
    // NEW variables for shotgun cooldown
    private int shotgunCooldownTimer = 0;
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun
+   
+
+   private void resetWeaponStatus() {
+    isPistolEquipped = false;
+    isAssaultRifleEquipped = false;
+    isShotgunEquipped = false;
+    currentAmmo = MAX_AMMO; // Reset ammo for pistol
+    assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO; // Reset ammo for assault rifle
+    shotgunAmmo = SHOTGUN_MAX_AMMO; // Reset ammo for shotgun
+    APistolPickup.weaponPickedUp = false;
+    AAsaultRiflePickup.weaponPickedUp = false;
+    AShotgunPickup.weaponPickedUp = false;
+
+    APistolPickup.weaponPickedUp = false; // Ensure pistol overlay is disabled
+    AAsaultRiflePickup.weaponPickedUp = false; // Ensure assault rifle overlay is disabled
+    AShotgunPickup.weaponPickedUp = false; // Ensure shotgun overlay is disabled
+}
+
 
 
    public Joe(float x, float y) {
@@ -60,85 +78,73 @@ public class Joe extends Player {
 
 
    public void update() {
-       super.update();
+    super.update();
+
+    // Update direction based on player input
+    if (Keyboard.isKeyDown(Key.RIGHT)) {
+        facingRight = true;
+    } else if (Keyboard.isKeyDown(Key.LEFT)) {
+        facingRight = false;
+    }
+
+    // Equip the correct weapon and reset others
+    if (APistolPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isPistolEquipped = true;
+    } else if (AAsaultRiflePickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isAssaultRifleEquipped = true;
+    } else if (AShotgunPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isShotgunEquipped = true;
+    }
+
+    // Reloading logic
+    if (reloading) {
+        reloadTimer++;
+        if (reloadTimer >= RELOAD_DELAY) {
+            finishReload();
+        }
+    } else {
+        // Shooting logic based on the equipped weapon
+        fireCooldownTimer++;
+        shotgunCooldownTimer++;
+
+        if (isPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
+            shootFireball();
+            currentAmmo--;
+            canShoot = false;
+        } else if (isAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0 
+                && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+            shootFireball();
+            assaultRifleAmmo--;
+            fireCooldownTimer = 0;
+        } else if (isShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0 
+                && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+            shootFireball();
+            shotgunAmmo--;
+            shotgunCooldownTimer = 0;
+        }
+
+        if (!Keyboard.isKeyDown(Key.SPACE)) {
+            canShoot = true;
+        }
+
+        // Start reload when R is pressed
+        if (Keyboard.isKeyDown(Key.R)) {
+            startReload();
+        }
+    }
+
+    // Update fireballs
+    for (Fireball fireball : fireballs) {
+        fireball.update(this);
+    }
+    fireballs.removeIf(fireball -> fireball.getMapEntityStatus() == Level.MapEntityStatus.REMOVED);
+}
 
 
-       // Update direction based on player input
-       if (Keyboard.isKeyDown(Key.RIGHT)) {
-           facingRight = true;
-       } else if (Keyboard.isKeyDown(Key.LEFT)) {
-           facingRight = false;
-       }
 
-
-       // Check if pistol, assault rifle, or shotgun is picked up and set flags accordingly
-       if (APistolPickup.weaponPickedUp) {
-           isPistolEquipped = true;
-           isAssaultRifleEquipped = false;
-           isShotgunEquipped = false;
-       }
-       if (AAsaultRiflePickup.weaponPickedUp) {
-           isPistolEquipped = false;
-           isAssaultRifleEquipped = true;
-           isShotgunEquipped = false;
-       }
-       if (AShotgunPickup.weaponPickedUp) {
-           isPistolEquipped = false;
-           isAssaultRifleEquipped = false;
-           isShotgunEquipped = true;
-       }
-
-
-       // Reloading logic
-       if (reloading) {
-           reloadTimer++;
-           if (reloadTimer >= RELOAD_DELAY) {
-               finishReload(); // Complete reload after delay
-           }
-       } else {
-           // Increment cooldown timers for each weapon
-           fireCooldownTimer++;
-           shotgunCooldownTimer++;
-
-
-           // Shooting logic
-           if (isPistolEquipped && !isAssaultRifleEquipped && !isShotgunEquipped) { // Pistol shooting
-               if (Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
-                   shootFireball();
-                   currentAmmo--; // Decrease ammo by 1 for each shot
-                   canShoot = false; // Prevents continuous shooting
-               }
-               if (!Keyboard.isKeyDown(Key.SPACE)) {
-                   canShoot = true; // Reset canShoot when SPACE is released
-               }
-           } else if (isAssaultRifleEquipped && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) { // Assault rifle automatic firing with cooldown
-               if (Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0) {
-                   shootFireball();
-                   assaultRifleAmmo--; // Decrease ammo by 1 for each shot
-                   fireCooldownTimer = 0; // Reset cooldown timer
-               }
-           } else if (isShotgunEquipped && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) { // Shotgun shooting with delay
-               if (Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0) {
-                   shootFireball(); // Fires shotgun bullet
-                   shotgunAmmo--; // Decrease ammo by 1 for each shot
-                   shotgunCooldownTimer = 0; // Reset shotgun cooldown timer
-               }
-           }
-
-
-           // Initiate reload when R is pressed
-           if (Keyboard.isKeyDown(Key.R)) {
-               startReload();
-           }
-       }
-
-
-       // Update fireballs
-       for (Fireball fireball : fireballs) {
-           fireball.update(this); // Pass the player for collision checking
-       }
-       fireballs.removeIf(fireball -> fireball.getMapEntityStatus() == Level.MapEntityStatus.REMOVED);
-   }
 
 
    private void startReload() {
@@ -149,45 +155,45 @@ public class Joe extends Player {
 
 
    private void finishReload() {
-       reloading = false;
-       if (isPistolEquipped) {
-           currentAmmo = MAX_AMMO; // Refill pistol ammo
-       } else if (isAssaultRifleEquipped) {
-           assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO; // Refill assault rifle ammo
-       } else if (isShotgunEquipped) {
-           shotgunAmmo = SHOTGUN_MAX_AMMO; // Refill shotgun ammo
-       }
-       canShoot = true; // Enable shooting after reload
-   }
+    reloading = false;
+    if (isPistolEquipped) {
+        currentAmmo = MAX_AMMO; // Reset pistol ammo
+    } else if (isAssaultRifleEquipped) {
+        assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO; // Reset assault rifle ammo
+    } else if (isShotgunEquipped) {
+        shotgunAmmo = SHOTGUN_MAX_AMMO; // Reset shotgun ammo
+    }
+}
 
 
-   private void shootFireball() {
-       // Position fireball to come directly from Joe
-       Point fireballStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
-       float fireballSpeed = 5.0f; // Fireball speed
-       int fireballLifetime = 120;
+private void shootFireball() {
+    Point fireballStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
+    float fireballSpeed = 5.0f;
+    float movementSpeed = facingRight ? fireballSpeed : -fireballSpeed;
+
+    Fireball fireball = new Fireball(fireballStart, movementSpeed, 120); // 120 frames lifetime
+
+    if (map != null) {
+        fireball.setMap(map);
+        map.addProjectile(fireball);
+    }
+
+    fireballs.add(fireball);
+}
 
 
-       // Fireball shoots in direction player is facing
-       float movementSpeed = facingRight ? fireballSpeed : -fireballSpeed;
-       Fireball fireball = new Fireball(fireballStart, movementSpeed, fireballLifetime);
-       fireball.setMap(map);
 
 
-       fireballs.add(fireball);
-       map.addProjectile(fireball);
-   }
 
+public void draw(GraphicsHandler graphicsHandler) {
+    super.draw(graphicsHandler);
 
-   public void draw(GraphicsHandler graphicsHandler) {
-       super.draw(graphicsHandler);
+    // Draw each fireball
+    for (Fireball fireball : fireballs) {
+        fireball.draw(graphicsHandler);
+    }
+}
 
-
-       // Draws fireballs
-       for (Fireball fireball : fireballs) {
-           fireball.draw(graphicsHandler);
-       }
-   }
 
 
    @Override

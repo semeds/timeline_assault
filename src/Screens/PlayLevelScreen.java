@@ -49,6 +49,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private boolean isWeaponPickedUp = false;
     private boolean isAssaultRiflePickedUp = false; // Assault rifle flag
     private boolean isShotgunPickedUp = false; // Shotgun flag
+    private boolean showPistolOverlay = false;
+    private boolean showAssaultRifleOverlay = false;
+    private boolean showShotgunOverlay = false;
     private APistolOverlay apistolOverlay;
     private AAsaultrifleOverlay aassaultRifleOverlay; // Assault rifle overlay
     private AShotgunOverlay ashotgunOverlay; // Shotgun overlay
@@ -103,61 +106,67 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     public void update() {
         switch (playLevelScreenState) {
             case RUNNING:
-                if (!isWeaponPickedUp && APistolPickup.weaponPickedUp) {
-                    switchToArmedJoe();
+                if (APistolPickup.weaponPickedUp && !isWeaponPickedUp) {
                     isWeaponPickedUp = true;
-                }
-
-                if (!isAssaultRiflePickedUp && AAsaultRiflePickup.weaponPickedUp) { // Check assault rifle pickup
-                    switchToArmedJoe();
+                    showPistolOverlay = true;
+                    showAssaultRifleOverlay = false;
+                    showShotgunOverlay = false;
+                } else if (AAsaultRiflePickup.weaponPickedUp && !isAssaultRiflePickedUp) {
                     isAssaultRiflePickedUp = true;
-                }
-
-                if (!isShotgunPickedUp && AShotgunPickup.weaponPickedUp) { // Check shotgun pickup
-                    switchToArmedJoe();
+                    showPistolOverlay = false;
+                    showAssaultRifleOverlay = true;
+                    showShotgunOverlay = false;
+                } else if (AShotgunPickup.weaponPickedUp && !isShotgunPickedUp) {
                     isShotgunPickedUp = true;
+                    showPistolOverlay = false;
+                    showAssaultRifleOverlay = false;
+                    showShotgunOverlay = true;
                 }
 
+                if (Keyboard.isKeyDown(Key.R) && !reloading) {  // Replace with the desired key
+                    startReload();
+                }
+                
+    
                 player.update();
                 map.update(player);
-
+    
+                // Handle reloading and shooting
                 if (reloading) {
                     reloadTimer++;
+                    System.out.println("Reloading... Timer: " + reloadTimer); // Debug statement
+                
                     if (reloadTimer >= RELOAD_DELAY) {
                         finishReload();
+                        reloadTimer = 0; // Reset the timer after reloading
                     }
-                } else {
-                    // Increment cooldown timers
+                }
+                
+                else {
                     fireCooldownTimer++;
                     shotgunCooldownTimer++;
-
-                    // Shoot when SPACE is pressed / if ammo is available
-                    if (isWeaponPickedUp && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
-                        currentAmmo--; // Reduce ammo by 1
-                        canShoot = false; // Prevents holding SPACE for shots
-                    } else if (isAssaultRiflePickedUp && Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0 
-                            && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) { // Automatic fire for assault rifle with cooldown
-                        assaultRifleAmmo--; // Decrement assault rifle ammo
-                        fireCooldownTimer = 0; // Reset cooldown timer
-                    } else if (isShotgunPickedUp && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0 
-                            && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) { // Shotgun fire with cooldown
-                        shotgunAmmo--; // Decrement shotgun ammo
-                        shotgunCooldownTimer = 0; // Reset shotgun cooldown timer
+    
+                    if (Keyboard.isKeyDown(Key.SPACE) && canShoot) {
+                        if (isWeaponPickedUp && currentAmmo > 0) {
+                            currentAmmo--;
+                            canShoot = false;
+                            spawnFireball();
+                        } else if (isAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+                            assaultRifleAmmo--;
+                            fireCooldownTimer = 0;
+                            spawnFireball();
+                        } else if (isShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+                            shotgunAmmo--;
+                            shotgunCooldownTimer = 0;
+                            spawnFireball();
+                        }
                     }
-
-                    // Reset canShoot when SPACE is released
                     if (!Keyboard.isKeyDown(Key.SPACE)) {
                         canShoot = true;
                     }
-
-                    // Initiate reload if "R" is pressed for any weapon
-                    if ((isWeaponPickedUp && Keyboard.isKeyDown(Key.R)) || 
-                        (isAssaultRiflePickedUp && Keyboard.isKeyDown(Key.R)) || 
-                        (isShotgunPickedUp && Keyboard.isKeyDown(Key.R))) {
-                        startReload();
-                    }
                 }
-
+    
+                // Check for any collisions and other actions
                 for (Enemy enemy : map.getActiveEnemies()) {
                     enemy.update(player);
                     if (playerCollidesWith(enemy)) {
@@ -172,21 +181,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         }
                     }
                 }
-
-                if (APistolPickup.showOverlay) {
-                    isWeaponPickedUp = true;
-                }
-
-                if (AAsaultRiflePickup.showOverlay) { // Show assault rifle overlay if picked up
-                    isAssaultRiflePickedUp = true;
-                }
-
-                if (AShotgunPickup.showOverlay) { // Show shotgun overlay if picked up
-                    isShotgunPickedUp = true;
-                }
-
                 break;
-
+    
             case LEVEL_COMPLETED:
                 if (levelCompletedStateChangeStart) {
                     screenTimer = 130;
@@ -199,13 +195,24 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-
+    
             case LEVEL_LOSE:
                 levelLoseScreen.update();
                 resetWeaponStatus();
                 break;
         }
     }
+    
+    
+    
+    
+    // Helper method to spawn a fireball for the player
+    private void spawnFireball() {
+        // Logic to spawn a fireball projectile from the player's location
+    }
+    
+    
+    
 
     private void switchToArmedJoe() {
         float currentX = player.getX();
@@ -222,11 +229,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     private void startReload() {
         reloading = true;
         reloadTimer = 0; // Start the reload timer
+        System.out.println("Reload started"); // Debug statement
     }
+     
 
     public static void finishReload() {
+        System.out.println("Reload complete");  // Debug statement
         reloading = false;
-        if (AAsaultRiflePickup.weaponPickedUp) { // Check for assault rifle reload
+        if (AAsaultRiflePickup.weaponPickedUp) { // Assault rifle reload
             assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
         } else if (APistolPickup.weaponPickedUp) { // Pistol reload
             currentAmmo = MAX_AMMO;
@@ -234,39 +244,44 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             shotgunAmmo = SHOTGUN_MAX_AMMO;
         }
     }
+    
+    
 
     public void draw(GraphicsHandler graphicsHandler) {
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
                 player.draw(graphicsHandler);
-
-                if (isWeaponPickedUp) {
+    
+                if (showPistolOverlay) {
                     apistolOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); // Draw pistol ammo
                 }
-
-                if (isAssaultRiflePickedUp) { // Draw assault rifle overlay and ammo count
+    
+                if (showAssaultRifleOverlay) { // Draw assault rifle overlay and ammo count
                     aassaultRifleOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO);
                 }
-
-                if (isShotgunPickedUp) { // Draw shotgun overlay and ammo count
+    
+                if (showShotgunOverlay) { // Draw shotgun overlay and ammo count
                     ashotgunOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO);
                 }
-
+    
                 drawHitpoints(graphicsHandler);
                 drawCoinForCount(graphicsHandler);
                 break;
+    
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
                 break;
+    
             case LEVEL_LOSE:
                 levelLoseScreen.draw(graphicsHandler);
                 break;
         }
     }
+    
 
     private void drawAmmoCount(GraphicsHandler graphicsHandler, int currentAmmo, int maxAmmo) {
         Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
