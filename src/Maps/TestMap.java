@@ -24,52 +24,6 @@ public class TestMap extends Map {
         this.playerStartPosition = getMapTile(2, 11).getLocation();
     }
 
-    /*
-     * @Override
-     * public ArrayList<Enemy> loadEnemies() {
-     * ArrayList<Enemy> enemies = new ArrayList<>();
-     * 
-     * BugEnemy bugEnemy = new BugEnemy(getMapTile(16,
-     * 10).getLocation().subtractY(25), Direction.LEFT);
-     * enemies.add(bugEnemy);
-     * 
-     * DinosaurEnemy dinosaurEnemy = new DinosaurEnemy(getMapTile(19,
-     * 1).getLocation().addY(2), getMapTile(22, 1).getLocation().addY(2),
-     * Direction.RIGHT);
-     * enemies.add(dinosaurEnemy);
-     * 
-     * ZombieEnemy zombieEnemy = new ZombieEnemy(getMapTile(0,10).getLocation(),
-     * getMapTile(22,9).getLocation(), Direction.RIGHT);
-     * enemies.add(zombieEnemy);
-     * 
-     * return enemies;
-     * }
-     */
-    @Override
-    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
-    
-        ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
-
-        // Define Wave 1: Add a few ZombieEnemies
-        ArrayList<Enemy> wave1 = new ArrayList<>();
-        wave1.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.RIGHT));
-        wave1.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.LEFT));
-        waves.add(wave1);
-
-        // Define Wave 2: Add more ZombieEnemies
-        ArrayList<Enemy> wave2 = new ArrayList<>();
-        wave2.add(new ZombieEnemy(new Point(100, 523), new Point(200, 523), Direction.RIGHT));
-        waves.add(wave2);
-
-        // Define Wave 3: Add even more ZombieEnemies
-        ArrayList<Enemy> wave3 = new ArrayList<>();
-        wave3.add(new ZombieEnemy(new Point(200, 523), new Point(400, 523), Direction.RIGHT));
-        wave3.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.LEFT));
-        waves.add(wave3);
-
-        return waves;
-    }
-
     @Override
     public ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
         ArrayList<EnhancedMapTile> enhancedMapTiles = new ArrayList<>();
