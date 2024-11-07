@@ -110,21 +110,26 @@ public class Joe extends Player {
         fireCooldownTimer++;
         shotgunCooldownTimer++;
 
-        if (isPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
-            shootFireball();
+         if (isPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
+            shootFireball(240); 
             currentAmmo--;
             canShoot = false;
         } else if (isAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0 
                 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-            shootFireball();
+            shootFireball(240); 
             assaultRifleAmmo--;
             fireCooldownTimer = 0;
-        } else if (isShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0 
-                && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-            shootFireball();
-            shotgunAmmo--;
-            shotgunCooldownTimer = 0;
         }
+        
+        else if (isShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0 
+        && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+    shootFireball(40); 
+    shotgunAmmo--;
+    shotgunCooldownTimer = 0;
+}
+
+
+
 
         if (!Keyboard.isKeyDown(Key.SPACE)) {
             canShoot = true;
@@ -166,12 +171,12 @@ public class Joe extends Player {
 }
 
 
-private void shootFireball() {
+private void shootFireball(int lifetime) {
     Point fireballStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
-    float fireballSpeed = 5.0f;
+    float fireballSpeed = 5.0f; // Speed for the fireball
     float movementSpeed = facingRight ? fireballSpeed : -fireballSpeed;
 
-    Fireball fireball = new Fireball(fireballStart, movementSpeed, 120); // 120 frames lifetime
+    Fireball fireball = new Fireball(fireballStart, movementSpeed, lifetime);
 
     if (map != null) {
         fireball.setMap(map);
@@ -180,6 +185,9 @@ private void shootFireball() {
 
     fireballs.add(fireball);
 }
+
+
+
 
 
 
