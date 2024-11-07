@@ -32,7 +32,7 @@ public class MenuScreen extends Screen {
         playGame = new SpriteFont("PLAY GAME", 200, 500, "Times New Roman", 30, new Color(49, 207, 240));
         playGame.setOutlineColor(Color.black);
         playGame.setOutlineThickness(3);
-        credits = new SpriteFont("CREDITS", 470, 500, "Arial", 30, new Color(49, 207, 240));
+        credits = new SpriteFont("CREDITS", 470, 500, "Times New Roman", 30, new Color(49, 207, 240));
         credits.setOutlineColor(Color.black);
         credits.setOutlineThickness(3);
         backgroundImage = ImageLoader.load("TitleScreen.png");
