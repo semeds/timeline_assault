@@ -97,6 +97,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         hp3Image = ImageLoader.load("ThreeHearts.png");
         hp2Image = ImageLoader.load("TwoHearts.png");
         hp1Image = ImageLoader.load("OneHeart.png");
+
+        coinImage = ImageLoader.load("coinForCount.png");
     }
 
     private boolean playerCollidesWith(Enemy enemy) {
@@ -123,39 +125,40 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     showShotgunOverlay = true;
                 }
 
-                if (Keyboard.isKeyDown(Key.R) && !reloading) {  // Replace with the desired key
+                if (Keyboard.isKeyDown(Key.R) && !reloading) { // Replace with the desired key
                     startReload();
                 }
-                
-    
+
                 player.update();
                 map.update(player);
-    
+
                 // Handle reloading and shooting
                 if (reloading) {
                     reloadTimer++;
                     System.out.println("Reloading... Timer: " + reloadTimer); // Debug statement
-                
+
                     if (reloadTimer >= RELOAD_DELAY) {
                         finishReload();
                         reloadTimer = 0; // Reset the timer after reloading
                     }
                 }
-                
+
                 else {
                     fireCooldownTimer++;
                     shotgunCooldownTimer++;
-    
+
                     if (Keyboard.isKeyDown(Key.SPACE) && canShoot) {
                         if (isWeaponPickedUp && currentAmmo > 0) {
                             currentAmmo--;
                             canShoot = false;
                             spawnFireball();
-                        } else if (isAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+                        } else if (isAssaultRiflePickedUp && assaultRifleAmmo > 0
+                                && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
                             assaultRifleAmmo--;
                             fireCooldownTimer = 0;
                             spawnFireball();
-                        } else if (isShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+                        } else if (isShotgunPickedUp && shotgunAmmo > 0
+                                && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
                             shotgunAmmo--;
                             shotgunCooldownTimer = 0;
                             spawnFireball();
@@ -165,7 +168,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         canShoot = true;
                     }
                 }
-    
+
                 // Check for any collisions and other actions
                 for (Enemy enemy : map.getActiveEnemies()) {
                     enemy.update(player);
@@ -182,7 +185,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-    
+
             case LEVEL_COMPLETED:
                 if (levelCompletedStateChangeStart) {
                     screenTimer = 130;
@@ -195,24 +198,18 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                     }
                 }
                 break;
-    
+
             case LEVEL_LOSE:
                 levelLoseScreen.update();
                 resetWeaponStatus();
                 break;
         }
     }
-    
-    
-    
-    
+
     // Helper method to spawn a fireball for the player
     private void spawnFireball() {
         // Logic to spawn a fireball projectile from the player's location
     }
-    
-    
-    
 
     private void switchToArmedJoe() {
         float currentX = player.getX();
@@ -231,10 +228,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         reloadTimer = 0; // Start the reload timer
         System.out.println("Reload started"); // Debug statement
     }
-     
 
     public static void finishReload() {
-        System.out.println("Reload complete");  // Debug statement
+        System.out.println("Reload complete"); // Debug statement
         reloading = false;
         if (AAsaultRiflePickup.weaponPickedUp) { // Assault rifle reload
             assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
@@ -244,44 +240,42 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             shotgunAmmo = SHOTGUN_MAX_AMMO;
         }
     }
-    
-    
 
     public void draw(GraphicsHandler graphicsHandler) {
         switch (playLevelScreenState) {
             case RUNNING:
                 map.draw(graphicsHandler);
                 player.draw(graphicsHandler);
-    
+
                 if (showPistolOverlay) {
                     apistolOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); // Draw pistol ammo
                 }
-    
+
                 if (showAssaultRifleOverlay) { // Draw assault rifle overlay and ammo count
                     aassaultRifleOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO);
                 }
-    
+
                 if (showShotgunOverlay) { // Draw shotgun overlay and ammo count
                     ashotgunOverlay.draw(graphicsHandler.getGraphics());
                     drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO);
                 }
-    
+
                 drawHitpoints(graphicsHandler);
                 drawCoinForCount(graphicsHandler);
+                drawCoinCount(graphicsHandler);
                 break;
-    
+
             case LEVEL_COMPLETED:
                 levelClearedScreen.draw(graphicsHandler);
                 break;
-    
+
             case LEVEL_LOSE:
                 levelLoseScreen.draw(graphicsHandler);
                 break;
         }
     }
-    
 
     private void drawAmmoCount(GraphicsHandler graphicsHandler, int currentAmmo, int maxAmmo) {
         Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
@@ -302,6 +296,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         }
 
         g2d.drawString(currentAmmo + "/" + maxAmmo, ammoX, ammoY);
+    }
+
+    private void drawCoinCount(GraphicsHandler graphicsHandler) {
+        Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.BOLD, 20));
+        String coinCount = " :" + player.getCoinCount();
+        g2d.drawString(coinCount, 730, 65);
     }
 
     private void drawHitpoints(GraphicsHandler graphicsHandler) {
@@ -354,7 +356,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
     private void drawCoinForCount(GraphicsHandler graphicsHandler) {
         Image coinpicture = coinImage;
-      
+
         if (coinpicture != null) {
             int originalWidth = coinpicture.getWidth(null);
             int originalHeight = coinpicture.getHeight(null);
