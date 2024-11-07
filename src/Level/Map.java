@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-import NPCs.WeaponPickup;
+import NPCs.APistolPickup;
 import java.util.Random;
 
 
