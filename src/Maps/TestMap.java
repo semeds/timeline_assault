@@ -68,14 +68,14 @@ public class TestMap extends Map {
 
 
 
-      AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
-      npcs.add(aasaultriflePickup);
+      //AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
+      //npcs.add(aasaultriflePickup);
 
 
 
 
-      AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
-      npcs.add(ashotgunPickup);
+      //AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
+      //npcs.add(ashotgunPickup);
 
 
        Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);

@@ -27,12 +27,18 @@ import NPCs.AShotgunPickup;
 import NPCs.MAssaultRiflePickup;
 import NPCs.MPistolPickup;
 import NPCs.MShotgunPickup;
+import NPCs.FPistolPickup;
+import NPCs.FAssaultRiflePickup;
+import NPCs.FShotgunPickup;
 import Engine.APistolOverlay;
 import Engine.AAsaultrifleOverlay;
 import Engine.AShotgunOverlay;
 import Engine.MPistolOverlay;
 import Engine.MShotgunOverlay;
 import Engine.MAssaultRifleOverlay;
+import Engine.FAssaultRifleOverlay;
+import Engine.FPistolOverlay;
+import Engine.FShotgunOverlay;
 import java.awt.Color;
 import java.awt.Font;
 import Engine.Key;
@@ -63,8 +69,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private boolean isAAssaultRiflePickedUp = false; 
    private boolean isAShotgunPickedUp = false;
    private boolean isMPistolickedUp = false;
-   private boolean isMAssaultRiflePickedUp = false; // Assault rifle flag
+   private boolean isMAssaultRiflePickedUp = false; 
    private boolean isMShotgunPickedUp = false; 
+   private boolean isFPistolPickedup = false;
+   private boolean isFAssaultRiflePickedUp = false;
+   private boolean isFShotgunPickedUp = false;
 
    private boolean showAPistolOverlay = false;
    private boolean showAAssaultRifleOverlay = false;
@@ -72,13 +81,19 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private boolean showMPistolOverlay = false;
    private boolean showMAssaultRifleOverlay = false;
    private boolean showMShotgunOverlay = false;
+   private boolean showFPistolOverlay = false;
+   private boolean showFAssaultRifleOverlay = false;
+   private boolean showFShotgunOverlay = false;
 
    private APistolOverlay apistolOverlay;
-   private AAsaultrifleOverlay aassaultRifleOverlay; // Assault rifle overlay
-   private AShotgunOverlay ashotgunOverlay; // Shotgun overlay
+   private AAsaultrifleOverlay aassaultRifleOverlay;
+   private AShotgunOverlay ashotgunOverlay;
    private MPistolOverlay mPistolOverlay;
    private MShotgunOverlay mShotgunOverlay;
    private MAssaultRifleOverlay mAssaultRifleOverlay;
+   private FPistolOverlay fPistolOverlay;
+   private FAssaultRifleOverlay fAssaultRifleOverlay;
+   private FShotgunOverlay fShotgunOverlay;
 
    private int coinCount = 0;
    public static int currentAmmo = 12; // Current bullets for pistol
@@ -109,6 +124,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
        mPistolOverlay = new MPistolOverlay();
        mAssaultRifleOverlay = new MAssaultRifleOverlay();
        mShotgunOverlay = new MShotgunOverlay();
+       fPistolOverlay = new FPistolOverlay();
+       fAssaultRifleOverlay = new FAssaultRifleOverlay();
+       fShotgunOverlay = new FShotgunOverlay();
    }
 
 
@@ -204,9 +222,45 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 showAPistolOverlay = false;
                 showAAssaultRifleOverlay = false;
                 showAShotgunOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAPistolOverlay = false;
+                showMAssaultRifleOverlay = false;
+                showMPistolOverlay = false;
                 showMShotgunOverlay = true;
+            } else if (FPistolPickup.weaponPickedUp && !isFPistolPickedup) {
+                isFPistolPickedup = true;
+                resetOverlays();
+                showAPistolOverlay = false;
+                showAAssaultRifleOverlay = false;
+                showAShotgunOverlay = false;
+                showMAssaultRifleOverlay = false;
+                showMPistolOverlay = false;
+                showMShotgunOverlay = false;
+                showFPistolOverlay = true;
+                showFAssaultRifleOverlay = false;
+                showFShotgunOverlay = false;
+            } else if (FAssaultRiflePickup.weaponPickedUp && !isAAssaultRiflePickedUp) {
+                isAAssaultRiflePickedUp = true;
+                resetOverlays();
+                showAPistolOverlay = false;
+                showAAssaultRifleOverlay = false;
+                showAShotgunOverlay = false;
+                showMAssaultRifleOverlay = false;
+                showMPistolOverlay = false;
+                showMShotgunOverlay = false;
+                showFPistolOverlay = false;
+                showFAssaultRifleOverlay = true;
+                showFShotgunOverlay = false;
+            } else if (FShotgunPickup.weaponPickedUp && !isFShotgunPickedUp) {
+                isFShotgunPickedUp = true;
+                resetOverlays();
+                showAPistolOverlay = false;
+                showAAssaultRifleOverlay = false;
+                showAShotgunOverlay = false;
+                showMAssaultRifleOverlay = false;
+                showMPistolOverlay = false;
+                showMShotgunOverlay = false;
+                showFPistolOverlay = false;
+                showFAssaultRifleOverlay = false;
+                showFShotgunOverlay = true;
             }
 
 
@@ -263,7 +317,19 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                         shotgunAmmo--;
                         shotgunCooldownTimer = 0;
                         spawnFireball();
-                       }
+                       } else if (isFPistolPickedup && currentAmmo >0) {
+                        currentAmmo--;
+                       canShoot = false;
+                       spawnFireball();
+                   } else if (isFAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+                       assaultRifleAmmo--;
+                       fireCooldownTimer = 0;
+                       spawnFireball();
+                   } else if (isFShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+                    shotgunAmmo--;
+                    shotgunCooldownTimer = 0;
+                    spawnFireball();
+                   }
                    }
                    if (!Keyboard.isKeyDown(Key.SPACE)) {
                        canShoot = true;
@@ -357,7 +423,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
     } else if (MShotgunPickup.weaponPickedUp) { // Shotgun reload
         shotgunAmmo = SHOTGUN_MAX_AMMO;
-   }
+   } else if (FPistolPickup.weaponPickedUp) { // Pistol reload
+    currentAmmo = MAX_AMMO;
+} else if (FAssaultRiflePickup.weaponPickedUp) { // Pistol reload
+    assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
+} else if (FShotgunPickup.weaponPickedUp) { // Shotgun reload
+    shotgunAmmo = SHOTGUN_MAX_AMMO;
+}
 }
   
   
@@ -395,6 +467,19 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             
             if (showMShotgunOverlay) {
                 mShotgunOverlay.draw(graphicsHandler.getGraphics());
+                drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO); 
+            } if (showFPistolOverlay) {
+                fPistolOverlay.draw(graphicsHandler.getGraphics());
+                drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); 
+            }
+            
+            if (showFAssaultRifleOverlay) {
+                fAssaultRifleOverlay.draw(graphicsHandler.getGraphics());
+                drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO); 
+            }
+            
+            if (showFShotgunOverlay) {
+                fShotgunOverlay.draw(graphicsHandler.getGraphics());
                 drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO); 
             }
             
@@ -442,6 +527,15 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     } else if (isMShotgunPickedUp) {
         ammoX = ashotgunOverlay.getX() +72;
         ammoY = ashotgunOverlay.getY() + 25;
+    } else if (isFPistolPickedup) {
+        ammoX = fPistolOverlay.getX() + 72;
+        ammoY = fPistolOverlay.getY() + 25;
+    } else if (isFAssaultRiflePickedUp) {
+        ammoX = fAssaultRifleOverlay.getX() + 72;
+        ammoY = fAssaultRifleOverlay.getY() + 25;
+    } else if (isFShotgunPickedUp) {
+        ammoX = fShotgunOverlay.getX() +72;
+        ammoY = fShotgunOverlay.getY() + 25;
     }
 
 
@@ -598,6 +692,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
     showMPistolOverlay = false;
     showMAssaultRifleOverlay = false;
     showMShotgunOverlay = false;
+    showFPistolOverlay = false;
+    showFAssaultRifleOverlay = false;
+    showFShotgunOverlay = false;
 }
 
 
@@ -608,18 +705,27 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
        MPistolPickup.showOverlay = false;
        MAssaultRiflePickup.showOverlay = false;
        MShotgunPickup.showOverlay = false;
+       FPistolPickup.showOverlay = false;
+       FAssaultRiflePickup.showOverlay = false;
+       FShotgunPickup.showOverlay = false;
        APistolPickup.weaponPickedUp = false;
        AAsaultRiflePickup.weaponPickedUp = false;
        AShotgunPickup.weaponPickedUp = false;
        MPistolPickup.weaponPickedUp = false;
        MAssaultRiflePickup.weaponPickedUp = false;
        MShotgunPickup.weaponPickedUp = false;
+       FPistolPickup.weaponPickedUp = false;
+       FAssaultRiflePickup.weaponPickedUp = false;
+       FShotgunPickup.weaponPickedUp = false;
        isAPistolickedUp = false;
        isAAssaultRiflePickedUp = false;
        isAShotgunPickedUp = false;
        isMPistolickedUp = false;
        isMAssaultRiflePickedUp = false;
        isMShotgunPickedUp = false;
+       isFPistolPickedup = false;
+       isFAssaultRiflePickedUp = false;
+       isFShotgunPickedUp = false;
        currentAmmo = MAX_AMMO;
        assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
        shotgunAmmo = SHOTGUN_MAX_AMMO;

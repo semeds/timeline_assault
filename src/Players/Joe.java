@@ -19,6 +19,9 @@ import NPCs.AShotgunPickup;
 import NPCs.MAssaultRiflePickup;
 import NPCs.MPistolPickup;
 import NPCs.MShotgunPickup;
+import NPCs.FAssaultRiflePickup;
+import NPCs.FPistolPickup;
+import NPCs.FShotgunPickup;
 import Screens.PlayLevelScreen;
 import Utils.Point;
 
@@ -88,6 +91,9 @@ public int getShotgunAmmo() {
    MPistolPickup.weaponPickedUp = false;
    MAssaultRiflePickup.weaponPickedUp = false;
    MShotgunPickup.weaponPickedUp = false;
+   FPistolPickup.weaponPickedUp = false;
+   FAssaultRiflePickup.weaponPickedUp = false;
+   FShotgunPickup.weaponPickedUp = false;
 }
 
 
@@ -137,6 +143,15 @@ public int getShotgunAmmo() {
         resetWeaponStatus();
         isAssaultRifleEquipped = true;
    } else if (MShotgunPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isShotgunEquipped = true;
+   } else if (FPistolPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isPistolEquipped = true;
+   } else if (FAssaultRiflePickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isAssaultRifleEquipped = true;
+   } else if (FShotgunPickup.weaponPickedUp) {
         resetWeaponStatus();
         isShotgunEquipped = true;
    }

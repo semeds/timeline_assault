@@ -83,23 +83,20 @@ public class Map1 extends Map {
        Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
        npcs.add(walrus);
 
-       MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(9, (int)8).getLocation(), this);
-      npcs.add(mpistolPickup);
+       MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(12, (int)8).getLocation(), this);
+       npcs.add(mpistolPickup);
 
 
 
 
-      MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
-      npcs.add(masaultriflePickup);
+      //MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+      //npcs.add(masaultriflePickup);
 
 
 
 
-      MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
-      npcs.add(mshotgunPickup);
-
-
-       
+      //MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+      //npcs.add(mshotgunPickup);    
 
 
        Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);

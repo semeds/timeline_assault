@@ -9,8 +9,9 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.AAsaultRiflePickup;
-import NPCs.APistolPickup;
-import NPCs.AShotgunPickup;
+import NPCs.FPistolPickup;
+import NPCs.FShotgunPickup;
+import NPCs.FAssaultRiflePickup;
 import NPCs.Walrus;
 import Tilesets.CommonTileset;
 import Utils.Direction;
@@ -76,6 +77,21 @@ public class Map2 extends Map {
        // Adding the Walrus NPC
        Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
        npcs.add(walrus);
+
+       FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(15, (int)11).getLocation(), this);
+       npcs.add(fpistolPickup);
+
+
+
+
+       //FAssaultRiflePickup fasaultriflePickup = new FAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+     // npcs.add(fasaultriflePickup);
+
+
+
+
+     // FShotgunPickup fshotgunPickup = new FShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+      //npcs.add(fshotgunPickup);
   
        return npcs;
    }
