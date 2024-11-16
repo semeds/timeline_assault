@@ -16,6 +16,9 @@ import Enemies.Fireball;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
 import NPCs.AShotgunPickup;
+import NPCs.MAssaultRiflePickup;
+import NPCs.MPistolPickup;
+import NPCs.MShotgunPickup;
 import Screens.PlayLevelScreen;
 import Utils.Point;
 
@@ -82,11 +85,9 @@ public int getShotgunAmmo() {
    APistolPickup.weaponPickedUp = false;
    AAsaultRiflePickup.weaponPickedUp = false;
    AShotgunPickup.weaponPickedUp = false;
-
-
-   APistolPickup.weaponPickedUp = false; // Ensure pistol overlay is disabled
-   AAsaultRiflePickup.weaponPickedUp = false; // Ensure assault rifle overlay is disabled
-   AShotgunPickup.weaponPickedUp = false; // Ensure shotgun overlay is disabled
+   MPistolPickup.weaponPickedUp = false;
+   MAssaultRiflePickup.weaponPickedUp = false;
+   MShotgunPickup.weaponPickedUp = false;
 }
 
 
@@ -129,6 +130,15 @@ public int getShotgunAmmo() {
    } else if (AShotgunPickup.weaponPickedUp) {
        resetWeaponStatus();
        isShotgunEquipped = true;
+   } else if (MPistolPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isPistolEquipped = true;
+   } else if (MAssaultRiflePickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isAssaultRifleEquipped = true;
+   } else if (MShotgunPickup.weaponPickedUp) {
+        resetWeaponStatus();
+        isShotgunEquipped = true;
    }
 
 
