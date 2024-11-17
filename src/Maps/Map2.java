@@ -12,7 +12,10 @@ import Level.*;
 import NPCs.Walrus;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
-import NPCs.AShotgunPickup;
+import NPCs.FPistolPickup;
+import NPCs.FShotgunPickup;
+import NPCs.FAssaultRiflePickup;
+import NPCs.Walrus;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import Utils.Point;
@@ -83,25 +86,21 @@ public class Map2 extends Map {
        Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
        npcs.add(walrus);
 
-
-       APistolPickup apistolPickup = new APistolPickup(getMapTile(9, (int)8).getLocation(), this);
-      npcs.add(apistolPickup);
-
-
-
-
-      AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
-      npcs.add(aasaultriflePickup);
+       FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(15, (int)11).getLocation(), this);
+       npcs.add(fpistolPickup);
 
 
 
 
-      AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
-      npcs.add(ashotgunPickup);
+       //FAssaultRiflePickup fasaultriflePickup = new FAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+     // npcs.add(fasaultriflePickup);
 
 
-       Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
-       npcs.add(coin);
+
+
+     // FShotgunPickup fshotgunPickup = new FShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+      //npcs.add(fshotgunPickup);
+  
        return npcs;
    }
     
