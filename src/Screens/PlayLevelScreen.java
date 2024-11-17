@@ -94,9 +94,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    public void initialize() {
         resetWeaponStatus();
         if (!isMap1Loaded) {
-            this.map = new TestMap(); // Start with TestMap
+            this.map = new Map1(); // Start with TestMap
         } else {
-            this.map = new Map1(); // Switch to Map1 after TestMap
+            this.map = new Map2(); // Switch to Map1 after TestMap
         }
 
 

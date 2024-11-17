@@ -23,31 +23,14 @@ import Collectibles.Coin;
 
 
 // Represents a test map to be used in a level
-public class Map2 extends Map {
+public class Map3 extends Map {
 
 
-   public Map2() {
-       super("map2.txt", new CommonTileset());
+   public Map3() {
+       super("map3.txt", new CommonTileset());
        this.playerStartPosition = getMapTile(2, 11).getLocation();
    }
 
-   /* 
-   @Override
-   public ArrayList<Enemy> loadEnemies() {
-       ArrayList<Enemy> enemies = new ArrayList<>();
-
-
-       BugEnemy bugEnemy = new BugEnemy(getMapTile(16, 10).getLocation().subtractY(25), Direction.LEFT);
-       enemies.add(bugEnemy);
-
-
-       DinosaurEnemy dinosaurEnemy = new DinosaurEnemy(getMapTile(19, 1).getLocation().addY(2), getMapTile(22, 1).getLocation().addY(2), Direction.RIGHT);
-       enemies.add(dinosaurEnemy);
-
-
-       return enemies;
-   }
-    */
 
    @Override
    public ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
