@@ -41,7 +41,7 @@ public class CommonTileset extends Tileset {
         mapTiles.add(grassTile);
 
         //left 45 slop
-        Frame leftSlopeFrame = new FrameBuilder(getSubImage(0, 2))
+        Frame leftSlopeFrame = new FrameBuilder(getSubImage(0, 3))
                 .withScale(tileScale)
                 .build();
 
@@ -53,7 +53,7 @@ public class CommonTileset extends Tileset {
         mapTiles.add(leftSlopeTile);
 
         //slop 45 right
-        Frame rightSlopeFrame = new FrameBuilder(getSubImage(0, 3))
+        Frame rightSlopeFrame = new FrameBuilder(getSubImage(0, 2))
                 .withScale(tileScale)
                 .build();
 
