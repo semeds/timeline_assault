@@ -2,12 +2,12 @@ package Maps;
 
 
 import Collectibles.Coin;
-import Enemies.ZombieEnemy;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
+import Enemies.*;
 import NPCs.Walrus;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
@@ -90,44 +90,71 @@ public class TestMap extends Map {
 
        // Define Wave 1: Add a few ZombieEnemies
        ArrayList<Enemy> wave1 = new ArrayList<>();
-       wave1.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.RIGHT));
-       wave1.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.LEFT));
-       wave1.add(new ZombieEnemy(new Point(350, 523), new Point(450, 523), Direction.RIGHT));
-       wave1.add(new ZombieEnemy(new Point(400, 523), new Point(500, 523), Direction.LEFT));
+       wave1.add(new BaseZombie(new Point(800, 523), Direction.LEFT));
+       wave1.add(new BaseZombie(new Point(750, 523), Direction.RIGHT));
+       wave1.add(new BaseZombie(new Point(700, 523), Direction.LEFT));
+       wave1.add(new BaseZombie(new Point(650, 523), Direction.LEFT));
+       wave1.add(new BaseZombie(new Point(500, 523), Direction.LEFT));
        waves.add(wave1);
 
 
        // Define Wave 2: Add more ZombieEnemies
        ArrayList<Enemy> wave2 = new ArrayList<>();
-       wave2.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.RIGHT));
-       wave2.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.RIGHT));
-       wave2.add(new ZombieEnemy(new Point(350, 523), new Point(450, 523), Direction.RIGHT));
-
+       wave2.add(new BaseZombie(new Point(250, 523), Direction.LEFT));
+       wave2.add(new BaseZombie(new Point(300, 523), Direction.RIGHT));
+       wave2.add(new BaseZombie(new Point(350, 523), Direction.LEFT));
+       wave2.add(new BaseZombie(new Point(450, 523), Direction.RIGHT));
+       wave2.add(new BaseZombie(new Point(200, 523), Direction.LEFT));
+       wave2.add(new BaseZombie(new Point(550, 523), Direction.RIGHT));
        waves.add(wave2);
 
 
        // Define Wave 3: Add even more ZombieEnemies
        ArrayList<Enemy> wave3 = new ArrayList<>();
-       wave3.add(new ZombieEnemy(new Point(200, 523), new Point(300, 523), Direction.RIGHT));
-       wave3.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.LEFT));
-
+      
+       wave3.add(new BaseZombie(new Point(250, 523), Direction.RIGHT));
+       wave3.add(new BaseZombie(new Point(300, 523), Direction.RIGHT));
+       wave3.add(new BaseZombie(new Point(350, 523), Direction.RIGHT));
+       wave3.add(new BaseZombie(new Point(450, 523), Direction.RIGHT));
+       wave3.add(new BaseZombie(new Point(200, 523), Direction.RIGHT));
+       wave3.add(new BaseZombie(new Point(550, 523), Direction.RIGHT));
        waves.add(wave3);
 
        ArrayList<Enemy> wave4 = new ArrayList<>();
-       wave4.add(new ZombieEnemy(new Point(200, 523), new Point(400, 523), Direction.RIGHT));
-       wave4.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.LEFT));
-       wave4.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.RIGHT));
-       wave4.add(new ZombieEnemy(new Point(350, 523), new Point(450, 523), Direction.LEFT));
+       wave4.add(new ZoomerZombie(new Point(200, 523), Direction.RIGHT));
+       wave4.add(new BaseZombie(new Point(250, 523), Direction.LEFT));
+       wave4.add(new BaseZombie(new Point(300, 523), Direction.RIGHT));
+       wave4.add(new BaseZombie(new Point(350, 523), Direction.LEFT));
 
        waves.add(wave4);
 
        ArrayList<Enemy> wave5 = new ArrayList<>();
-       wave5.add(new ZombieEnemy(new Point(200, 523), new Point(400, 523), Direction.RIGHT));
-       wave5.add(new ZombieEnemy(new Point(250, 523), new Point(350, 523), Direction.LEFT));
-       wave5.add(new ZombieEnemy(new Point(300, 523), new Point(400, 523), Direction.RIGHT));
-       wave5.add(new ZombieEnemy(new Point(400, 523), new Point(500, 523), Direction.LEFT));
+       wave5.add(new ZoomerZombie(new Point(200, 523), Direction.RIGHT));
+       wave5.add(new ZoomerZombie(new Point(250, 523), Direction.LEFT));
+       wave5.add(new BaseZombie(new Point(300, 523), Direction.RIGHT));
+       wave5.add(new BaseZombie(new Point(400, 523), Direction.LEFT));
+       wave5.add(new BaseZombie(new Point(500, 523), Direction.RIGHT));
+       wave5.add(new BaseZombie(new Point(600, 523), Direction.LEFT));
+
        waves.add(wave5);
 
+       ArrayList<Enemy> wave6 = new ArrayList<>();
+       wave6.add(new ZoomerZombie(new Point(200, 523), Direction.RIGHT));
+       wave6.add(new BaseZombie(new Point(300, 523), Direction.RIGHT));
+       wave6.add(new BaseZombie(new Point(400, 523), Direction.LEFT));
+       wave6.add(new ZoomerZombie(new Point(250, 523), Direction.LEFT));
+       wave6.add(new BaseZombie(new Point(500, 523), Direction.RIGHT));
+       wave6.add(new BaseZombie(new Point(600, 523), Direction.LEFT));
+       wave6.add(new ZoomerZombie(new Point(250, 523), Direction.LEFT));
+       wave6.add(new BaseZombie(new Point(500, 523), Direction.RIGHT));
+       wave6.add(new BaseZombie(new Point(600, 523), Direction.LEFT));
+
+       waves.add(wave6);
+
+       ArrayList<Enemy> bossWave = new ArrayList<>();
+       bossWave.add(new StrongZombie(new Point(200,523), Direction.RIGHT));
+
+       waves.add(bossWave);
 
        return waves;
    }

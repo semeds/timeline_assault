@@ -1,7 +1,6 @@
 package Screens;
 
 
-import Enemies.DinosaurEnemy;
 import Enemies.Fireball;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
@@ -82,6 +81,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
    private boolean isMap1Loaded = false;
+   private boolean isMap2Loaded = false;
 
    public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
@@ -162,6 +162,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                 onLevelCompleted(); // Manually trigger level completion
             }
 
+                if (map.isWaveComplete() && map instanceof Map1 && !isMap2Loaded) {
+                System.out.println("All waves in TestMap are complete. Switching to Map2...");
+                onLevelCompleted(); // Manually trigger level completion
+            }
   
                // Handle reloading and shooting
                if (reloading) {
@@ -264,13 +268,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private void startReload() {
        reloading = true;
        reloadTimer = 0; // Start the reload timer
-       System.out.println("Reload started"); // Debug statement
    }
    
 
 
    public static void finishReload() {
-       System.out.println("Reload complete");  // Debug statement
        reloading = false;
        if (AAsaultRiflePickup.weaponPickedUp) { // Assault rifle reload
            assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
@@ -458,9 +460,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             System.out.println("Level Complete! Switching to Map1...");
             isMap1Loaded = true;
             initialize(); // Reinitialize to load Map1
+        } else if (!isMap2Loaded) {
+            System.out.println("Level Complete! Switching to Map2...");
+            isMap2Loaded = true;
+            initialize();
         } else {
-            System.out.println("All levels completed!");
-            // Optionally, add logic here to show an end screen or go back to the menu
+            playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
         }
    }
 
