@@ -1,15 +1,16 @@
 package Maps;
 
 
-import Enemies.BugEnemy;
-import Enemies.DinosaurEnemy;
+import Enemies.*;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
-import NPCs.WeaponPickup;
+import NPCs.MPistolPickup;
+import NPCs.MAssaultRiflePickup;
+import NPCs.MShotgunPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import java.util.ArrayList;
@@ -46,21 +47,8 @@ public class Map1 extends Map {
    public ArrayList<EnhancedMapTile> loadEnhancedMapTiles() {
        ArrayList<EnhancedMapTile> enhancedMapTiles = new ArrayList<>();
 
-
-       HorizontalMovingPlatform hmp = new HorizontalMovingPlatform(
-               ImageLoader.load("GreenPlatform.png"),
-               getMapTile(24, 6).getLocation(),
-               getMapTile(27, 6).getLocation(),
-               TileType.JUMP_THROUGH_PLATFORM,
-               3,
-               new Rectangle(0, 6,16,4),
-               Direction.RIGHT
-       );
-       enhancedMapTiles.add(hmp);
-
-
        EndLevelBox endLevelBox = new EndLevelBox(getMapTile(32, 7).getLocation());
-       enhancedMapTiles.add(endLevelBox);
+       //enhancedMapTiles.add(endLevelBox);
 
 
        return enhancedMapTiles;
@@ -70,15 +58,25 @@ public class Map1 extends Map {
    @Override
    public ArrayList<NPC> loadNPCs() {
        ArrayList<NPC> npcs = new ArrayList<>();
-  
-       // Adding the Walrus NPC
-       Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
-       npcs.add(walrus);
-  
-       // Adding the WeaponPickup NPC
-       WeaponPickup weaponPickup = new WeaponPickup(getMapTile(7, 15).getLocation(), this);
-       npcs.add(weaponPickup);
-  
+
+       MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(12, (int)8).getLocation(), this);
+       npcs.add(mpistolPickup);
+
+
+
+
+      //MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+      //npcs.add(masaultriflePickup);
+
+
+
+
+      //MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+      //npcs.add(mshotgunPickup);    
+
+
+       Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
+       npcs.add(coin);
        return npcs;
    }
     
@@ -88,7 +86,53 @@ public class Map1 extends Map {
 
    @Override
    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
-       // TODO
-       throw new UnsupportedOperationException("Unimplemented method 'loadEnemyWaves'");
+       ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
+
+       ArrayList<Enemy> wave1 = new ArrayList<>();
+       wave1.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+       wave1.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+       wave1.add(new BaseHumanEnemy(new Point(1850, 523), Direction.LEFT));
+       wave1.add(new BaseHumanEnemy(new Point(1950, 523), Direction.LEFT));
+       wave1.add(new BaseHumanEnemy(new Point(1750, 523), Direction.LEFT));
+
+       waves.add(wave1);
+
+
+       // Define Wave 2: Add more ZombieEnemies
+       ArrayList<Enemy> wave2 = new ArrayList<>();
+       wave2.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+       wave2.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+       wave2.add(new BaseHumanEnemy(new Point(850, 523), Direction.LEFT));
+       wave2.add(new BaseHumanEnemy(new Point(950, 523), Direction.LEFT));
+       wave2.add(new BaseHumanEnemy(new Point(750, 523), Direction.LEFT));
+       wave2.add(new BaseHumanEnemy(new Point(200, 523), Direction.RIGHT));
+       wave2.add(new BaseHumanEnemy(new Point(350, 523), Direction.RIGHT));
+       wave2.add(new BaseHumanEnemy(new Point(650, 523), Direction.LEFT));
+       wave2.add(new BaseHumanEnemy(new Point(800, 523), Direction.LEFT));
+       wave2.add(new BaseHumanEnemy(new Point(750, 523), Direction.LEFT));
+
+       waves.add(wave2);
+
+
+       // Define Wave 3: Add even more ZombieEnemies
+       ArrayList<Enemy> wave3 = new ArrayList<>();
+       wave3.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(1850, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(1950, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(1750, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(1800, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(1900, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(1700, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+       wave3.add(new BaseHumanEnemy(new Point(2000, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(2050, 523), Direction.LEFT));
+       wave3.add(new BaseHumanEnemy(new Point(2100, 523), Direction.LEFT));
+       
+       waves.add(wave3);
+       return waves;
    }
 }

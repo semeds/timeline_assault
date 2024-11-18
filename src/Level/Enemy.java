@@ -84,7 +84,7 @@ public class Enemy extends MapEntity {
 
         // Write the loot dropping logic here
         if (map != null) { // Ensure the map is assigned to this enemy
-            if (chance < 2) {
+            if (chance < 9) {
                 // 90% chance enemy drops a coin
                 map.spawnCoin(this.getX(), this.getY());
             } else {

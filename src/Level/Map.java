@@ -180,7 +180,6 @@ public abstract class Map {
            ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
            currentWave++;
 
-
            for (Enemy enemy : nextWave) {
                addEnemy(enemy);
            }
@@ -196,7 +195,8 @@ public abstract class Map {
    }
    // Check if all active enemies are dead
    public boolean isWaveComplete() {
-       return getActiveEnemies().isEmpty(); // No active enemies means the wave is complete
+        boolean complete = getActiveEnemies().isEmpty();
+        return complete; 
    }
 
 
@@ -320,9 +320,7 @@ public abstract class Map {
           //20% chance of instakill
            instakill.setMap(this);
            getNPCs().add(instakill);
-       }
-
-
+       }   
    }
 
 

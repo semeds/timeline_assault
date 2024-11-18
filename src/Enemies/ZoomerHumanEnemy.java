@@ -1,7 +1,6 @@
 package Enemies;
 
 import Builders.FrameBuilder;
-import GameObject.GameObject;
 import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.ImageEffect;
@@ -10,35 +9,30 @@ import Level.Enemy;
 import Level.MapEntity;
 import Level.Player;
 import Utils.AirGroundState;
-import Utils.Direction;
 import Utils.Point;
-
+import Utils.Direction;
 import java.util.HashMap;
+import java.util.Random;
 
-public class ZombieEnemy extends Enemy {
+// This class is for the black bug enemy
+// enemy behaves like a Mario goomba -- walks forward until it hits a solid map tile, and then turns around
+// if it ends up in the air from walking off a cliff, it will fall down until it hits the ground again, and then will continue walking
+public class ZoomerHumanEnemy extends Enemy {
 
-    protected Point startLocation;
-    protected Point endLocation;
-    
-    protected float movementSpeed = 0.5f;
+    private float gravity = .5f;
+    private float movementSpeed = 1.75f;
     private Direction startFacingDirection;
-    protected Direction facingDirection;
-    protected AirGroundState airGroundState;
-    
-    private int hitPoints = 1;
+    private Direction facingDirection;
+    private AirGroundState airGroundState;
 
-    private ZombieState zombieState;
-    protected ZombieState previousZombieState;
-
-    public ZombieEnemy(Point startLocation, Point endLocation, Direction facingDirection) {
-        super(startLocation.x, startLocation.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58 ),
-                "STAND_RIGHT");
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
+    public ZoomerHumanEnemy(Point location, Direction facingDirection) {
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
+        this.hitPoints = 2;
         this.initialize();
     }
 
+    // Method to hurt the enemy - Basically copied hurtPlayrt()
     public void hurtEnemy(Player player) {
         if (hitPoints > 0) {
             hitPoints--;
@@ -51,9 +45,18 @@ public class ZombieEnemy extends Enemy {
     }
 
     public void die() {
+        Random random = new Random();
+        int chance = random.nextInt(10);
+
         // Write the loot dropping logic here
         if (map != null) { // Ensure the map is assigned to this enemy
-            map.spawnCoin(this.getX(), this.getY());
+            if (chance < 9) {
+                // 90% chance enemy drops a coin
+                map.spawnCoin(this.getX(), this.getY());
+            } else {
+                // 10% chance it drops a powerup
+                map.spawnpowerup(this.getX(), this.getY());
+            }
             map.removeEnemy(this);
         }
     }
@@ -61,9 +64,6 @@ public class ZombieEnemy extends Enemy {
     @Override
     public void initialize() {
         super.initialize();
-
-        zombieState = ZombieState.WALK;
-        previousZombieState = zombieState;
         facingDirection = startFacingDirection;
         if (facingDirection == Direction.RIGHT) {
             currentAnimationName = "WALK_RIGHT";
@@ -73,45 +73,34 @@ public class ZombieEnemy extends Enemy {
         airGroundState = AirGroundState.GROUND;
     }
 
-    
-   
     @Override
     public void update(Player player) {
-        float startBound = startLocation.x;
-        float endBound = endLocation.x;
+        float moveAmountX = 0;
+        float moveAmountY = 0;
 
-        //logic to determine which direction zombie should walk in
-        if (zombieState == ZombieState.WALK) {
+        // add gravity (if in air, this will cause bug to fall)
+        moveAmountY += gravity;
+
+        // if on ground, walk forward based on facing direction
+        if (airGroundState == AirGroundState.GROUND) {
             if (facingDirection == Direction.RIGHT) {
-                currentAnimationName = "WALK_RIGHT";
-                moveXHandleCollision(movementSpeed);
+                moveAmountX += movementSpeed;
             } else {
-                currentAnimationName = "WALK_LEFT";
-                moveXHandleCollision(-movementSpeed);
-            }
-
-            //if zombie reaches start or end location
-            if (getX1() + getWidth() >= endBound) {
-                float difference = endBound - (getX2());
-                moveXHandleCollision(-difference);
-                facingDirection = Direction.LEFT;
-            } else if (getX1() <= startBound) {
-                float difference = startBound - getX1();
-                moveXHandleCollision(difference);
-                facingDirection = Direction.RIGHT;
+                moveAmountX -= movementSpeed;
             }
         }
 
-        super.update(player);
-        previousZombieState = zombieState;
+        // move bug
+        moveYHandleCollision(moveAmountY);
+        moveXHandleCollision(moveAmountX);
 
-        super.update();
+        super.update(player);
     }
 
     @Override
     public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
-        // if dinosaur enemy collides with something on the x axis, it turns around and
-        // walks the other way
+        // if enemy has collided into something while walking forward,
+        // it turns around (changes facing direction)
         if (hasCollided) {
             if (direction == Direction.RIGHT) {
                 facingDirection = Direction.LEFT;
@@ -119,6 +108,20 @@ public class ZombieEnemy extends Enemy {
             } else {
                 facingDirection = Direction.RIGHT;
                 currentAnimationName = "WALK_RIGHT";
+            }
+        }
+    }
+
+    @Override
+    public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
+        // if bug is colliding with the ground, change its air ground state to GROUND
+        // if it is not colliding with the ground, it means that it's currently in the
+        // air, so its air ground state is changed to AIR
+        if (direction == Direction.DOWN) {
+            if (hasCollided) {
+                airGroundState = AirGroundState.GROUND;
+            } else {
+                airGroundState = AirGroundState.AIR;
             }
         }
     }
@@ -220,9 +223,5 @@ public class ZombieEnemy extends Enemy {
                 });
             }
         };
-    }
-
-    public enum ZombieState {
-        WALK, HIT
     }
 }
