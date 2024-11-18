@@ -299,7 +299,13 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
         if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
             isGamePaused = !isGamePaused;
             keyLocker.lockKey(pauseKey);
-            playLevelScreenState = PlayLevelScreenState.PAUSED;
+            if (isGamePaused == true) {
+                playLevelScreenState = PlayLevelScreenState.PAUSED;
+            }
+            else {
+                playLevelScreenState = PlayLevelScreenState.RUNNING;
+            }
+            
         }
 
         if (Keyboard.isKeyUp(pauseKey)) {
