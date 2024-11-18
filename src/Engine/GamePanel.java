@@ -25,10 +25,10 @@ public class GamePanel extends JPanel {
 	// used to draw graphics to the panel
 	private GraphicsHandler graphicsHandler;
 
-	private boolean isGamePaused = false;
-	//private SpriteFont pauseLabel;
+	// private boolean isGamePaused = false;
+	// private SpriteFont pauseLabel;
 	private KeyLocker keyLocker = new KeyLocker();
-	private final Key pauseKey = Key.P;
+	// private final Key pauseKey = Key.P;
 	private Thread gameLoopProcess;
 
 	private Key showFPSKey = Key.G;
@@ -79,6 +79,10 @@ public class GamePanel extends JPanel {
 		shottyLabel.setOutlineColor(Color.black);
 		shottyLabel.setOutlineThickness(2.0f);
 
+		// pistolLabel = new SpriteFont("Pistol", 360, 400, "Impact", 24, Color.white);
+		// pistolLabel.setOutlineColor(Color.black);
+		// pistolLabel.setOutlineThickness(2.0f);
+
 		keyPressTimer = 0;
 		menuItemSelected = -1;
 
@@ -117,64 +121,60 @@ public class GamePanel extends JPanel {
 	}
 
 	public void update() {
-		updatePauseState();
+		// updatePauseState();
 		updateShowFPSState();
 
-		if (!isGamePaused) {
-			screenManager.update();
-		}
-		else {
-			//menuNav();
-				if (Keyboard.isKeyDown(Key.DOWN) && keyPressTimer == 0) {
-					keyPressTimer = 14;
-					currentMenuItemHovered++;
-				} else if (Keyboard.isKeyDown(Key.UP) && keyPressTimer == 0) {
-					keyPressTimer = 14;
-					currentMenuItemHovered--;
-				} else {
-					if (keyPressTimer > 0) {
-						keyPressTimer--;
-					}
-				}
+		//  if (!isGamePaused) {
+		 	screenManager.update();
+		// }
+		// else {
+		// 	//menuNav();
+		// 		if (Keyboard.isKeyDown(Key.DOWN) && keyPressTimer == 0) {
+		// 			keyPressTimer = 14;
+		// 			currentMenuItemHovered++;
+		// 		} else if (Keyboard.isKeyDown(Key.UP) && keyPressTimer == 0) {
+		// 			keyPressTimer = 14;
+		// 			currentMenuItemHovered--;
+		// 		} else {
+		// 			if (keyPressTimer > 0) {
+		// 				keyPressTimer--;
+		// 			}
+		// 		}
 		
-				// if down is pressed on last menu item or up is pressed on first menu item,
-				// "loop" the selection back around to the beginning/end
-				if (currentMenuItemHovered > 1) {
-					currentMenuItemHovered = 0;
-				} else if (currentMenuItemHovered < 0) {
-					currentMenuItemHovered = 1;
-				}
+		// 		// if down is pressed on last menu item or up is pressed on first menu item,
+		// 		// "loop" the selection back around to the beginning/end
+		// 		if (currentMenuItemHovered > 1) {
+		// 			currentMenuItemHovered = 0;
+		// 		} else if (currentMenuItemHovered < 0) {
+		// 			currentMenuItemHovered = 1;
+		// 		}
 		
-				// sets location for blue square in front of text (pointerLocation) and also
-				// sets color of spritefont text based on which menu item is being hovered
-				if (currentMenuItemHovered == 0) {
-					arLabel.setColor(new Color(255, 215, 0));
-					shottyLabel.setColor(new Color(49, 207, 240));
-					pointerLocationX = 300;
-					pointerLocationY = 200;
-				} else if (currentMenuItemHovered == 1) {
-					arLabel.setColor(new Color(49, 207, 240));
-					shottyLabel.setColor(new Color(255, 215, 0));
-					pointerLocationX = 300;
-					pointerLocationY = 300;
-				}
-		}
+		// 		// sets location for blue square in front of text (pointerLocation) and also
+		// 		// sets color of spritefont text based on which menu item is being hovered
+		// 		if (currentMenuItemHovered == 0) {
+		// 			arLabel.setColor(new Color(255, 215, 0));
+		// 			shottyLabel.setColor(new Color(49, 207, 240));
+		// 			pointerLocationX = 300;
+		// 			pointerLocationY = 200;
+		// 		} else if (currentMenuItemHovered == 1) {
+		// 			arLabel.setColor(new Color(49, 207, 240));
+		// 			shottyLabel.setColor(new Color(255, 215, 0));
+		// 			pointerLocationX = 300;
+		// 			pointerLocationY = 300;
+		// 		}
+		// }
 	}
 
-	private void updatePauseState() {
-		if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
-			isGamePaused = !isGamePaused;
-			keyLocker.lockKey(pauseKey);
-		}
+	// private void updatePauseState() {
+	// 	if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
+	// 		isGamePaused = !isGamePaused;
+	// 		keyLocker.lockKey(pauseKey);
+	// 	}
 
-		if (Keyboard.isKeyUp(pauseKey)) {
-			keyLocker.unlockKey(pauseKey);
-		}
-	}
-
-	private void menuNav() {
-
-	}
+	// 	if (Keyboard.isKeyUp(pauseKey)) {
+	// 		keyLocker.unlockKey(pauseKey);
+	// 	}
+	// }
 
 	private void updateShowFPSState() {
 		if (Keyboard.isKeyDown(showFPSKey) && !keyLocker.isKeyLocked(showFPSKey)) {
@@ -192,16 +192,17 @@ public class GamePanel extends JPanel {
 	public void draw() {
 		screenManager.draw(graphicsHandler);
 
-		// if game is paused, draw pause gfx over Screen gfx
-		if (isGamePaused) {
-			//pauseLabel.draw(graphicsHandler);
-			graphicsHandler.drawFilledRectangle(0, 0, ScreenManager.getScreenWidth(), ScreenManager.getScreenHeight(), new Color(165,42,42, 255));
-			shopLabel.draw(graphicsHandler);
-			arLabel.draw(graphicsHandler);
-			shottyLabel.draw(graphicsHandler);
-			graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,
-                new Color(49, 207, 240), Color.black, 2);
-		}
+		// //if game is paused, draw pause gfx over Screen gfx
+		// if (isGamePaused) {
+		// 	//pauseLabel.draw(graphicsHandler);
+		// 	graphicsHandler.drawFilledRectangle(0, 0, ScreenManager.getScreenWidth(), ScreenManager.getScreenHeight(), new Color(165,42,42, 255));
+		// 	shopLabel.draw(graphicsHandler);
+		// 	arLabel.draw(graphicsHandler);
+		// 	shottyLabel.draw(graphicsHandler);
+		// 	//pistolLabel.draw(graphicsHandler);
+		// 	graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,
+        //         new Color(49, 207, 240), Color.black, 2);
+		// }
 
 		if (showFPS) {
 			fpsDisplayLabel.draw(graphicsHandler);

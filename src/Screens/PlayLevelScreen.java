@@ -6,6 +6,7 @@ import Enemies.Fireball;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import Engine.Screen;
+import Engine.ScreenManager;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Enemy;
@@ -13,7 +14,6 @@ import Level.Map;
 import Level.MapEntity;
 import Level.Player;
 import Level.PlayerListener;
-import Maps.TestMap;
 import Players.Joe;
 import Players.ArmedJoe;
 import Utils.Direction;
@@ -31,7 +31,9 @@ import Engine.AShotgunOverlay;
 import java.awt.Color;
 import java.awt.Font;
 import Engine.Key;
+import Engine.KeyLocker;
 import Engine.Keyboard;
+import Maps.*;
 
 
 public class PlayLevelScreen extends Screen implements PlayerListener {
@@ -41,6 +43,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    protected PlayLevelScreenState playLevelScreenState;
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
+   protected PauseScreen pauseScreen;
    protected LevelLoseScreen levelLoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
@@ -50,7 +53,16 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private Image hp1Image;
    private Image coinImage;
 
-   
+   //pause screen logic
+   private KeyLocker keyLocker = new KeyLocker();
+   private final Key pauseKey = Key.P;
+   private boolean isGamePaused = false;
+   private ScreenManager screenManager;
+   protected int currentMenuItemHovered = 0;
+   protected int menuItemSelected = -1;
+   protected int keyPressTimer;
+   protected int pointerLocationX, pointerLocationY;
+   protected boolean screenPausedStateChangeStart;
 
 
    private boolean isWeaponPickedUp = false;
@@ -81,6 +93,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private int shotgunCooldownTimer = 0; // Timer to control firing rate for shotgun
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
+   private boolean isMap1Loaded = false;
 
    public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
@@ -91,8 +104,12 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    public void initialize() {
-       resetWeaponStatus();
-       this.map = new TestMap();
+        resetWeaponStatus();
+        if (!isMap1Loaded) {
+            this.map = new TestMap(); // Start with TestMap
+        } else {
+            this.map = new Map1(); // Switch to Map1 after TestMap
+        }
 
 
        // Start the player as normal Joe
@@ -103,6 +120,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
        levelClearedScreen = new LevelClearedScreen();
        levelLoseScreen = new LevelLoseScreen(this);
+       pauseScreen = new PauseScreen();
 
 
        this.playLevelScreenState = PlayLevelScreenState.RUNNING;
@@ -113,6 +131,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
        hp1Image = ImageLoader.load("OneHeart.png");
 
        coinImage = ImageLoader.load("coinForCount.png");
+
+       map.setupMap();
    }
 
 
@@ -122,6 +142,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    public void update() {
+    updatePauseState();
+
        switch (playLevelScreenState) {
            case RUNNING:
                if (APistolPickup.weaponPickedUp && !isWeaponPickedUp) {
@@ -149,12 +171,17 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
   
                player.update();
                map.update(player);
+
+               if (map.isWaveComplete() && map instanceof TestMap && !isMap1Loaded) {
+                System.out.println("All waves in TestMap are complete. Switching to Map1...");
+                onLevelCompleted(); // Manually trigger level completion
+            }
+
   
                // Handle reloading and shooting
                if (reloading) {
                    reloadTimer++;
-                   System.out.println("Reloading... Timer: " + reloadTimer); // Debug statement
-              
+                   
                    if (reloadTimer >= RELOAD_DELAY) {
                        finishReload();
                        reloadTimer = 0; // Reset the timer after reloading
@@ -200,6 +227,44 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                        }
                    }
                }
+
+        //        if (isGamePaused) {
+        //         screenManager.update();
+        //        }
+        //        else {
+        //         if (Keyboard.isKeyDown(Key.DOWN) && keyPressTimer == 0) {
+        //             			keyPressTimer = 14;
+        //             			currentMenuItemHovered++;
+        //             		} else if (Keyboard.isKeyDown(Key.UP) && keyPressTimer == 0) {
+        //             			keyPressTimer = 14;
+        //             			currentMenuItemHovered--;
+        //             		} else {
+        //             			if (keyPressTimer > 0) {
+        //             				keyPressTimer--;
+        //             			}
+        //                     }
+        //        // if down is pressed on last menu item or up is pressed on first menu item,
+		// 		// "loop" the selection back around to the beginning/end
+		// 		if (currentMenuItemHovered > 1) {
+		// 			currentMenuItemHovered = 0;
+		// 		} else if (currentMenuItemHovered < 0) {
+		// 			currentMenuItemHovered = 1;
+		// 		}
+		
+		// 		// sets location for blue square in front of text (pointerLocation) and also
+		// 		// sets color of spritefont text based on which menu item is being hovered
+		// 		if (currentMenuItemHovered == 0) {
+		// 			//arLabel.setColor(new Color(255, 215, 0));
+		// 			//shottyLabel.setColor(new Color(49, 207, 240));
+		// 			pointerLocationX = 300;
+		// 			pointerLocationY = 200;
+		// 		} else if (currentMenuItemHovered == 1) {
+		// 			//arLabel.setColor(new Color(49, 207, 240));
+		// 			//shottyLabel.setColor(new Color(255, 215, 0));
+		// 			pointerLocationX = 300;
+		// 			pointerLocationY = 300;
+		// 		}
+		// }
                break;
   
            case LEVEL_COMPLETED:
@@ -219,10 +284,28 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                levelLoseScreen.update();
                resetWeaponStatus();
                break;
+            
+            case PAUSED:
+            //   updatePauseState();
+              pauseScreen.update();
+              
+               break;
+
        }
    }
   
-  
+//update pause state for game; copied from Gamepanel
+    private void updatePauseState() {
+        if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
+            isGamePaused = !isGamePaused;
+            keyLocker.lockKey(pauseKey);
+            playLevelScreenState = PlayLevelScreenState.PAUSED;
+        }
+
+        if (Keyboard.isKeyUp(pauseKey)) {
+            keyLocker.unlockKey(pauseKey);
+        }
+    }
   
   
    // Helper method to spawn a fireball for the player
@@ -277,6 +360,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
            case RUNNING:
                map.draw(graphicsHandler);
                player.draw(graphicsHandler);
+
+
   
                if (showPistolOverlay) {
                    apistolOverlay.draw(graphicsHandler.getGraphics());
@@ -304,6 +389,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
   
            case LEVEL_LOSE:
                levelLoseScreen.draw(graphicsHandler);
+               break;
+
+            case PAUSED:
+               pauseScreen.draw(graphicsHandler);
                break;
        }
    }
@@ -442,10 +531,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
    @Override
    public void onLevelCompleted() {
-       if (playLevelScreenState != PlayLevelScreenState.LEVEL_COMPLETED) {
-           playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
-           levelCompletedStateChangeStart = true;
-       }
+        if (!isMap1Loaded) {
+            System.out.println("Level Complete! Switching to Map1...");
+            isMap1Loaded = true;
+            initialize(); // Reinitialize to load Map1
+        } else {
+            System.out.println("All levels completed!");
+            // Optionally, add logic here to show an end screen or go back to the menu
+        }
    }
 
 
@@ -468,7 +561,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    private enum PlayLevelScreenState {
-       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE
+       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
    }
 
 
