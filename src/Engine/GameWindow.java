@@ -15,7 +15,7 @@ public class GameWindow {
     //private WeaponOverlay weaponOverlay; // Add an instance of WeaponOverlay
 
     public GameWindow() {
-        gameWindow = new JFrame("Game");
+        gameWindow = new JFrame("Timeline Assault");
         gamePanel = new GamePanel() {
            // @Override
            // protected void paintComponent(Graphics g) {
