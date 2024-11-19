@@ -57,7 +57,8 @@ public class PauseScreen extends Screen {
 
     @Override
     public void update() {
-     
+		menuNav();
+
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
@@ -67,7 +68,7 @@ public class PauseScreen extends Screen {
 		arLabel.draw(graphicsHandler);
 		shottyLabel.draw(graphicsHandler);
 		pistolLabel.draw(graphicsHandler);
-		menuNav();
+		
     }
 
     public void menuNav() {
