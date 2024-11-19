@@ -67,6 +67,7 @@ public class PauseScreen extends Screen {
 		arLabel.draw(graphicsHandler);
 		shottyLabel.draw(graphicsHandler);
 		pistolLabel.draw(graphicsHandler);
+		menuNav();
     }
 
     public void menuNav() {
