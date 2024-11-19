@@ -127,6 +127,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
    private boolean isMap1Loaded = false;
    private boolean isMap2Loaded = false;
+   private boolean isMap3Loaded = false;
 
    public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
@@ -145,9 +146,11 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    public void initialize() {
         resetWeaponStatus();
         if (!isMap1Loaded) {
-            this.map = new Map1(); // Start with TestMap
-        } else {
-            this.map = new Map2(); // Switch to Map1 after TestMap
+            this.map = new Map1(); // Start with Map 1
+        } else if (isMap1Loaded && !isMap2Loaded) {
+            this.map = new Map2(); // Switch to Map2
+        } else if (isMap1Loaded && isMap2Loaded && !isMap3Loaded) {
+            this.map = new Map3(); 
         }
 
 
@@ -287,13 +290,14 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                player.update();
                map.update(player);
 
-               if (map.isWaveComplete() && map instanceof TestMap && !isMap1Loaded) {
-                System.out.println("All waves in TestMap are complete. Switching to Map1...");
+
+                if (map.isWaveComplete() && map instanceof Map1 && !isMap2Loaded) {
+                System.out.println("All waves in Map1 are complete. Switching to Map2...");
                 onLevelCompleted(); // Manually trigger level completion
             }
 
-                if (map.isWaveComplete() && map instanceof Map1 && !isMap2Loaded) {
-                System.out.println("All waves in TestMap are complete. Switching to Map2...");
+                if (map.isWaveComplete() && map instanceof Map2 && !isMap3Loaded) {
+                System.out.println("All waves in Map2 are complete. Switching to Map3...");
                 onLevelCompleted(); // Manually trigger level completion
             }
   
@@ -709,7 +713,9 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
             isMap2Loaded = true;
             initialize();
         } else {
-            playLevelScreenState = PlayLevelScreenState.LEVEL_COMPLETED;
+            System.out.println("Level Complete! Switching to Map3...");
+            isMap3Loaded = true;
+            initialize();
         }
    }
 
@@ -734,7 +740,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
    private enum PlayLevelScreenState {
        RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
-   }
+};
 
 
    private void resetOverlays() {

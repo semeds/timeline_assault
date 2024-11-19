@@ -18,7 +18,7 @@ public class Config {
 
     // POWER_SAVER does not hog CPU as much, but can potentially stutter/lag on lower end computers if they cannot handle reaching the target FPS
     // MAX_PERFORMANCE will have the game do whatever it takes to reach the target FPS, even if that means hogging the CPU
-    public static final GameLoopType GAME_LOOP_TYPE = GameLoopType.POWER_SAVER;
+    public static final GameLoopType GAME_LOOP_TYPE = GameLoopType.MAX_PERFORMANCE;
 
     // prevents Config from being instantiated
     private Config() { }
