@@ -578,7 +578,7 @@ public class CommonTileset extends Tileset {
         .build();
 
         MapTileBuilder DarkBlueEdgeTile = new MapTileBuilder(DarkBlueEdgeFrame)
-        .withTileType(TileType.PASSABLE); // Make this tile passable
+        .withTileType(TileType.NOT_PASSABLE); // Make this tile passable
         mapTiles.add(DarkBlueEdgeTile);
 
         //sky R and I
