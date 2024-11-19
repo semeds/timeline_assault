@@ -47,7 +47,7 @@ import Engine.Keyboard;
 import Maps.*;
 
 
-public class PlayLevelScreen extends Screen implements PlayerListener {
+public class WorldOneScreen extends Screen implements PlayerListener {
    protected ScreenCoordinator screenCoordinator;
    protected Map map;
    protected Player player;
@@ -129,7 +129,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private boolean isMap2Loaded = false;
    private boolean isMap3Loaded = false;
 
-   public PlayLevelScreen(ScreenCoordinator screenCoordinator) {
+   public WorldOneScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
        apistolOverlay = new APistolOverlay();
        aassaultRifleOverlay = new AAsaultrifleOverlay(); 

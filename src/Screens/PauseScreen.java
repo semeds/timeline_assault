@@ -57,7 +57,8 @@ public class PauseScreen extends Screen {
 
     @Override
     public void update() {
-     
+		menuNav();
+
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
@@ -67,6 +68,9 @@ public class PauseScreen extends Screen {
 		arLabel.draw(graphicsHandler);
 		shottyLabel.draw(graphicsHandler);
 		pistolLabel.draw(graphicsHandler);
+		graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,
+                new Color(49, 207, 240), Color.black, 2);
+
     }
 
     public void menuNav() {
@@ -82,26 +86,40 @@ public class PauseScreen extends Screen {
 					}
 				}
 		
+
 				// if down is pressed on last menu item or up is pressed on first menu item,
 				// "loop" the selection back around to the beginning/end
-				if (currentMenuItemHovered > 1) {
+				if (currentMenuItemHovered > 2) {
 					currentMenuItemHovered = 0;
 				} else if (currentMenuItemHovered < 0) {
-					currentMenuItemHovered = 1;
-				}
+					currentMenuItemHovered = 2;
+				 } 
+				// else if (currentMenuItemHovered ) {
+				// 	currentMenuItemHovered = 2;
+				// }
 		
 				// sets location for blue square in front of text (pointerLocation) and also
 				// sets color of spritefont text based on which menu item is being hovered
 				if (currentMenuItemHovered == 0) {
 					arLabel.setColor(new Color(255, 215, 0));
 					shottyLabel.setColor(new Color(49, 207, 240));
+					pistolLabel.setColor(new Color(49, 207, 240));
 					pointerLocationX = 300;
 					pointerLocationY = 200;
 				} else if (currentMenuItemHovered == 1) {
 					arLabel.setColor(new Color(49, 207, 240));
 					shottyLabel.setColor(new Color(255, 215, 0));
+					pistolLabel.setColor(new Color(49, 207, 240));
 					pointerLocationX = 300;
 					pointerLocationY = 300;
 				}
+				else if (currentMenuItemHovered == 2) {
+					arLabel.setColor(new Color(49, 207, 240));
+					shottyLabel.setColor(new Color(49, 207, 240));
+					pistolLabel.setColor(new Color(255, 215, 0));
+					pointerLocationX = 300;
+					pointerLocationY = 400;
+				}
     }
 }
+
