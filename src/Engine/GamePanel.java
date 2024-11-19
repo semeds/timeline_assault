@@ -4,8 +4,6 @@ import GameObject.Rectangle;
 import SpriteFont.SpriteFont;
 import Utils.Colors;
 
-//new imports
-import GameObject.Sprite;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;

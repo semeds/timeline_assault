@@ -1,6 +1,9 @@
 package Screens;
 
 import Engine.ImageLoader;
+import Engine.KeyLocker;
+import Engine.Keyboard;
+import Engine.Key;
 import Engine.GamePanel;
 import Engine.GraphicsHandler;
 import Engine.Screen;
@@ -18,6 +21,13 @@ public class PauseScreen extends Screen {
 	private SpriteFont arLabel;
 	private SpriteFont shottyLabel;
 	private SpriteFont pistolLabel;
+
+    //menu nav variables
+    protected int currentMenuItemHovered = 0;
+    protected int menuItemSelected = -1;
+    protected int keyPressTimer;
+    protected int pointerLocationX, pointerLocationY;
+    private KeyLocker keyLocker = new KeyLocker();
     
 
 
@@ -57,5 +67,41 @@ public class PauseScreen extends Screen {
 		arLabel.draw(graphicsHandler);
 		shottyLabel.draw(graphicsHandler);
 		pistolLabel.draw(graphicsHandler);
+    }
+
+    public void menuNav() {
+        if (Keyboard.isKeyDown(Key.DOWN) && keyPressTimer == 0) {
+					keyPressTimer = 14;
+					currentMenuItemHovered++;
+				} else if (Keyboard.isKeyDown(Key.UP) && keyPressTimer == 0) {
+					keyPressTimer = 14;
+					currentMenuItemHovered--;
+				} else {
+					if (keyPressTimer > 0) {
+						keyPressTimer--;
+					}
+				}
+		
+				// if down is pressed on last menu item or up is pressed on first menu item,
+				// "loop" the selection back around to the beginning/end
+				if (currentMenuItemHovered > 1) {
+					currentMenuItemHovered = 0;
+				} else if (currentMenuItemHovered < 0) {
+					currentMenuItemHovered = 1;
+				}
+		
+				// sets location for blue square in front of text (pointerLocation) and also
+				// sets color of spritefont text based on which menu item is being hovered
+				if (currentMenuItemHovered == 0) {
+					arLabel.setColor(new Color(255, 215, 0));
+					shottyLabel.setColor(new Color(49, 207, 240));
+					pointerLocationX = 300;
+					pointerLocationY = 200;
+				} else if (currentMenuItemHovered == 1) {
+					arLabel.setColor(new Color(49, 207, 240));
+					shottyLabel.setColor(new Color(255, 215, 0));
+					pointerLocationX = 300;
+					pointerLocationY = 300;
+				}
     }
 }
