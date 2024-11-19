@@ -116,37 +116,31 @@ public class BaseAlien extends Enemy {
         }
 
         if (alienState == AlienState.SHOOT) {
-            // define where fireball will spawn on map (x location) relative to dinosaur
-            // enemy's location
-            // and define its movement speed
-            int fireballX;
-            float movementSpeed;
-            if (facingDirection == Direction.RIGHT) {
-                fireballX = Math.round(getX()) + getWidth();
-                movementSpeed = 1.5f;
-            } else {
-                fireballX = Math.round(getX() - 21);
-                movementSpeed = -1.5f;
-            }
+    int enemyProjectilesX;
+    float movementSpeed;
+    if (facingDirection == Direction.RIGHT) {
+        enemyProjectilesX = Math.round(getX()) + getWidth();
+        movementSpeed = 3;
+    } else {
+        enemyProjectilesX = Math.round(getX() - 21);
+        movementSpeed = 3;
+    }
 
-            // define where fireball will spawn on the map (y location) relative to dinosaur
-            // enemy's location
-            int fireballY = Math.round(getY()) + 4;
+    int enemyProjectilesY = Math.round(getY()) + 4;
 
-            // create Fireball enemy
-            Fireball fireball = new Fireball(new Point(fireballX, fireballY), movementSpeed, 60);
+    // Create enemy projectile with updated constructor
+    EnemyProjectiles enemyProjectiles = new EnemyProjectiles(
+        new Point(enemyProjectilesX, enemyProjectilesY), 
+        movementSpeed, 
+        300, 
+        player // Pass the player as the target
+    );
 
-            // add fireball enemy to the map for it to spawn in the level
-            map.addEnemy(fireball);
+    map.addEnemy(enemyProjectiles);
+    alienState = AlienState.WALK;
+    shootWaitTimer = 400;
+}
 
-            // change dinosaur back to its WALK state after shooting, reset shootTimer to
-            // wait a certain number of frames before shooting again
-            alienState = AlienState.WALK;
-
-            // reset shoot wait timer so the process can happen again (dino walks around,
-            // then waits, then shoots)
-            shootWaitTimer = 130;
-        }
 
         // add gravity (if in air, this will cause bug to fall)
         moveAmountY += gravity;
