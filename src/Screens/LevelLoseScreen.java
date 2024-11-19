@@ -10,9 +10,9 @@ public class LevelLoseScreen extends Screen {
     protected SpriteFont loseMessage;
     protected SpriteFont instructions;
     protected KeyLocker keyLocker = new KeyLocker();
-    protected PlayLevelScreen playLevelScreen;
+    protected WorldOneScreen playLevelScreen;
 
-    public LevelLoseScreen(PlayLevelScreen playLevelScreen) {
+    public LevelLoseScreen(WorldOneScreen playLevelScreen) {
         this.playLevelScreen = playLevelScreen;
         initialize();
     }

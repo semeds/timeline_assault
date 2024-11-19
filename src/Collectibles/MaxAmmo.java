@@ -8,7 +8,7 @@ import GameObject.SpriteSheet;
 import Level.Map;
 import Level.NPC;
 import Level.Player;
-import Screens.PlayLevelScreen;
+import Screens.WorldOneScreen;
 import Utils.Point;
 import java.util.HashMap;
 
@@ -34,7 +34,7 @@ public class MaxAmmo extends NPC {
 
     private void collectpowerup(Player player) {
         //set ammo to full
-        PlayLevelScreen.finishReload();
+        WorldOneScreen.finishReload();
         mapPosition.getNPCs().remove(this);
 
     }

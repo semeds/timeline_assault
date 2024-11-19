@@ -22,7 +22,7 @@ import NPCs.MShotgunPickup;
 import NPCs.FAssaultRiflePickup;
 import NPCs.FPistolPickup;
 import NPCs.FShotgunPickup;
-import Screens.PlayLevelScreen;
+import Screens.WorldOneScreen;
 import Utils.Point;
 
 
@@ -177,7 +177,7 @@ public int getShotgunAmmo() {
        && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
    shootFireball(240); // Fire a projectile with a 240-frame lifetime
    assaultRifleAmmo--; // Reduce ammo count by 1
-   PlayLevelScreen.assaultRifleAmmo = assaultRifleAmmo; // Sync display ammo count for assault rifle
+   WorldOneScreen.assaultRifleAmmo = assaultRifleAmmo; // Sync display ammo count for assault rifle
    fireCooldownTimer = 0; // Reset cooldown timer
 }
 
@@ -243,9 +243,9 @@ public int getShotgunAmmo() {
        shotgunAmmo = SHOTGUN_MAX_AMMO;  // Reset shotgun ammo
    }
    // Ensure that the ammo count for display is updated here if it's a static variable
-   PlayLevelScreen.currentAmmo = currentAmmo;  // Update display for pistol
-   PlayLevelScreen.assaultRifleAmmo = assaultRifleAmmo;  // Update display for assault rifle
-   PlayLevelScreen.shotgunAmmo = shotgunAmmo;  // Update display for shotgun
+   WorldOneScreen.currentAmmo = currentAmmo;  // Update display for pistol
+   WorldOneScreen.assaultRifleAmmo = assaultRifleAmmo;  // Update display for assault rifle
+   WorldOneScreen.shotgunAmmo = shotgunAmmo;  // Update display for shotgun
 }
 
 

@@ -14,9 +14,7 @@ public class InstructionsCutscene extends Screen {
     protected int animationFrame = 0;
     protected int cutsceneTimer;
     protected int cutsceneDuration = 3700; // Total cutscene duration
-    protected boolean musicStarted = false;
     protected int blackScreenDuration = 330; // Black screen duration
-
 
     // Define frame switch times for each transition
     protected final int[] frameSwitchTimes = {
@@ -44,12 +42,13 @@ public class InstructionsCutscene extends Screen {
 
     @Override
     public void initialize() {
+
         // Load 16 frames
         for (int i = 0; i < cutsceneFrames.length; i++) {
             if (i < 15) {
                 cutsceneFrames[i] = new Sprite(ImageLoader.load("line" + (i + 1) + ".png"), 0, 0);
             } else {
-                cutsceneFrames[i] = new Sprite(ImageLoader.load("TitleScreen.png"), 0, 0); // Load the title screen frame
+                cutsceneFrames[i] = new Sprite(ImageLoader.load("titleScreen.png"), 0, 0); // Load the title screen frame
             }
         }
 
@@ -67,8 +66,6 @@ public class InstructionsCutscene extends Screen {
         if (Keyboard.isKeyDown(Key.SPACE)) {
             screenCoordinator.setGameState(GameState.MENU);
         }
-
-    
 
         // Frame transitions based on timer
         if (cutsceneTimer >= blackScreenDuration) {
