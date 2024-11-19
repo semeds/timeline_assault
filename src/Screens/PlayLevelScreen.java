@@ -5,6 +5,7 @@ import Enemies.Fireball;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import Engine.Screen;
+import Engine.ScreenManager;
 import Game.GameState;
 import Game.ScreenCoordinator;
 import Level.Enemy;
@@ -41,6 +42,7 @@ import Engine.FShotgunOverlay;
 import java.awt.Color;
 import java.awt.Font;
 import Engine.Key;
+import Engine.KeyLocker;
 import Engine.Keyboard;
 import Maps.*;
 
@@ -52,6 +54,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    protected PlayLevelScreenState playLevelScreenState;
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
+   protected PauseScreen pauseScreen;
    protected LevelLoseScreen levelLoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
@@ -61,7 +64,16 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
    private Image hp1Image;
    private Image coinImage;
 
-   
+   //pause screen logic
+   private KeyLocker keyLocker = new KeyLocker();
+   private final Key pauseKey = Key.P;
+   private boolean isGamePaused = false;
+   private ScreenManager screenManager;
+   protected int currentMenuItemHovered = 0;
+   protected int menuItemSelected = -1;
+   protected int keyPressTimer;
+   protected int pointerLocationX, pointerLocationY;
+   protected boolean screenPausedStateChangeStart;
 
 
    private boolean isAPistolickedUp = false;
@@ -150,6 +162,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
        levelClearedScreen = new LevelClearedScreen();
        levelLoseScreen = new LevelLoseScreen(this);
+       pauseScreen = new PauseScreen();
 
 
        this.playLevelScreenState = PlayLevelScreenState.RUNNING;
@@ -171,6 +184,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    public void update() {
+    updatePauseState();
+
        switch (playLevelScreenState) {
            case RUNNING:
                if (APistolPickup.weaponPickedUp && !isAPistolickedUp) {
@@ -378,10 +393,36 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
                levelLoseScreen.update();
                resetWeaponStatus();
                break;
+            
+            case PAUSED:
+            //   updatePauseState();
+              pauseScreen.update();
+              
+               break;
+
        }
    }
   
-  
+//update pause state for game; copied from Gamepanel
+    private void updatePauseState() {
+        if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
+            isGamePaused = !isGamePaused;
+            keyLocker.lockKey(pauseKey);
+            if (isGamePaused == true) {
+                playLevelScreenState = PlayLevelScreenState.PAUSED;
+            }
+            else {
+                playLevelScreenState = PlayLevelScreenState.RUNNING;
+            }
+            
+        }
+
+        if (Keyboard.isKeyUp(pauseKey)) {
+            keyLocker.unlockKey(pauseKey);
+        }
+    }
+
+    
   
   
    // Helper method to spawn a fireball for the player
@@ -446,6 +487,8 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
            case RUNNING:
                map.draw(graphicsHandler);
                player.draw(graphicsHandler);
+
+
   
                if (showAPistolOverlay) {
                    apistolOverlay.draw(graphicsHandler.getGraphics());
@@ -501,6 +544,10 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
   
            case LEVEL_LOSE:
                levelLoseScreen.draw(graphicsHandler);
+               break;
+
+            case PAUSED:
+               pauseScreen.draw(graphicsHandler);
                break;
        }
    }
@@ -692,7 +739,7 @@ public class PlayLevelScreen extends Screen implements PlayerListener {
 
 
    private enum PlayLevelScreenState {
-       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE
+       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
    }
 
 

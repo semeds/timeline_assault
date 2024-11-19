@@ -10,7 +10,6 @@ import Collectibles.MaxAmmo;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
-import Maps.TestMap;
 import Utils.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-import NPCs.APistolPickup;
+import NPCs.WeaponPickup;
 import java.util.Random;
 
 
@@ -54,7 +53,6 @@ public abstract class Map {
    // height-wise
    protected int width;
    protected int height;
-
 
 
    // the tileset this map uses for its map tiles
@@ -109,8 +107,6 @@ public abstract class Map {
 
    //private EnemyWave enemyWave;
    private boolean waveActive = false;
-   
-   public int mapId = 0;
 
 
    public Map(String mapFileName, Tileset tileset) {
@@ -189,20 +185,14 @@ public abstract class Map {
            }
        } else {
            if (isWaveComplete()) {
-                System.out.println("All waves complete. Triggering level completion...");
-                onLevelCompleted();
-           } else {
-                System.out.println("Wave not complete yet.");
-
+               // ScreenManager.setCurrentScreen(new LevelClearedScreen()); // Switch to the
+               // level cleared screen
+               System.out.println("Game complete!!");
            }
+
 
        }
    }
-
-   public void onLevelCompleted() {
-    // Placeholder for callback
-}
-
    // Check if all active enemies are dead
    public boolean isWaveComplete() {
         boolean complete = getActiveEnemies().isEmpty();
