@@ -15,7 +15,7 @@ public class GameCompleteScreen extends Screen {
     protected int menuItemSelected = -1;
     protected SpriteFont playGame;
     protected SpriteFont credits;
-    protected SpriteFont gameComplete
+    protected SpriteFont gameComplete;
     protected BufferedImage backgroundImage;
     protected int keyPressTimer;
     protected int pointerLocationX, pointerLocationY;
