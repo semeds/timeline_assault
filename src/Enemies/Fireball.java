@@ -21,7 +21,7 @@ public class Fireball extends Enemy {
     private int existenceFrames;
 
     public Fireball(Point location, float movementSpeed, int existenceFrames) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("NewBullet.png"), 6, 6), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("LaserBullet.png"), 20, 20), "DEFAULT");
         this.movementSpeed = movementSpeed;
 
         this.existenceFrames = existenceFrames;

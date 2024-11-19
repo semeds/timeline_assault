@@ -1,6 +1,7 @@
 package Enemies;
 
 import Builders.FrameBuilder;
+import Enemies.DinosaurEnemy.DinosaurState;
 import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.ImageEffect;
@@ -25,11 +26,26 @@ public class BaseAlien extends Enemy {
     private Direction facingDirection;
     private AirGroundState airGroundState;
 
+    protected Point startLocation;
+    protected Point endLocation;
+
+    protected int shootWaitTimer;
+
+    protected int shootTimer;
+
+    protected AlienState alienState;
+    protected AlienState previousAlienState;
+
+
+
     public BaseAlien(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
         this.hitPoints = 4;
         this.initialize();
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+        this.startFacingDirection = facingDirection;
     }
 
     // Method to hurt the enemy - Basically copied hurtPlayrt()
@@ -65,18 +81,72 @@ public class BaseAlien extends Enemy {
     public void initialize() {
         super.initialize();
         facingDirection = startFacingDirection;
+        previousAlienState = alienState;
         if (facingDirection == Direction.RIGHT) {
             currentAnimationName = "WALK_RIGHT";
         } else if (facingDirection == Direction.LEFT) {
             currentAnimationName = "WALK_LEFT";
         }
         airGroundState = AirGroundState.GROUND;
+
+        shootWaitTimer = 65;
     }
+    
 
     @Override
     public void update(Player player) {
         float moveAmountX = 0;
         float moveAmountY = 0;
+
+         if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
+            alienState = AlienState.SHOOT_WAIT;
+        } else {
+            shootWaitTimer--;
+        }
+
+        if (alienState == AlienState.SHOOT_WAIT) {
+            if (previousAlienState == AlienState.WALK) {
+                shootTimer = 65;
+                currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
+            } else if (shootTimer == 0) {
+                alienState = AlienState.SHOOT;
+            } else {
+                shootTimer--;
+            }
+        }
+
+        if (alienState == AlienState.SHOOT) {
+            // define where fireball will spawn on map (x location) relative to dinosaur
+            // enemy's location
+            // and define its movement speed
+            int fireballX;
+            float movementSpeed;
+            if (facingDirection == Direction.RIGHT) {
+                fireballX = Math.round(getX()) + getWidth();
+                movementSpeed = 1.5f;
+            } else {
+                fireballX = Math.round(getX() - 21);
+                movementSpeed = -1.5f;
+            }
+
+            // define where fireball will spawn on the map (y location) relative to dinosaur
+            // enemy's location
+            int fireballY = Math.round(getY()) + 4;
+
+            // create Fireball enemy
+            Fireball fireball = new Fireball(new Point(fireballX, fireballY), movementSpeed, 60);
+
+            // add fireball enemy to the map for it to spawn in the level
+            map.addEnemy(fireball);
+
+            // change dinosaur back to its WALK state after shooting, reset shootTimer to
+            // wait a certain number of frames before shooting again
+            alienState = AlienState.WALK;
+
+            // reset shoot wait timer so the process can happen again (dino walks around,
+            // then waits, then shoots)
+            shootWaitTimer = 130;
+        }
 
         // add gravity (if in air, this will cause bug to fall)
         moveAmountY += gravity;
@@ -223,5 +293,9 @@ public class BaseAlien extends Enemy {
                 });
             }
         };
+    }
+
+    public enum AlienState {
+        WALK, SHOOT_WAIT, SHOOT
     }
 }
