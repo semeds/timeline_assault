@@ -16,6 +16,7 @@ import NPCs.Walrus;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
 import NPCs.AShotgunPickup;
+import NPCs.FPistolPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import Utils.Point;
@@ -70,20 +71,20 @@ public class Map3 extends Map {
        npcs.add(walrus);
 
 
-       APistolPickup apistolPickup = new APistolPickup(getMapTile(9, (int)8).getLocation(), this);
-      npcs.add(apistolPickup);
+        FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(15, (int)11).getLocation(), this);
+       npcs.add(fpistolPickup);
 
 
 
 
-      AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
-      npcs.add(aasaultriflePickup);
+       //FAssaultRiflePickup fasaultriflePickup = new FAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+     // npcs.add(fasaultriflePickup);
 
 
 
 
-      AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
-      npcs.add(ashotgunPickup);
+     // FShotgunPickup fshotgunPickup = new FShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+      //npcs.add(fshotgunPickup);
 
 
        Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
