@@ -1,7 +1,7 @@
 package Screens;
 
 
-import Enemies.Fireball;
+import Enemies.FutureBullets;
 import Engine.GraphicsHandler;
 import Engine.ImageLoader;
 import Engine.Screen;
@@ -84,6 +84,10 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
    public static final int SHOTGUN_MAX_AMMO = 8; // Shotgun max ammo
    private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
    public static boolean reloading = false; // Flag to indicate if reload is in progress
+public static int fassaultRifleAmmo;
+public static int apistolAmmo;
+public static int aassaultRifleAmmo;
+public static int ashotgunAmmo;
    private int reloadTimer = 0; // Reload delay
    private static final int RELOAD_DELAY = 60; // Reload delay in frames
 
@@ -200,15 +204,15 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
                        if (isFPistolPickedup && currentAmmo >0) {
                         currentAmmo--;
                        canShoot = false;
-                       spawnFireball();
+                       spawnFutureBullets();
                    } else if (isFAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
                        assaultRifleAmmo--;
                        fireCooldownTimer = 0;
-                       spawnFireball();
+                       spawnFutureBullets();
                    } else if (isFShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
                     shotgunAmmo--;
                     shotgunCooldownTimer = 0;
-                    spawnFireball();
+                    spawnFutureBullets();
                    }
                    }
                    if (!Keyboard.isKeyDown(Key.SPACE)) {
@@ -225,8 +229,8 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
                    }
                    for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
                        MapEntity projectile = map.getProjectiles().get(i);
-                       if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
-                           ((Fireball) projectile).touchedEntity(enemy);
+                       if (projectile instanceof FutureBullets && projectile.getBounds().intersects(enemy.getBounds())) {
+                           ((FutureBullets) projectile).touchedEntity(enemy);
                            map.removeProjectile(projectile);
                        }
                    }
@@ -282,9 +286,7 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
     
   
   
-   // Helper method to spawn a fireball for the player
-   private void spawnFireball() {
-       // Logic to spawn a fireball projectile from the player's location
+   private void spawnFutureBullets() {
    }
   
   

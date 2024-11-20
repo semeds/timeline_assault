@@ -14,13 +14,13 @@ import Utils.Point;
 
 import java.util.HashMap;
 
-public class ModernPistolBullets extends Enemy {
+public class FutureBullets extends Enemy {
 
     private float movementSpeed;
     private int existenceFrames;
 
-    public ModernPistolBullets(Point location, float movementSpeed, int existenceFrames) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("ModernPistolBullet.png"), 5, 5), "DEFAULT");
+    public FutureBullets(Point location, float movementSpeed, int existenceFrames) {
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("FutureBullets.png"), 5, 5), "DEFAULT");
         this.movementSpeed = movementSpeed;
 
         this.existenceFrames = existenceFrames;
