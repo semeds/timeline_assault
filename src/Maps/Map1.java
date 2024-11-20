@@ -65,7 +65,7 @@ public class Map1 extends Map {
       ArrayList<NPC> npcs = new ArrayList<>();
    
 
-     APistolPickup apistolPickup = new APistolPickup(getMapTile(9, (int)8).getLocation(), this);
+     APistolPickup apistolPickup = new APistolPickup(getMapTile(10, (int)7).getLocation(), this);
       npcs.add(apistolPickup);
 
 

@@ -14,26 +14,16 @@ import Utils.Point;
 
 import java.util.HashMap;
 
-public class EnemyProjectiles extends Enemy {
-    // EnemyProjectiles variables
+public class ModernPistolBullets extends Enemy {
+
     private float movementSpeed;
     private int existenceFrames;
-    private float xSpeed;
-    private float ySpeed;
 
-    public EnemyProjectiles(Point location, float movementSpeed, int existenceFrames, Player target) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("LaserBullet.png"), 10, 10), "DEFAULT");
+    public ModernPistolBullets(Point location, float movementSpeed, int existenceFrames) {
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("ModernPistolBullet.png"), 5, 5), "DEFAULT");
         this.movementSpeed = movementSpeed;
+
         this.existenceFrames = existenceFrames;
-
-        // Calculate the initial direction vector toward the player
-        float xDifference = target.getX() - location.x;
-        float yDifference = target.getY() - location.y;
-
-        // Normalize the direction vector and scale it by the movementSpeed
-        float distance = (float) Math.sqrt(xDifference * xDifference + yDifference * yDifference);
-        this.xSpeed = (xDifference / distance) * movementSpeed;
-        this.ySpeed = (yDifference / distance) * movementSpeed;
 
         initialize();
     }
@@ -43,9 +33,7 @@ public class EnemyProjectiles extends Enemy {
         if (existenceFrames == 0) {
             this.mapEntityStatus = MapEntityStatus.REMOVED;
         } else {
-            // Move the EnemyProjectiles in the fixed direction
-            moveXHandleCollision(xSpeed);
-            moveYHandleCollision(ySpeed);
+            moveXHandleCollision(movementSpeed);
             super.update(player);
         }
         existenceFrames--;
@@ -58,7 +46,7 @@ public class EnemyProjectiles extends Enemy {
         }
     }
 
-    @Override
+    // @Override
     public void touchedPlayer(Player player) {
         if (!(player instanceof Joe)) {
             super.touchedPlayer(player);
@@ -71,7 +59,6 @@ public class EnemyProjectiles extends Enemy {
             ((Enemy) entity).takeDamage();
         }
 
-        // Remove the EnemyProjectiles after it touches any entity
         this.mapEntityStatus = MapEntityStatus.REMOVED;
     }
 

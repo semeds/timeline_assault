@@ -71,7 +71,7 @@ public class Map3 extends Map {
        npcs.add(walrus);
 
 
-        FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(15, (int)11).getLocation(), this);
+        FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(2, (int)7).getLocation(), this);
        npcs.add(fpistolPickup);
 
 
