@@ -10,6 +10,7 @@ import Engine.Screen;
 import Engine.ScreenManager;
 import Game.GameState;
 import Game.ScreenCoordinator;
+import GameObject.Sprite;
 import Level.Map;
 import SpriteFont.SpriteFont;
 
@@ -21,6 +22,7 @@ public class PauseScreen extends Screen {
 	private SpriteFont arLabel;
 	private SpriteFont shottyLabel;
 	private SpriteFont pistolLabel;
+	private SpriteFont purchaseLabel;
 
     //menu nav variables
     protected int currentMenuItemHovered = 0;

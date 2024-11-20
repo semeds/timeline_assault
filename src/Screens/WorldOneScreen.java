@@ -43,6 +43,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
    protected PauseScreen pauseScreen;
+   protected PurchaseScreen purchaseScreen;
    protected LevelLoseScreen levelLoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
@@ -255,6 +256,9 @@ public class WorldOneScreen extends Screen implements PlayerListener {
               pauseScreen.update();
               
                break;
+            
+           case PURCHASE:
+               purchaseScreen.update();
 
        }
    }
@@ -366,6 +370,9 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             case PAUSED:
                pauseScreen.draw(graphicsHandler);
                break;
+            
+            case PURCHASE:
+               purchaseScreen.draw(graphicsHandler);
        }
    }
   
@@ -526,7 +533,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
 
    private enum PlayLevelScreenState {
-       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
+       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED, PURCHASE
 };
 
 
