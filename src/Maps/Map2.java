@@ -17,6 +17,7 @@ import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
 import NPCs.FPistolPickup;
 import NPCs.FShotgunPickup;
+import NPCs.MPistolPickup;
 import NPCs.FAssaultRiflePickup;
 import NPCs.Walrus;
 import Tilesets.CommonTileset;
@@ -72,20 +73,20 @@ public class Map2 extends Map {
        Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
        npcs.add(walrus);
 
-       FPistolPickup fpistolPickup = new FPistolPickup(getMapTile(15, (int)11).getLocation(), this);
-       npcs.add(fpistolPickup);
+      MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(12, (int)8).getLocation(), this);
+      npcs.add(mpistolPickup);
 
 
 
 
-       //FAssaultRiflePickup fasaultriflePickup = new FAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
-     // npcs.add(fasaultriflePickup);
+     //MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+     //npcs.add(masaultriflePickup);
 
 
 
 
-     // FShotgunPickup fshotgunPickup = new FShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
-      //npcs.add(fshotgunPickup);
+     //MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+     //npcs.add(mshotgunPickup); 
   
        return npcs;
    }

@@ -9,6 +9,7 @@ import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
 import NPCs.MPistolPickup;
+import NPCs.APistolPickup;
 import NPCs.MAssaultRiflePickup;
 import NPCs.MShotgunPickup;
 import Tilesets.CommonTileset;
@@ -62,21 +63,22 @@ public class Map1 extends Map {
   @Override
   public ArrayList<NPC> loadNPCs() {
       ArrayList<NPC> npcs = new ArrayList<>();
+   
 
-      MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(12, (int)8).getLocation(), this);
-      npcs.add(mpistolPickup);
-
-
-
-
-     //MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
-     //npcs.add(masaultriflePickup);
+     APistolPickup apistolPickup = new APistolPickup(getMapTile(9, (int)8).getLocation(), this);
+      npcs.add(apistolPickup);
 
 
 
 
-     //MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
-     //npcs.add(mshotgunPickup);    
+      //AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
+      //npcs.add(aasaultriflePickup);
+
+
+
+
+      //AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
+      //npcs.add(ashotgunPickup);
 
 
       Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
