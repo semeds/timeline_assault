@@ -15,7 +15,7 @@ public class GameCompleteScreen extends Screen {
     protected int menuItemSelected = -1;
     protected SpriteFont playGame;
     protected SpriteFont credits;
-    protected SpriteFont gameComplete
+    protected SpriteFont gameComplete;
     protected BufferedImage backgroundImage;
     protected int keyPressTimer;
     protected int pointerLocationX, pointerLocationY;
@@ -100,7 +100,7 @@ public class GameCompleteScreen extends Screen {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        graphicsHandler.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight);
+        //graphicsHandler.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight);
         playGame.draw(graphicsHandler);
         credits.draw(graphicsHandler);
         graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,

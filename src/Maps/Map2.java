@@ -96,16 +96,16 @@ public class Map2 extends Map {
 
    @Override
    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
-        ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
+    ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
 
-        ArrayList<Enemy> wave1 = new ArrayList<>();
-        wave1.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
-        wave1.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
-        wave1.add(new BaseHumanEnemy(new Point(1850, 523), Direction.LEFT));
-        wave1.add(new BaseHumanEnemy(new Point(1950, 523), Direction.LEFT));
-        wave1.add(new BaseHumanEnemy(new Point(1750, 523), Direction.LEFT));
+    ArrayList<Enemy> wave1 = new ArrayList<>();
+    wave1.add(new BaseHumanEnemy(new Point(250, 523), Direction.RIGHT));
+    wave1.add(new BaseHumanEnemy(new Point(300, 523), Direction.RIGHT));
+    wave1.add(new BaseHumanEnemy(new Point(1850, 523), Direction.LEFT));
+    wave1.add(new BaseHumanEnemy(new Point(1950, 523), Direction.LEFT));
+    wave1.add(new BaseHumanEnemy(new Point(1750, 523), Direction.LEFT));
 
-        waves.add(wave1);
+    waves.add(wave1);
 
 
        // Define Wave 2: Add more HumanEnemyEnemies

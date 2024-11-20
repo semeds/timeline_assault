@@ -125,9 +125,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
    private int shotgunCooldownTimer = 0; // Timer to control firing rate for shotgun
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
-   private boolean isMap1Loaded = false;
-   private boolean isMap2Loaded = false;
-   private boolean isMap3Loaded = false;
+   private boolean isMapLoaded = false;
 
    public WorldOneScreen(ScreenCoordinator screenCoordinator) {
        this.screenCoordinator = screenCoordinator;
@@ -145,12 +143,8 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
    public void initialize() {
         resetWeaponStatus();
-        if (!isMap1Loaded) {
+        if (!isMapLoaded) {
             this.map = new Map1(); // Start with Map 1
-        } else if (isMap1Loaded && !isMap2Loaded) {
-            this.map = new Map2(); // Switch to Map2
-        } else if (isMap1Loaded && isMap2Loaded && !isMap3Loaded) {
-            this.map = new Map3(); 
         }
 
 
@@ -291,16 +285,10 @@ public class WorldOneScreen extends Screen implements PlayerListener {
                map.update(player);
 
 
-                if (map.isWaveComplete() && map instanceof Map1 && !isMap2Loaded) {
-                System.out.println("All waves in Map1 are complete. Switching to Map2...");
-                onLevelCompleted(); // Manually trigger level completion
+               if (map.isWaveComplete()) {
+                System.out.println("Level 1 done switching to 2...");
+                screenCoordinator.setGameState(GameState.WORLDTWO);// Manually trigger level completion
             }
-
-                if (map.isWaveComplete() && map instanceof Map2 && !isMap3Loaded) {
-                System.out.println("All waves in Map2 are complete. Switching to Map3...");
-                onLevelCompleted(); // Manually trigger level completion
-            }
-  
                // Handle reloading and shooting
                if (reloading) {
                    reloadTimer++;
@@ -704,19 +692,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
    @Override
    public void onLevelCompleted() {
-        if (!isMap1Loaded) {
-            System.out.println("Level Complete! Switching to Map1...");
-            isMap1Loaded = true;
-            initialize(); // Reinitialize to load Map1
-        } else if (!isMap2Loaded) {
-            System.out.println("Level Complete! Switching to Map2...");
-            isMap2Loaded = true;
-            initialize();
-        } else {
-            System.out.println("Level Complete! Switching to Map3...");
-            isMap3Loaded = true;
-            initialize();
-        }
+        
    }
 
 
