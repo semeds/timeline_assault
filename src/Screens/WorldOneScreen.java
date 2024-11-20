@@ -123,6 +123,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
        levelClearedScreen = new LevelClearedScreen();
        levelLoseScreen = new LevelLoseScreen(this);
        pauseScreen = new PauseScreen();
+       purchaseScreen = new PurchaseScreen();
 
 
        this.playLevelScreenState = PlayLevelScreenState.RUNNING;
@@ -145,6 +146,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
    public void update() {
     updatePauseState();
+    completePurchase();
 
        switch (playLevelScreenState) {
            case RUNNING:
@@ -282,6 +284,24 @@ public class WorldOneScreen extends Screen implements PlayerListener {
         }
     }
 
+
+    private void completePurchase() {
+        if (Keyboard.isKeyDown(Key.SPACE) && !keyLocker.isKeyLocked(Key.SPACE)) {
+            //isGamePaused = !isGamePaused;
+            keyLocker.lockKey(Key.SPACE);
+            if (isGamePaused == true) {
+                playLevelScreenState = PlayLevelScreenState.PURCHASE;
+            }
+            else {
+                playLevelScreenState = PlayLevelScreenState.RUNNING;
+            }
+            
+        }
+
+        if (Keyboard.isKeyUp(pauseKey)) {
+            keyLocker.unlockKey(pauseKey);
+        }
+    }
     
   
   
