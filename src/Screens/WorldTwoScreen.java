@@ -43,7 +43,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
    protected PauseScreen pauseScreen;
-   protected LevelLoseScreen levelLoseScreen;
+   protected Level2LoseScreen level2LoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
 
@@ -99,7 +99,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
     private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
                      
                         private boolean isMapLoaded = false;
-                        private WorldOneScreen worldOneScreen;
+        
                         
                      
                         public WorldTwoScreen(ScreenCoordinator screenCoordinator) {
@@ -124,7 +124,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                      
                      
                             levelClearedScreen = new LevelClearedScreen();
-                            levelLoseScreen = new LevelLoseScreen(worldOneScreen);
+                            level2LoseScreen = new Level2LoseScreen(this);
                             pauseScreen = new PauseScreen();
                      
                      
@@ -256,7 +256,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                                     break;
                        
                                 case LEVEL_LOSE:
-                                    levelLoseScreen.update();
+                                    level2LoseScreen.update();
                                     resetWeaponStatus();
                                     break;
                                  
@@ -367,7 +367,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                break;
   
            case LEVEL_LOSE:
-               levelLoseScreen.draw(graphicsHandler);
+               level2LoseScreen.draw(graphicsHandler);
                break;
 
             case PAUSED:

@@ -43,7 +43,7 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
    protected PauseScreen pauseScreen;
-   protected LevelLoseScreen levelLoseScreen;
+   protected Level3LoseScreen level3LoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
 
@@ -99,7 +99,6 @@ public static int ashotgunAmmo;
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
    private boolean isMapLoaded = false;
-   private WorldThreeScreen worldThreeScreen;
 
 
    public WorldThreeScreen(ScreenCoordinator screenCoordinator) {
@@ -123,7 +122,7 @@ public static int ashotgunAmmo;
 
 
        levelClearedScreen = new LevelClearedScreen();
-       levelLoseScreen = new LevelLoseScreen(worldThreeScreen);
+       level3LoseScreen = new Level3LoseScreen(this);
        pauseScreen = new PauseScreen();
 
 
@@ -251,7 +250,7 @@ public static int ashotgunAmmo;
                break;
   
            case LEVEL_LOSE:
-               levelLoseScreen.update();
+               level3LoseScreen.update();
                resetWeaponStatus();
                break;
             
@@ -361,7 +360,7 @@ public static int ashotgunAmmo;
                break;
   
            case LEVEL_LOSE:
-               levelLoseScreen.draw(graphicsHandler);
+               level3LoseScreen.draw(graphicsHandler);
                break;
 
             case PAUSED:
