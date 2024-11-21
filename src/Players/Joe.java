@@ -175,7 +175,7 @@ public int getMShotgunAmmo() {
 
 
   public Joe(float x, float y) {
-      super(new SpriteSheet(ImageLoader.load("combinedJoe.png"), 24, 24), x, y, "STAND_RIGHT");
+      super(new SpriteSheet(ImageLoader.load("johawk.png"), 27, 30), x, y, "STAND_RIGHT");
       gravity = .5f;
       terminalVelocityY = 6f;
       jumpHeight = 12.5f;
