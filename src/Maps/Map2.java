@@ -13,12 +13,9 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
-import NPCs.APistolPickup;
-import NPCs.AAsaultRiflePickup;
-import NPCs.FPistolPickup;
-import NPCs.FShotgunPickup;
 import NPCs.MPistolPickup;
-import NPCs.FAssaultRiflePickup;
+import NPCs.MAssaultRiflePickup;
+import NPCs.MShotgunPickup;
 import NPCs.Walrus;
 import Tilesets.CommonTileset;
 import Utils.Direction;
@@ -79,14 +76,14 @@ public class Map2 extends Map {
 
 
 
-     //MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
-     //npcs.add(masaultriflePickup);
+    //  MAssaultRiflePickup masaultriflePickup = new MAssaultRiflePickup(getMapTile(13, (int)11).getLocation(), this);
+    //  npcs.add(masaultriflePickup);
 
 
 
 
-     //MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
-     //npcs.add(mshotgunPickup); 
+    //  MShotgunPickup mshotgunPickup = new MShotgunPickup(getMapTile(11, (int)11).getLocation(), this);
+    //  npcs.add(mshotgunPickup); 
   
        return npcs;
    }

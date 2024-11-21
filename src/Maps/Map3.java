@@ -13,9 +13,7 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
-import NPCs.APistolPickup;
-import NPCs.AAsaultRiflePickup;
-import NPCs.AShotgunPickup;
+
 import NPCs.FPistolPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;

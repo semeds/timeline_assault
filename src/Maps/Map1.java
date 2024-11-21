@@ -8,10 +8,9 @@ import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
-import NPCs.MPistolPickup;
 import NPCs.APistolPickup;
-import NPCs.MAssaultRiflePickup;
-import NPCs.MShotgunPickup;
+import NPCs.AAsaultRiflePickup;
+import NPCs.AShotgunPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import Utils.Point;
@@ -71,14 +70,14 @@ public class Map1 extends Map {
 
 
 
-      //AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
-      //npcs.add(aasaultriflePickup);
+    //   AAsaultRiflePickup aasaultriflePickup = new AAsaultRiflePickup(getMapTile(16, (int)6).getLocation(), this);
+    //   npcs.add(aasaultriflePickup);
 
 
 
 
-      //AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
-      //npcs.add(ashotgunPickup);
+    //   AShotgunPickup ashotgunPickup = new AShotgunPickup(getMapTile(12, (int)11).getLocation(), this);
+    //   npcs.add(ashotgunPickup);
 
 
       Coin coin = new Coin(getMapTile(10, 11).getLocation(), this);
