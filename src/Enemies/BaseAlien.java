@@ -1,7 +1,6 @@
 package Enemies;
 
 import Builders.FrameBuilder;
-import Enemies.DinosaurEnemy.DinosaurState;
 import Engine.ImageLoader;
 import GameObject.Frame;
 import GameObject.ImageEffect;
@@ -25,30 +24,29 @@ public class BaseAlien extends Enemy {
     private Direction startFacingDirection;
     private Direction facingDirection;
     private AirGroundState airGroundState;
+    private AlienState currentState;
+    private int chaseDelayTimer = 60; // Timer for delaying the chase state
 
     protected Point startLocation;
     protected Point endLocation;
 
     protected int shootWaitTimer;
-
     protected int shootTimer;
-
     protected AlienState alienState;
     protected AlienState previousAlienState;
-
-
 
     public BaseAlien(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
         this.hitPoints = 4;
+        this.currentState = AlienState.WALK;
         this.initialize();
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.startFacingDirection = facingDirection;
     }
 
-    // Method to hurt the enemy - Basically copied hurtPlayrt()
+    // Method to hurt the enemy - Basically copied hurtPlayer()
     public void hurtEnemy(Player player) {
         if (hitPoints > 0) {
             hitPoints--;
@@ -91,14 +89,41 @@ public class BaseAlien extends Enemy {
 
         shootWaitTimer = 65;
     }
-    
 
     @Override
     public void update(Player player) {
         float moveAmountX = 0;
         float moveAmountY = 0;
 
-         if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
+        // Determine distance between enemy and player
+        float distanceToPlayer = player.getX() - getX();
+
+        // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
+        if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
+            if (chaseDelayTimer == 0) {
+                currentState = AlienState.CHASE;
+            } else {
+                chaseDelayTimer--;
+            }
+        } else {
+            currentState = AlienState.WALK;
+            chaseDelayTimer = 60; // Reset delay timer when not in chase range
+        }
+
+        // Movement logic
+        if (currentState == AlienState.WALK || currentState == AlienState.CHASE) {
+            if (currentState == AlienState.CHASE) {
+                // Adjust facing direction towards player
+                facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
+            }
+
+            if (airGroundState == AirGroundState.GROUND) {
+                moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
+            }
+        }
+
+        // Shooting logic
+        if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
             alienState = AlienState.SHOOT_WAIT;
         } else {
             shootWaitTimer--;
@@ -116,45 +141,33 @@ public class BaseAlien extends Enemy {
         }
 
         if (alienState == AlienState.SHOOT) {
-    int enemyProjectilesX;
-    float movementSpeed;
-    if (facingDirection == Direction.RIGHT) {
-        enemyProjectilesX = Math.round(getX()) + getWidth();
-        movementSpeed = 3;
-    } else {
-        enemyProjectilesX = Math.round(getX() - 21);
-        movementSpeed = 3;
-    }
-
-    int enemyProjectilesY = Math.round(getY()) + 4;
-
-    // Create enemy projectile with updated constructor
-    EnemyProjectiles enemyProjectiles = new EnemyProjectiles(
-        new Point(enemyProjectilesX, enemyProjectilesY), 
-        movementSpeed, 
-        300, 
-        player // Pass the player as the target
-    );
-
-    map.addEnemy(enemyProjectiles);
-    alienState = AlienState.WALK;
-    shootWaitTimer = 400;
-}
-
-
-        // add gravity (if in air, this will cause bug to fall)
-        moveAmountY += gravity;
-
-        // if on ground, walk forward based on facing direction
-        if (airGroundState == AirGroundState.GROUND) {
+            int enemyProjectilesX;
+            float projectileSpeed;
             if (facingDirection == Direction.RIGHT) {
-                moveAmountX += movementSpeed;
+                enemyProjectilesX = Math.round(getX()) + getWidth();
+                projectileSpeed = 3;
             } else {
-                moveAmountX -= movementSpeed;
+                enemyProjectilesX = Math.round(getX() - 21);
+                projectileSpeed = 3;
             }
+
+            int enemyProjectilesY = Math.round(getY()) + 4;
+
+            // Create enemy projectile with updated constructor
+            EnemyProjectiles enemyProjectiles = new EnemyProjectiles(
+                new Point(enemyProjectilesX, enemyProjectilesY),
+                projectileSpeed,
+                300,
+                player // Pass the player as the target
+            );
+
+            map.addEnemy(enemyProjectiles);
+            alienState = AlienState.WALK;
+            shootWaitTimer = 400;
         }
 
-        // move bug
+        // Apply gravity and movement
+        moveAmountY += gravity;
         moveYHandleCollision(moveAmountY);
         moveXHandleCollision(moveAmountX);
 
@@ -166,13 +179,8 @@ public class BaseAlien extends Enemy {
         // if enemy has collided into something while walking forward,
         // it turns around (changes facing direction)
         if (hasCollided) {
-            if (direction == Direction.RIGHT) {
-                facingDirection = Direction.LEFT;
-                currentAnimationName = "WALK_LEFT";
-            } else {
-                facingDirection = Direction.RIGHT;
-                currentAnimationName = "WALK_RIGHT";
-            }
+            facingDirection = (direction == Direction.RIGHT) ? Direction.LEFT : Direction.RIGHT;
+            currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
         }
     }
 
@@ -182,11 +190,7 @@ public class BaseAlien extends Enemy {
         // if it is not colliding with the ground, it means that it's currently in the
         // air, so its air ground state is changed to AIR
         if (direction == Direction.DOWN) {
-            if (hasCollided) {
-                airGroundState = AirGroundState.GROUND;
-            } else {
-                airGroundState = AirGroundState.AIR;
-            }
+            airGroundState = hasCollided ? AirGroundState.GROUND : AirGroundState.AIR;
         }
     }
 
@@ -290,6 +294,6 @@ public class BaseAlien extends Enemy {
     }
 
     public enum AlienState {
-        WALK, SHOOT_WAIT, SHOOT
+        WALK, SHOOT_WAIT, SHOOT, CHASE
     }
 }

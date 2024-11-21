@@ -24,15 +24,18 @@ public class BaseZombie extends Enemy {
     private Direction startFacingDirection;
     private Direction facingDirection;
     private AirGroundState airGroundState;
+    private ZombieState currentState;
+    private int chaseDelayTimer = 60; // Timer for delaying the chase state
 
     public BaseZombie(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
         this.hitPoints = 2;
+        this.currentState = ZombieState.WALK;
         this.initialize();
     }
 
-    // Method to hurt the enemy - Basically copied hurtPlayrt()
+    // Method to hurt the enemy - Basically copied hurtPlayer()
     public void hurtEnemy(Player player) {
         if (hitPoints > 0) {
             hitPoints--;
@@ -78,19 +81,35 @@ public class BaseZombie extends Enemy {
         float moveAmountX = 0;
         float moveAmountY = 0;
 
-        // add gravity (if in air, this will cause bug to fall)
-        moveAmountY += gravity;
+        // Determine distance between enemy and player
+        float distanceToPlayer = player.getX() - getX();
 
-        // if on ground, walk forward based on facing direction
-        if (airGroundState == AirGroundState.GROUND) {
-            if (facingDirection == Direction.RIGHT) {
-                moveAmountX += movementSpeed;
+        // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
+        if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
+            if (chaseDelayTimer == 0) {
+                currentState = ZombieState.CHASE;
             } else {
-                moveAmountX -= movementSpeed;
+                chaseDelayTimer--;
+            }
+        } else {
+            currentState = ZombieState.WALK;
+            chaseDelayTimer = 60; // Reset delay timer when not in chase range
+        }
+
+        // Movement logic
+        if (currentState == ZombieState.WALK || currentState == ZombieState.CHASE) {
+            if (currentState == ZombieState.CHASE) {
+                // Adjust facing direction towards player
+                facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
+            }
+
+            if (airGroundState == AirGroundState.GROUND) {
+                moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
             }
         }
 
-        // move bug
+        // Apply gravity and movement
+        moveAmountY += gravity;
         moveYHandleCollision(moveAmountY);
         moveXHandleCollision(moveAmountX);
 
@@ -102,13 +121,8 @@ public class BaseZombie extends Enemy {
         // if enemy has collided into something while walking forward,
         // it turns around (changes facing direction)
         if (hasCollided) {
-            if (direction == Direction.RIGHT) {
-                facingDirection = Direction.LEFT;
-                currentAnimationName = "WALK_LEFT";
-            } else {
-                facingDirection = Direction.RIGHT;
-                currentAnimationName = "WALK_RIGHT";
-            }
+            facingDirection = (direction == Direction.RIGHT) ? Direction.LEFT : Direction.RIGHT;
+            currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
         }
     }
 
@@ -118,11 +132,7 @@ public class BaseZombie extends Enemy {
         // if it is not colliding with the ground, it means that it's currently in the
         // air, so its air ground state is changed to AIR
         if (direction == Direction.DOWN) {
-            if (hasCollided) {
-                airGroundState = AirGroundState.GROUND;
-            } else {
-                airGroundState = AirGroundState.AIR;
-            }
+            airGroundState = hasCollided ? AirGroundState.GROUND : AirGroundState.AIR;
         }
     }
 
@@ -223,5 +233,9 @@ public class BaseZombie extends Enemy {
                 });
             }
         };
+    }
+
+    public enum ZombieState {
+        WALK, CHASE
     }
 }
