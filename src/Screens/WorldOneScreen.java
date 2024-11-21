@@ -250,6 +250,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
            case LEVEL_LOSE:
                levelLoseScreen.update();
                resetWeaponStatus();
+               resetOverlays();
                break;
             
             case PAUSED:
@@ -260,6 +261,8 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             
            case PURCHASE:
                purchaseScreen.update();
+
+               break;
 
        }
    }
@@ -392,6 +395,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             
             case PURCHASE:
                purchaseScreen.draw(graphicsHandler);
+               break;
        }
    }
   

@@ -45,6 +45,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
    protected PauseScreen pauseScreen;
    protected PurchaseScreen purchaseScreen;
    protected Level2LoseScreen level2LoseScreen;
+   protected PurchaseScreen purchaseScreen;
    protected boolean levelCompletedStateChangeStart;
 
 
@@ -79,271 +80,280 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
    private AShotgunOverlay ashotgunOverlay;
 
    private int coinCount = 0;
-   public static int apistolAmmo = 12; // Current bullets for pistol
-   public static final int APISTOL_MAX_AMMO = 12; // Ammo in a pistol magazine
-   public static int aassaultRifleAmmo = 30; // Assault rifle current bullets
-   public static final int AASSAULT_RIFLE_MAX_AMMO = 30; // Assault rifle max ammo
-   public static int ashotgunAmmo = 8; // Shotgun current bullets
-   public static final int AASHOTGUN_MAX_AMMO = 8; // Shotgun max ammo
-   private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
-   public static boolean reloading = false; // Flag to indicate if reload is in progress
-   private int reloadTimer = 0; // Reload delay
-   private static final int RELOAD_DELAY = 60; // Reload delay in frames
+   public static int mpistolAmmo = 12;
+   private static final int MPISTOL_MAX_AMMO = 12;
+   private static int massaultRifleAmmo = 30;
+   private static final int MASSAULT_RIFLE_MAX_AMMO = 30;
+   private static int mshotgunAmmo = 8;
+    private static final int MSHOTGUN_MAX_AMMO = 8;
+    private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
+    public static boolean reloading = false; // Flag to indicate if reload is in progress
+    public static int aassaultRifleAmmo;
+    public static int apistolAmmo;
+    public static int ashotgunAmmo;
+    private int reloadTimer = 0; // Reload delay
+    private static final int RELOAD_DELAY = 60; // Reload delay in frames
+                     
+                     
+    // NEW variables for assault rifle and shotgun cooldowns
+    private int fireCooldownTimer = 0; // Timer to control firing rate for assault rifle
+    private static final int FIRE_COOLDOWN_DELAY = 10; // Cooldown delay for assault rifle firing rate
+    private int shotgunCooldownTimer = 0; // Timer to control firing rate for shotgun
+    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
+                     
+                        private boolean isMapLoaded = false;
+        
+                        
+                     
+                        public WorldTwoScreen(ScreenCoordinator screenCoordinator) {
+                            this.screenCoordinator = screenCoordinator;
+                            mPistolOverlay = new MPistolOverlay();
+                            mAssaultRifleOverlay = new MAssaultRifleOverlay();
+                            mShotgunOverlay = new MShotgunOverlay();
+                        }
+                     
+                     
+                        public void initialize() {
+                             resetWeaponStatus();
+                             if (!isMapLoaded) {
+                                 this.map = new Map2(); // Start with Map 2
+                             }
+                     
+                     
+                            // Start the player as normal Joe
+                            this.player = new Joe(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
+                            this.player.setMap(map);
+                            this.player.addListener(this);
+                     
+                     
+                            levelClearedScreen = new LevelClearedScreen();
+                            level2LoseScreen = new Level2LoseScreen(this);
+                            pauseScreen = new PauseScreen();
+                            purchaseScreen = new PurchaseScreen();
+                     
+                     
+                            this.playLevelScreenState = PlayLevelScreenState.RUNNING;
+                     
+                     
+                            hp3Image = ImageLoader.load("ThreeHearts.png");
+                            hp2Image = ImageLoader.load("TwoHearts.png");
+                            hp1Image = ImageLoader.load("OneHeart.png");
+                     
+                            coinImage = ImageLoader.load("coinForCount.png");
+                     
+                            map.setupMap();
+                        }
+                     
+                     
+                        private boolean playerCollidesWith(Enemy enemy) {
+                            return player.getBounds().intersects(enemy.getBounds());
+                        }
+                     
+                     
+                        public void update() {
+                         updatePauseState();
+                         completePurchase();
+                     
+                            switch (playLevelScreenState) {
+                                case RUNNING:
+                                    if (MPistolPickup.weaponPickedUp && !isMPistolickedUp) {
+                                     isMPistolickedUp = true;
+                                     resetOverlays();
+                                     showMPistolOverlay = true;
+                                     showMAssaultRifleOverlay = false;
+                                     showMShotgunOverlay = false;
+                                 } else if (MAssaultRiflePickup.weaponPickedUp && !isMAssaultRiflePickedUp) {
+                                     isMAssaultRiflePickedUp = true;
+                                     resetOverlays();
+                                     showMPistolOverlay = false;
+                                     showMAssaultRifleOverlay = true;
+                                     showMShotgunOverlay = false;
+                                 } else if (MShotgunPickup.weaponPickedUp && !isMShotgunPickedUp) {
+                                     isMShotgunPickedUp = true;
+                                     resetOverlays();
+                                     showMAssaultRifleOverlay = false;
+                                     showMPistolOverlay = false;
+                                     showMShotgunOverlay = true;
+                                 }
+                     
+                     
+                                    if (Keyboard.isKeyDown(Key.R) && !reloading) { // Replace with the desired key
+                                     startReload();
+                                 }
+                                   
+                       
+                                    player.update();
+                                    map.update(player);
+                     
+                     
+                                     if (map.isWaveComplete()) {
+                                         System.out.println("Level 2 done switching to 3...");
+                                         screenCoordinator.setGameState(GameState.WORLDTHREE);// Manually trigger level completion
+                                 }
+                     
+                                 //     if (map.isWaveComplete() && map instanceof Map2 && !isMap3Loaded) {
+                                 //     System.out.println("All waves in Map2 are complete. Switching to Map3...");
+                                 //     onLevelCompleted(); // Manually trigger level completion
+                                 // }
+                       
+                                    // Handle reloading and shooting
+                                    if (reloading) {
+                                        reloadTimer++;
+                                        
+                                        if (reloadTimer >= RELOAD_DELAY) {
+                                            finishReload();
+                                            reloadTimer = 0; // Reset the timer after reloading
+                                        }
+                                    }
+                                   
+                                    else {
+                                        fireCooldownTimer++;
+                                        shotgunCooldownTimer++;
+                       
+                                        if (Keyboard.isKeyDown(Key.SPACE) && canShoot) {
+                                            if (isMPistolickedUp && mpistolAmmo >0) {
+                                             mpistolAmmo--;
+                                                canShoot = false;
+                                                spawnModernBullets();
+                                            } else if (isMAssaultRiflePickedUp && massaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+                                             massaultRifleAmmo--;
+                                                fireCooldownTimer = 0;
+                                                spawnModernBullets();
+                                            } else if (isMShotgunPickedUp && mshotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+                                             mshotgunAmmo--;
+                                             shotgunCooldownTimer = 0;
+                                             spawnModernBullets();
+                                            }
+                                        }
+                                        if (!Keyboard.isKeyDown(Key.SPACE)) {
+                                            canShoot = true;
+                                        }
+                                    }
+                       
+                                    // Check for any collisions and other actions
+                                    for (Enemy enemy : map.getActiveEnemies()) {
+                                        enemy.update(player);
+                                        if (playerCollidesWith(enemy)) {
+                                            player.hurtPlayer(enemy);
+                                            enemy.touchedPlayer(player);
+                                        }
+                                        for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
+                                            MapEntity projectile = map.getProjectiles().get(i);
+                                            if (projectile instanceof ModernBullets && projectile.getBounds().intersects(enemy.getBounds())) {
+                                                ((ModernBullets) projectile).touchedEntity(enemy);
+                                                map.removeProjectile(projectile);
+                                            }
+                                        }
+                                    }
+                                    break;
+                       
+                                case LEVEL_COMPLETED:
+                                    if (levelCompletedStateChangeStart) {
+                                        screenTimer = 130;
+                                        levelCompletedStateChangeStart = false;
+                                    } else {
+                                        levelClearedScreen.update();
+                                        screenTimer--;
+                                        if (screenTimer == 0) {
+                                            goBackToMenu();
+                                        }
+                                    }
+                                    break;
+                       
+                                case LEVEL_LOSE:
+                                    level2LoseScreen.update();
+                                    resetWeaponStatus();
+                                    resetOverlays();
+                                    break;
+                                 
+                                case PAUSED:
+                                   pauseScreen.update();
+                                   
+                                case PURCHASE:
+                                    purchaseScreen.update();
 
-
-   // NEW variables for assault rifle and shotgun cooldowns
-   private int fireCooldownTimer = 0; // Timer to control firing rate for assault rifle
-   private static final int FIRE_COOLDOWN_DELAY = 10; // Cooldown delay for assault rifle firing rate
-   private int shotgunCooldownTimer = 0; // Timer to control firing rate for shotgun
-   private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
-
-   private boolean isMapLoaded = false;
-
-   public WorldTwoScreen(ScreenCoordinator screenCoordinator) {
-       this.screenCoordinator = screenCoordinator;
-       apistolOverlay = new APistolOverlay();
-       aassaultRifleOverlay = new AAsaultrifleOverlay(); 
-       ashotgunOverlay = new AShotgunOverlay(); 
+                                    break;
+                     
+                            }
+                        }
+                       
+                     //update pause state for game; copied from Gamepanel
+                         private void updatePauseState() {
+                             if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
+                                 isGamePaused = !isGamePaused;
+                                 keyLocker.lockKey(pauseKey);
+                                 if (isGamePaused == true) {
+                                     playLevelScreenState = PlayLevelScreenState.PAUSED;
+                                 }
+                                 else {
+                                     playLevelScreenState = PlayLevelScreenState.RUNNING;
+                                 }
+                                 
+                             }
+                     
+                             if (Keyboard.isKeyUp(pauseKey)) {
+                                 keyLocker.unlockKey(pauseKey);
+                             }
+                         }
+                     
+                         
+                       
+                       
+                        private void spawnModernBullets() {
+                        }
+                       
+                       
+                        private void completePurchase() {
+                            if (Keyboard.isKeyDown(Key.SPACE) && !keyLocker.isKeyLocked(Key.SPACE)) {
+                                //isGamePaused = !isGamePaused;
+                                keyLocker.lockKey(Key.SPACE);
+                                if (isGamePaused == true) {
+                                    playLevelScreenState = PlayLevelScreenState.PURCHASE;
+                                }
+                                else {
+                                    playLevelScreenState = PlayLevelScreenState.RUNNING;
+                                }
+                                
+                            }
+                    
+                            if (Keyboard.isKeyUp(pauseKey)) {
+                                keyLocker.unlockKey(pauseKey);
+                            }
+                        }
+                       
+                     
+                     
+                        private void switchToArmedJoe() {
+                            float currentX = player.getX();
+                            float currentY = player.getY();
+                     
+                     
+                            ArmedJoe armedJoe = new ArmedJoe(currentX, currentY);
+                            armedJoe.setMap(map);
+                            armedJoe.addListener(this);
+                     
+                     
+                            player = armedJoe;
+                            armedJoe.update();
+                        }
+                     
+                     
+                        private void startReload() {
+                            reloading = true;
+                            reloadTimer = 0; // Start the reload timer
+                        }
+                        
+                     
+                     
+                        public static void finishReload() {
+                            reloading = false;
+                            if (MPistolPickup.weaponPickedUp) { // Pistol reload
+                             mpistolAmmo = MPISTOL_MAX_AMMO;
+                      } else if (MAssaultRiflePickup.weaponPickedUp) { // Assault Rifle reload
+                          massaultRifleAmmo = MASSAULT_RIFLE_MAX_AMMO;
+                } else if (MShotgunPickup.weaponPickedUp) { // Shotgun reload
+                    mshotgunAmmo = MSHOTGUN_MAX_AMMO;
    }
-
-
-   public void initialize() {
-        resetWeaponStatus();
-        if (!isMapLoaded) {
-            this.map = new Map1(); // Start with Map 1
-        }
-
-
-       // Start the player as normal Joe
-       this.player = new Joe(map.getPlayerStartPosition().x, map.getPlayerStartPosition().y);
-       this.player.setMap(map);
-       this.player.addListener(this);
-
-
-       levelClearedScreen = new LevelClearedScreen();
-       level2LoseScreen = new Level2LoseScreen(this);
-       pauseScreen = new PauseScreen();
-       purchaseScreen = new PurchaseScreen();
-
-
-       this.playLevelScreenState = PlayLevelScreenState.RUNNING;
-
-
-       hp3Image = ImageLoader.load("ThreeHearts.png");
-       hp2Image = ImageLoader.load("TwoHearts.png");
-       hp1Image = ImageLoader.load("OneHeart.png");
-
-       coinImage = ImageLoader.load("coinForCount.png");
-
-       map.setupMap();
-   }
-
-
-   private boolean playerCollidesWith(Enemy enemy) {
-       return player.getBounds().intersects(enemy.getBounds());
-   }
-
-
-   public void update() {
-    updatePauseState();
-    completePurchase();
-
-       switch (playLevelScreenState) {
-           case RUNNING:
-               if (APistolPickup.weaponPickedUp && !isAPistolickedUp) {
-                   isAPistolickedUp = true;
-                   resetOverlays();
-                   showAPistolOverlay = true;
-                   showAAssaultRifleOverlay = false;
-                   showAShotgunOverlay = false;
-               } else if (AAsaultRiflePickup.weaponPickedUp && !isAAssaultRiflePickedUp) {
-                isAAssaultRiflePickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = true;
-                showAShotgunOverlay = false;
-               } else if (AShotgunPickup.weaponPickedUp && !isAShotgunPickedUp) {
-                isAShotgunPickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = true;
-               }
-
-
-               if (Keyboard.isKeyDown(Key.R) && !reloading) { // Replace with the desired key
-                startReload();
-            }
-              
-  
-               player.update();
-               map.update(player);
-
-
-                if (map.isLastWaveComplete()) {
-                 screenCoordinator.setGameState(GameState.WORLDTWO);// Manually trigger level completion
-            }
-               // Handle reloading and shooting
-               if (reloading) {
-                   reloadTimer++;
-                   
-                   if (reloadTimer >= RELOAD_DELAY) {
-                       finishReload();
-                       reloadTimer = 0; // Reset the timer after reloading
-                   }
-               }
-              
-               else {
-                   fireCooldownTimer++;
-                   shotgunCooldownTimer++;
-  
-                   if (Keyboard.isKeyDown(Key.SPACE) && canShoot) {
-                       if (isAPistolickedUp && apistolAmmo > 0) {
-                           apistolAmmo--;
-                           canShoot = false;
-                           spawnFireball();
-                       } else if (isAAssaultRiflePickedUp && aassaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-                           aassaultRifleAmmo--;
-                           fireCooldownTimer = 0;
-                           spawnFireball();
-                       } else if (isAShotgunPickedUp && ashotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-                           ashotgunAmmo--;
-                           shotgunCooldownTimer = 0;
-                           spawnFireball();
-                       }
-                   }
-                   if (!Keyboard.isKeyDown(Key.SPACE)) {
-                       canShoot = true;
-                   }
-               }
-  
-               // Check for any collisions and other actions
-               for (Enemy enemy : map.getEnemies()) {
-                   enemy.update(player);
-                   if (playerCollidesWith(enemy)) {
-                       player.hurtPlayer(enemy);
-                       enemy.touchedPlayer(player);
-                   }
-                   for (int i = map.getProjectiles().size() - 1; i >= 0; i--) {
-                       MapEntity projectile = map.getProjectiles().get(i);
-                       if (projectile instanceof Fireball && projectile.getBounds().intersects(enemy.getBounds())) {
-                           ((Fireball) projectile).touchedEntity(enemy);
-                           map.removeProjectile(projectile);
-                       }
-                   }
-               }
-               break;
-  
-           case LEVEL_COMPLETED:
-               if (levelCompletedStateChangeStart) {
-                   screenTimer = 130;
-                   levelCompletedStateChangeStart = false;
-               } else {
-                   levelClearedScreen.update();
-                   screenTimer--;
-                   if (screenTimer == 0) {
-                       goBackToMenu();
-                   }
-               }
-               break;
-  
-           case LEVEL_LOSE:
-               level2LoseScreen.update();
-               resetWeaponStatus();
-               break;
-            
-            case PAUSED:
-            //   updatePauseState();
-              pauseScreen.update();
-              
-               break;
-            
-           case PURCHASE:
-               purchaseScreen.update();
-
-       }
-   }
-  
-//update pause state for game; copied from Gamepanel
-    private void updatePauseState() {
-        if (Keyboard.isKeyDown(pauseKey) && !keyLocker.isKeyLocked(pauseKey)) {
-            isGamePaused = !isGamePaused;
-            keyLocker.lockKey(pauseKey);
-            if (isGamePaused == true) {
-                playLevelScreenState = PlayLevelScreenState.PAUSED;
-            }
-            else {
-                playLevelScreenState = PlayLevelScreenState.RUNNING;
-            }
-            
-        }
-
-        if (Keyboard.isKeyUp(pauseKey)) {
-            keyLocker.unlockKey(pauseKey);
-        }
-    }
-
-
-    private void completePurchase() {
-        if (Keyboard.isKeyDown(Key.SPACE) && !keyLocker.isKeyLocked(Key.SPACE)) {
-            //isGamePaused = !isGamePaused;
-            keyLocker.lockKey(Key.SPACE);
-            if (isGamePaused == true) {
-                playLevelScreenState = PlayLevelScreenState.PURCHASE;
-            }
-            else {
-                playLevelScreenState = PlayLevelScreenState.RUNNING;
-            }
-            
-        }
-
-        if (Keyboard.isKeyUp(pauseKey)) {
-            keyLocker.unlockKey(pauseKey);
-        }
-    }
-    
-  
-  
-   // Helper method to spawn a fireball for the player
-   private void spawnFireball() {
-       // Logic to spawn a fireball projectile from the player's location
-   }
-  
-  
-  
-
-
-   private void switchToArmedJoe() {
-       float currentX = player.getX();
-       float currentY = player.getY();
-
-
-       ArmedJoe armedJoe = new ArmedJoe(currentX, currentY);
-       armedJoe.setMap(map);
-       armedJoe.addListener(this);
-
-
-       player = armedJoe;
-       armedJoe.update();
-   }
-
-
-   private void startReload() {
-       reloading = true;
-       reloadTimer = 0; // Start the reload timer
-   }
-   
-
-
-   public static void finishReload() {
-       reloading = false;
-       if (AAsaultRiflePickup.weaponPickedUp) { // Assault rifle reload
-           aassaultRifleAmmo = AASSAULT_RIFLE_MAX_AMMO;
-       } else if (APistolPickup.weaponPickedUp) { // Pistol reload
-           apistolAmmo = APISTOL_MAX_AMMO;
-       } else if (AShotgunPickup.weaponPickedUp) { // Shotgun reload
-           ashotgunAmmo = AASHOTGUN_MAX_AMMO;
-       } 
 }
   
   
@@ -392,6 +402,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
             
             case PURCHASE:
                purchaseScreen.draw(graphicsHandler);
+               break;
        }
    }
   

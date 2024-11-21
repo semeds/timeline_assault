@@ -14,25 +14,37 @@ import Utils.Direction;
 import java.util.HashMap;
 import java.util.Random;
 
-// This class is for the black bug enemy
-// enemy behaves like a Mario goomba -- walks forward until it hits a solid map tile, and then turns around
-// if it ends up in the air from walking off a cliff, it will fall down until it hits the ground again, and then will continue walking
+// This class is for the base human enemy that shoots bullets straight in whichever direction it is facing
 public class BaseHumanEnemy extends Enemy {
 
     private float gravity = .5f;
-    private float movementSpeed = 1.0f;
+    private float movementSpeed = 1.25f;
     private Direction startFacingDirection;
     private Direction facingDirection;
     private AirGroundState airGroundState;
+    private HumanState currentState;
+    private int chaseDelayTimer = 60; // Timer for delaying the chase state
+
+    protected Point startLocation;
+    protected Point endLocation;
+
+    protected int shootWaitTimer;
+    protected int shootTimer;
+    protected HumanState HumanState;
+    protected HumanState previousHumanState;
 
     public BaseHumanEnemy(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
-        this.hitPoints = 3;
+        this.hitPoints = 4;
+        this.currentState = HumanState.WALK;
         this.initialize();
+        this.startLocation = location;
+        this.endLocation = null;
+        this.startFacingDirection = facingDirection;
     }
 
-    // Method to hurt the enemy - Basically copied hurtPlayrt()
+    // Method to hurt the enemy - Basically copied hurtPlayer()
     public void hurtEnemy(Player player) {
         if (hitPoints > 0) {
             hitPoints--;
@@ -65,12 +77,15 @@ public class BaseHumanEnemy extends Enemy {
     public void initialize() {
         super.initialize();
         facingDirection = startFacingDirection;
+        previousHumanState = HumanState;
         if (facingDirection == Direction.RIGHT) {
             currentAnimationName = "WALK_RIGHT";
         } else if (facingDirection == Direction.LEFT) {
             currentAnimationName = "WALK_LEFT";
         }
         airGroundState = AirGroundState.GROUND;
+
+        shootWaitTimer = 65;
     }
 
     @Override
@@ -78,19 +93,78 @@ public class BaseHumanEnemy extends Enemy {
         float moveAmountX = 0;
         float moveAmountY = 0;
 
-        // add gravity (if in air, this will cause bug to fall)
-        moveAmountY += gravity;
+        // Determine distance between enemy and player
+        float distanceToPlayer = player.getX() - getX();
 
-        // if on ground, walk forward based on facing direction
-        if (airGroundState == AirGroundState.GROUND) {
-            if (facingDirection == Direction.RIGHT) {
-                moveAmountX += movementSpeed;
+        // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
+        if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
+            if (chaseDelayTimer == 0) {
+                currentState = HumanState.CHASE;
             } else {
-                moveAmountX -= movementSpeed;
+                chaseDelayTimer--;
+            }
+        } else {
+            currentState = HumanState.WALK;
+            chaseDelayTimer = 60; // Reset delay timer when not in chase range
+        }
+
+        // Movement logic
+        if (currentState == HumanState.WALK || currentState == HumanState.CHASE) {
+            if (currentState == HumanState.CHASE) {
+                // Adjust facing direction towards player
+                facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
+            }
+
+            if (airGroundState == AirGroundState.GROUND) {
+                moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
             }
         }
 
-        // move bug
+        // Shooting logic
+        if (shootWaitTimer == 0 && HumanState != HumanState.SHOOT_WAIT) {
+            HumanState = HumanState.SHOOT_WAIT;
+        } else {
+            shootWaitTimer--;
+        }
+
+        if (HumanState == HumanState.SHOOT_WAIT) {
+            if (previousHumanState == HumanState.WALK) {
+                shootTimer = 65;
+                currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
+            } else if (shootTimer == 0) {
+                HumanState = HumanState.SHOOT;
+            } else {
+                shootTimer--;
+            }
+        }
+
+        if (HumanState == HumanState.SHOOT) {
+            int modernBulletsX;
+            float projectileSpeed;
+            if (facingDirection == Direction.RIGHT) {
+                modernBulletsX = Math.round(getX()) + getWidth();
+                projectileSpeed = 3;
+            } else {
+                modernBulletsX = Math.round(getX() - 21);
+                projectileSpeed = 3;
+            }
+
+            int modernBulletsY = Math.round(getY()) + 4;
+
+            // Create enemy projectile with updated constructor
+             ModernBullets modernBullets = new  ModernBullets(
+                new Point(modernBulletsX, modernBulletsY),
+                projectileSpeed,
+                300
+            );
+
+            map.addEnemy(modernBullets);
+            HumanState = HumanState.WALK;
+            shootWaitTimer = 400;
+        }
+
+        // Apply gravity and movement
+        moveAmountY += gravity;
         moveYHandleCollision(moveAmountY);
         moveXHandleCollision(moveAmountX);
 
@@ -102,13 +176,8 @@ public class BaseHumanEnemy extends Enemy {
         // if enemy has collided into something while walking forward,
         // it turns around (changes facing direction)
         if (hasCollided) {
-            if (direction == Direction.RIGHT) {
-                facingDirection = Direction.LEFT;
-                currentAnimationName = "WALK_LEFT";
-            } else {
-                facingDirection = Direction.RIGHT;
-                currentAnimationName = "WALK_RIGHT";
-            }
+            facingDirection = (direction == Direction.RIGHT) ? Direction.LEFT : Direction.RIGHT;
+            currentAnimationName = facingDirection == Direction.RIGHT ? "WALK_RIGHT" : "WALK_LEFT";
         }
     }
 
@@ -118,11 +187,7 @@ public class BaseHumanEnemy extends Enemy {
         // if it is not colliding with the ground, it means that it's currently in the
         // air, so its air ground state is changed to AIR
         if (direction == Direction.DOWN) {
-            if (hasCollided) {
-                airGroundState = AirGroundState.GROUND;
-            } else {
-                airGroundState = AirGroundState.AIR;
-            }
+            airGroundState = hasCollided ? AirGroundState.GROUND : AirGroundState.AIR;
         }
     }
 
@@ -223,5 +288,9 @@ public class BaseHumanEnemy extends Enemy {
                 });
             }
         };
+    }
+
+    public enum HumanState {
+        WALK, SHOOT_WAIT, SHOOT, CHASE
     }
 }
