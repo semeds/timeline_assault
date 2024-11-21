@@ -126,7 +126,7 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
    private static final int SHOTGUN_COOLDOWN_DELAY = 60; // 1-second delay for shotgun firing rate
 
    private boolean isMapLoaded = false;
-   private WorldOneScreen worldOneScreen;
+   private WorldThreeScreen worldThreeScreen;
 
 
    public WorldThreeScreen(ScreenCoordinator screenCoordinator) {
@@ -156,7 +156,7 @@ public class WorldThreeScreen extends Screen implements PlayerListener {
 
 
        levelClearedScreen = new LevelClearedScreen();
-       levelLoseScreen = new LevelLoseScreen(worldOneScreen);
+       levelLoseScreen = new LevelLoseScreen(worldThreeScreen);
        pauseScreen = new PauseScreen();
 
 
