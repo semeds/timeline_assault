@@ -73,7 +73,7 @@ public class Map2 extends Map {
        Walrus walrus = new Walrus(getMapTile(30, 10).getLocation().subtractY(13));
        npcs.add(walrus);
 
-      MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(12, (int)8).getLocation(), this);
+      MPistolPickup mpistolPickup = new MPistolPickup(getMapTile(9, (int)7).getLocation(), this);
       npcs.add(mpistolPickup);
 
 

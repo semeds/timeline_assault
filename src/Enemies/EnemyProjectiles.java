@@ -22,7 +22,7 @@ public class EnemyProjectiles extends Enemy {
     private float ySpeed;
 
     public EnemyProjectiles(Point location, float movementSpeed, int existenceFrames, Player target) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("LaserBullet.png"), 20, 20), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("LaserBullet.png"), 10, 10), "DEFAULT");
         this.movementSpeed = movementSpeed;
         this.existenceFrames = existenceFrames;
 

@@ -14,14 +14,13 @@ import Utils.Point;
 
 import java.util.HashMap;
 
-public class Fireball extends Enemy {
-    // fireball variables
+public class FutureBullets extends Enemy {
 
     private float movementSpeed;
     private int existenceFrames;
 
-    public Fireball(Point location, float movementSpeed, int existenceFrames) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("ApocalypseBullets.png"), 5, 5), "DEFAULT");
+    public FutureBullets(Point location, float movementSpeed, int existenceFrames) {
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("FutureBullets.png"), 5, 5), "DEFAULT");
         this.movementSpeed = movementSpeed;
 
         this.existenceFrames = existenceFrames;
@@ -60,7 +59,6 @@ public class Fireball extends Enemy {
             ((Enemy) entity).takeDamage();
         }
 
-        // Remove the fireball after it touches any entity
         this.mapEntityStatus = MapEntityStatus.REMOVED;
     }
 
