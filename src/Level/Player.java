@@ -91,7 +91,7 @@ public abstract class Player extends GameObject {
         instaKillStartTime = System.currentTimeMillis();
         
         // Set all active enemies' hitPoints to 1
-        for (Enemy enemy : map.getActiveEnemies()) {
+        for (Enemy enemy : map.getEnemies()) {
             enemy.hitPoints = 1;
         }
     }
@@ -161,7 +161,7 @@ public abstract class Player extends GameObject {
 
         // Continuously set active enemies' hitPoints to 1 while insta-kill mode is active
         if (instaKillMode) {
-            for (Enemy enemy : map.getActiveEnemies()) {
+            for (Enemy enemy : map.getEnemies()) {
                 enemy.hitPoints = 1; // Keep hitPoints at 1 for all enemies on screen
             }
         }

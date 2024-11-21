@@ -10,7 +10,7 @@ import Collectibles.MaxAmmo;
 import Engine.Config;
 import Engine.GraphicsHandler;
 import Engine.ScreenManager;
-import Maps.TestMap;
+import Maps.*;
 import Utils.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,8 +42,8 @@ import java.util.Random;
 public abstract class Map {
    // the tile map (map tiles that make up the entire map image)
    protected MapTile[] mapTiles;
-   protected ArrayList<ArrayList<Enemy>> enemyWaves = new ArrayList<>(); // Store enemy waves
-   private int currentWave = 0;
+   protected ArrayList<EnemyWave> enemyWaves = new ArrayList<>();
+   private int currentWaveIndex = 0;
 
 
    private List<MapEntity> projectiles = new ArrayList<>();
@@ -104,13 +104,9 @@ public abstract class Map {
 
 
    public List<MapEntity> entities = new ArrayList<>();
-
-
-   //private EnemyWave enemyWave;
-   private boolean waveActive = false;
    
    public int mapId = 0;
-
+   private boolean waveActive = false;
 
    public Map(String mapFileName, Tileset tileset) {
        this.mapFileName = mapFileName;
@@ -123,12 +119,26 @@ public abstract class Map {
        this.xMidPoint = ScreenManager.getScreenWidth() / 2;
        this.yMidPoint = (ScreenManager.getScreenHeight() / 2);
        this.playerStartPosition = new Point(0, 0);
-       //enemyWave = new EnemyWave(null);
-
-
+       enemyWaves = loadEnemyWaves();
+       spawnNextWave();
+       
    }
   
-   protected abstract ArrayList<ArrayList<Enemy>> loadEnemyWaves();
+   protected abstract ArrayList<EnemyWave> loadEnemyWaves();
+
+   private void spawnNextWave() {
+    if (currentWaveIndex < enemyWaves.size()) {
+        System.out.println("Spawning wave " + (currentWaveIndex + 1));
+        EnemyWave wave = enemyWaves.get(currentWaveIndex++);
+        for (Enemy enemy : wave.getEnemies()) {
+            addEnemy(enemy);
+        }
+        waveActive = true;
+    } else {
+        waveActive = false;
+        onAllWavesComplete();
+    }
+}
 
 
    // sets up map by reading in the map file to create the tile map
@@ -152,15 +162,6 @@ public abstract class Map {
        // for (Enemy enemy : this.enemies) {
        // enemy.setMap(this);
        // }
-
-
- 
-       if (!enemyWaves.isEmpty()) {
-           loadNextWave(player);
-       }
-
-
-
 
        this.enhancedMapTiles = loadEnhancedMapTiles();
        for (EnhancedMapTile enhancedMapTile : this.enhancedMapTiles) {
@@ -186,7 +187,8 @@ public abstract class Map {
 
    // Check if all active enemies are dead
    public boolean isWaveComplete() {
-        return waveActive && getActiveEnemies().isEmpty(); 
+        boolean complete = getEnemies().isEmpty();
+        return complete; 
    }
 
 
@@ -516,11 +518,12 @@ public abstract class Map {
 
    // add an enemy to the map's list of enemies
    public void addEnemy(Enemy enemy) {
-       enemy.setMap(this);
-       this.enemies.add(enemy);
+    if (enemies == null) {
+        enemies = new ArrayList<>();
+    }
+    enemies.add(enemy);
+    enemy.setMap(this);
    }
-
-
    // add an enhanced map tile to the map's list of enhanced map tiles
    public void addEnhancedMapTile(EnhancedMapTile enhancedMapTile) {
        enhancedMapTile.setMap(this);
@@ -548,33 +551,40 @@ public abstract class Map {
            adjustMovementX(player);
        }
 
-
-       if (isWaveComplete()) {
-        System.out.println("Wave " + currentWave + " completed.");
+       if (isCurrentWaveComplete()) {
+        System.out.println(enemyWaves.size());
+        System.out.println("Wave " + currentWaveIndex + " completed.");
         waveActive = false;
-        loadNextWave(player);
+        if (!isLastWave()) {
+            spawnNextWave();
+        } else {
+            System.out.println("Final wave completed. Preparing to finish level.");
+            onAllWavesComplete();
+        }
     }
+
        camera.update(player);
    }
 
-   
-   public void loadNextWave(Player player) {
-    if (currentWave < enemyWaves.size()) {
-        ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
-        currentWave++;
-        waveActive = true;
-        System.out.println("Wave " + currentWave + " spawning.");
-
-        for (Enemy enemy : nextWave) {
-            addEnemy(enemy);
-        }
-    } else {
-         waveActive = false;
-         System.out.println("All waves complete. Triggering level completion...");
-         onLevelCompleted();
-        }
+   private boolean isCurrentWaveComplete() {
+    return getEnemies().isEmpty() && waveActive;
 }
 
+private boolean isLastWave() {
+    return currentWaveIndex == enemyWaves.size(); // Check if on the last wave
+}
+
+public boolean isLastWaveComplete() {
+    // Check if we're on the last wave and all enemies are defeated
+    return currentWaveIndex == enemyWaves.size() && getEnemies().isEmpty();
+}
+
+protected void onAllWavesComplete() {
+    System.out.println("All waves completed!");
+    onLevelCompleted();
+}
+
+   
    // based on the player's current X position (which in a level can potentially be
    // updated each frame),
    // adjust the player's and camera's positions accordingly in order to properly
@@ -653,9 +663,7 @@ public abstract class Map {
 
    public void reset() {
        setupMap();
-       currentWave = 0;
         waveActive = false;
-        loadNextWave(player);
    }
 
 

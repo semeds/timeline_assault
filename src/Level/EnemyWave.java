@@ -1,43 +1,39 @@
-// package Level;
-// import Enemies.DinosaurEnemy; // Import specific enemy class
-// import Utils.Point; // Import the Point class
-// import java.util.ArrayList;
-// import Utils.Direction;
+package Level;
 
-// public class EnemyWave {
-//     private int waveNumber;
-//     private ArrayList<Enemy> enemies;
-//     private int baseEnemyCount = 3;
-//     private int maxEnemyCount = 5;
-//     private Player player;
-//     private int enemySpacing = 50;
+import java.util.ArrayList;
 
-//     public EnemyWave(Player player) {
-//         this.player = player;
-//         this.waveNumber = 0;
-//         this.enemies = new ArrayList<>();
-//     }
+public class EnemyWave {
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private int waveId;
+    private int spawnDelay; // in milliseconds
 
-//     public void startWave() {
-//         waveNumber++;
-//         enemies.clear();
+    public EnemyWave(int waveId, int spawnDelay) {
+        this.waveId = waveId;
+        this.spawnDelay = spawnDelay;
+    }
 
-//         int enemyCount = Math.min(baseEnemyCount + waveNumber, maxEnemyCount);
-//         for (int i = 0; i < enemyCount; i++) {
-//             spawnEnemy(i);
-//         }
-//     }
+    public EnemyWave addEnemy(Enemy enemy) {
+        if (enemy == null) {
+            throw new IllegalArgumentException("Enemy cannot be null");
+        }
+        enemies.add(enemy);
+        return this;
+    }
 
-//     private void spawnEnemy(int index) {
-//         int xPosition = 350 + (index * enemySpacing);
-//         enemies.add(new DinosaurEnemy(new Point(xPosition, 100), new Point(500, 100), Direction.RIGHT));
-//     }
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
 
-//     public ArrayList<Enemy> getEnemies() {
-//         return enemies;
-//     }
+    public boolean isComplete() {
+        return enemies.stream().allMatch(Enemy::isDefeated);
+    }
 
-//     public boolean isWaveComplete() {
-//         return enemies.isEmpty();
-//     }
-// }
+    public int getWaveId() {
+        return waveId;
+    }
+
+    public int getSpawnDelay() {
+        return spawnDelay;
+    }
+}
+
