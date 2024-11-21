@@ -15,6 +15,8 @@ import Level.*;
 import NPCs.Walrus;
 
 import NPCs.FPistolPickup;
+import NPCs.FAssaultRiflePickup;
+import NPCs.FShotgunPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import Utils.Point;
