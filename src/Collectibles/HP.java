@@ -17,7 +17,7 @@ public class HP extends NPC {
     protected Map mapPosition;
 
     public HP(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("HP.png"), 24, 24), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("new_hp.png"), 24, 24), "DEFAULT");
         isInteractable = true;
         this.mapPosition = map;
     }

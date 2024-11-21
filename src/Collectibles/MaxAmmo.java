@@ -18,7 +18,7 @@ public class MaxAmmo extends NPC {
     protected Map mapPosition;
 
     public MaxAmmo(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("invincibility.png"), 24, 24), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("new_maxammo.png"), 24, 24), "DEFAULT");
         isInteractable = true;
         this.mapPosition = map;
     }

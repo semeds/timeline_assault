@@ -17,7 +17,7 @@ public class InstaKill extends NPC {
     protected Map mapPosition;
 
     public InstaKill(Point location, Map map) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("instakill.png"), 24, 24), "DEFAULT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("new_instakill.png"), 24, 24), "DEFAULT");
         isInteractable = true;
         this.mapPosition = map;
     }
