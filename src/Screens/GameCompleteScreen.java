@@ -16,7 +16,7 @@ public class GameCompleteScreen extends Screen {
     protected SpriteFont playGame;
     protected SpriteFont credits;
     protected SpriteFont gameComplete;
-    protected BufferedImage backgroundImage;
+    protected BufferedImage gameCompleteImage;
     protected int keyPressTimer;
     protected int pointerLocationX, pointerLocationY;
     protected KeyLocker keyLocker = new KeyLocker();
@@ -32,13 +32,13 @@ public class GameCompleteScreen extends Screen {
     public void initialize() {
         gameComplete = new SpriteFont("GAME COMPLETE.", 335, 600, "Times New Roman", 35, new Color(49,207,240));
 
-        playGame = new SpriteFont("Play Again", 200, 500, "Times New Roman", 30, new Color(49, 207, 240));
+        playGame = new SpriteFont("Play Again", 300, 500, "Times New Roman", 30, new Color(49, 207, 240));
         playGame.setOutlineColor(Color.black);
         playGame.setOutlineThickness(3);
-        credits = new SpriteFont("CREDITS", 470, 500, "Times New Roman", 30, new Color(49, 207, 240));
-        credits.setOutlineColor(Color.black);
-        credits.setOutlineThickness(3);
-        // backgroundImage = ImageLoader.load("TitleScreen.png");
+        //credits = new SpriteFont("CREDITS", 470, 500, "Times New Roman", 30, new Color(49, 207, 240));
+        //credits.setOutlineColor(Color.black);
+        //credits.setOutlineThickness(3);
+        gameCompleteImage = ImageLoader.load("GameCompleteScreen.png");
         screenHeight = ScreenManager.getScreenHeight();
         screenWidth = ScreenManager.getScreenWidth();
         keyPressTimer = 0;
@@ -74,12 +74,12 @@ public class GameCompleteScreen extends Screen {
         // sets color of spritefont text based on which menu item is being hovered
         if (currentMenuItemHovered == 0) {
             playGame.setColor(new Color(255, 215, 0));
-            credits.setColor(new Color(49, 207, 240));
+            //credits.setColor(new Color(49, 207, 240));
             pointerLocationX = 170;
             pointerLocationY = 505;
         } else if (currentMenuItemHovered == 1) {
             playGame.setColor(new Color(49, 207, 240));
-            credits.setColor(new Color(255, 215, 0));
+            //credits.setColor(new Color(255, 215, 0));
             pointerLocationX = 440;
             pointerLocationY = 505;
         }
@@ -100,9 +100,9 @@ public class GameCompleteScreen extends Screen {
     }
 
     public void draw(GraphicsHandler graphicsHandler) {
-        //graphicsHandler.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight);
+        graphicsHandler.drawImage(gameCompleteImage, 0, 0, screenWidth, screenHeight);
         playGame.draw(graphicsHandler);
-        credits.draw(graphicsHandler);
+        //credits.draw(graphicsHandler);
         graphicsHandler.drawFilledRectangleWithBorder(pointerLocationX, pointerLocationY, 20, 20,
                 new Color(49, 207, 240), Color.black, 2);
     }

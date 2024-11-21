@@ -178,35 +178,15 @@ public abstract class Map {
    }
 
 
-   public void loadNextWave(Player player) {
-       if (currentWave < enemyWaves.size()) {
-           ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
-           currentWave++;
 
 
-           for (Enemy enemy : nextWave) {
-               addEnemy(enemy);
-           }
-       } else {
-           if (isWaveComplete()) {
-                System.out.println("All waves complete. Triggering level completion...");
-                onLevelCompleted();
-           } else {
-                System.out.println("Wave not complete yet.");
-
-           }
-
-       }
-   }
-
-   public void onLevelCompleted() {
+       public void onLevelCompleted() {
     // Placeholder for callback
 }
 
    // Check if all active enemies are dead
    public boolean isWaveComplete() {
-        boolean complete = getActiveEnemies().isEmpty();
-        return complete; 
+        return waveActive && getActiveEnemies().isEmpty(); 
    }
 
 
@@ -569,12 +549,31 @@ public abstract class Map {
        }
 
 
-       if (isWaveComplete() && currentWave < enemyWaves.size()) {
-           loadNextWave(player);
-       }
+       if (isWaveComplete()) {
+        System.out.println("Wave " + currentWave + " completed.");
+        waveActive = false;
+        loadNextWave(player);
+    }
        camera.update(player);
    }
 
+   
+   public void loadNextWave(Player player) {
+    if (currentWave < enemyWaves.size()) {
+        ArrayList<Enemy> nextWave = enemyWaves.get(currentWave);
+        currentWave++;
+        waveActive = true;
+        System.out.println("Wave " + currentWave + " spawning.");
+
+        for (Enemy enemy : nextWave) {
+            addEnemy(enemy);
+        }
+    } else {
+         waveActive = false;
+         System.out.println("All waves complete. Triggering level completion...");
+         onLevelCompleted();
+        }
+}
 
    // based on the player's current X position (which in a level can potentially be
    // updated each frame),
@@ -654,6 +653,9 @@ public abstract class Map {
 
    public void reset() {
        setupMap();
+       currentWave = 0;
+        waveActive = false;
+        loadNextWave(player);
    }
 
 

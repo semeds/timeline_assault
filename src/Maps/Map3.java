@@ -2,21 +2,18 @@ package Maps;
 
 
 import Enemies.BaseAlien;
-import Enemies.BaseAlien;
-import Enemies.BugEnemy;
-import Enemies.DinosaurEnemy;
-import Enemies.StrongHumanEnemy;
-import Enemies.ZoomerHumanEnemy;
+import Enemies.StrongAlien;
+import Enemies.ZoomerAlien;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
 import GameObject.Rectangle;
 import Level.*;
 import NPCs.Walrus;
-import NPCs.APistolPickup;
-import NPCs.AAsaultRiflePickup;
-import NPCs.AShotgunPickup;
+
 import NPCs.FPistolPickup;
+import NPCs.FAssaultRiflePickup;
+import NPCs.FShotgunPickup;
 import Tilesets.CommonTileset;
 import Utils.Direction;
 import Utils.Point;
@@ -99,150 +96,52 @@ public class Map3 extends Map {
    @Override
    protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
        ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
-       ArrayList<Enemy> wave1 = new ArrayList<>();
-        wave1.add(new BaseAlien(new Point(250, 523), Direction.RIGHT));
-        wave1.add(new BaseAlien(new Point(300, 523), Direction.RIGHT));
-        wave1.add(new BaseAlien(new Point(1850, 523), Direction.LEFT));
-        wave1.add(new BaseAlien(new Point(1950, 523), Direction.LEFT));
-        wave1.add(new BaseAlien(new Point(1750, 523), Direction.LEFT));
 
-        waves.add(wave1);
+      // Use a helper method to generate waves
+      waves.add(generateWave(5, BaseAlien.class, 300, 523, Direction.LEFT));
+      waves.add(generateWave(6, BaseAlien.class, 400, 523, Direction.RIGHT));
+      waves.add(generateWave(7, BaseAlien.class, 500, 523, Direction.LEFT));
 
+      // Add Zoomer Aliens starting in Wave 4
+      ArrayList<Enemy> wave4 = generateWave(4, BaseAlien.class, 200, 523, Direction.LEFT);
+      wave4.add(new ZoomerAlien(new Point(800, 523), Direction.RIGHT));
+      waves.add(wave4);
 
-       // Define Wave 2: Add more HumanEnemyEnemies
-       ArrayList<Enemy> wave2 = new ArrayList<>();
-       wave2.add(new BaseAlien(new Point(250, 523), Direction.RIGHT));
-       wave2.add(new BaseAlien(new Point(300, 523), Direction.RIGHT));
-       wave2.add(new BaseAlien(new Point(850, 523), Direction.LEFT));
-       wave2.add(new BaseAlien(new Point(950, 523), Direction.LEFT));
-       wave2.add(new BaseAlien(new Point(750, 523), Direction.LEFT));
-       wave2.add(new BaseAlien(new Point(200, 523), Direction.RIGHT));
-       wave2.add(new BaseAlien(new Point(350, 523), Direction.RIGHT));
+      // Add more Zoomer Aliens and Base Aliens
+      ArrayList<Enemy> wave5 = generateWave(4, BaseAlien.class, 200, 523, Direction.RIGHT);
+      wave5.add(new ZoomerAlien(new Point(350, 523), Direction.LEFT));
+      wave5.add(new ZoomerAlien(new Point(450, 523), Direction.LEFT));
+      waves.add(wave5);
 
-       waves.add(wave2);
+      // Add Strong Alien in later waves
+      ArrayList<Enemy> wave6 = generateWave(6, BaseAlien.class, 200, 523, Direction.LEFT);
+      wave6.add(new StrongAlien(new Point(650, 523), Direction.RIGHT));
+      wave6.add(new ZoomerAlien(new Point(750, 523), Direction.RIGHT));
+      waves.add(wave6);
 
+      // Boss Wave
+      ArrayList<Enemy> bossWave = new ArrayList<>();
+      bossWave.add(new StrongAlien(new Point(300, 523), Direction.RIGHT));
+      waves.add(bossWave);
 
-       // Define Wave 3: Add even more HumanEnemyEnemies
-       ArrayList<Enemy> wave3 = new ArrayList<>();
-       wave3.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-       wave3.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-       wave3.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-       wave3.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-       wave3.add(new BaseAlien(new Point(1600, 523), Direction.RIGHT));
-       wave3.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-       wave3.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-       wave3.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-       wave3.add(new ZoomerHumanEnemy(new Point(500, 523), Direction.LEFT));
-       wave3.add(new ZoomerHumanEnemy(new Point(1700, 523), Direction.RIGHT));
-       waves.add(wave3);
+      return waves;
+  }
 
-       // Define Wave 4
-        ArrayList<Enemy> wave4 = new ArrayList<>();
-        wave4.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave4.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave4.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave4.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave4.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave4.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-        wave4.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-        wave4.add(new ZoomerHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave4.add(new ZoomerHumanEnemy(new Point(1700, 523), Direction.RIGHT));
-        waves.add(wave4);
+ 
+  private ArrayList<Enemy> generateWave(int count, Class<? extends Enemy> enemyType, int startX, int y, Direction direction) {
+      ArrayList<Enemy> wave = new ArrayList<>();
+      int spacing = 100; // Space between each enemy
 
-        // Define Wave 5
-        ArrayList<Enemy> wave5 = new ArrayList<>();
-        wave5.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave5.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave5.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave5.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave5.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave5.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-        wave5.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-        wave5.add(new BaseAlien(new Point(1700, 523), Direction.RIGHT));
-        wave5.add(new ZoomerHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave5.add(new ZoomerHumanEnemy(new Point(1600, 523), Direction.RIGHT));
-        waves.add(wave5);
+      for (int i = 0; i < count; i++) {
+          try {
+              Enemy enemy = enemyType.getConstructor(Point.class, Direction.class)
+                  .newInstance(new Point(startX + i * spacing, y), direction);
+              wave.add(enemy);
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+      }
 
-        // Define Wave 6
-        ArrayList<Enemy> wave6 = new ArrayList<>();
-        wave6.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave6.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave6.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave6.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave6.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave6.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-        wave6.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-        wave6.add(new BaseAlien(new Point(1700, 523), Direction.RIGHT));
-        wave6.add(new StrongHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave6.add(new StrongHumanEnemy(new Point(1600, 523), Direction.RIGHT));
-        wave6.add(new ZoomerHumanEnemy(new Point(600, 523), Direction.LEFT));
-        wave6.add(new ZoomerHumanEnemy(new Point(700, 523), Direction.LEFT));
-        wave6.add(new ZoomerHumanEnemy(new Point(1500, 523), Direction.RIGHT));
-        wave6.add(new ZoomerHumanEnemy(new Point(1400, 523), Direction.RIGHT));
-        waves.add(wave6);
-
-        // Define Wave 7
-        ArrayList<Enemy> wave7 = new ArrayList<>();
-        wave7.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(500, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(600, 523), Direction.LEFT));
-        wave7.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave7.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-        wave7.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-        wave7.add(new BaseAlien(new Point(1700, 523), Direction.RIGHT));
-        wave7.add(new BaseAlien(new Point(1400, 523), Direction.RIGHT));
-        wave7.add(new BaseAlien(new Point(1300, 523), Direction.RIGHT));
-        wave7.add(new StrongHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave7.add(new StrongHumanEnemy(new Point(1600, 523), Direction.RIGHT));
-        wave7.add(new StrongHumanEnemy(new Point(700, 523), Direction.LEFT));
-        wave7.add(new StrongHumanEnemy(new Point(1200, 523), Direction.RIGHT));
-        wave7.add(new ZoomerHumanEnemy(new Point(600, 523), Direction.LEFT));
-        wave7.add(new ZoomerHumanEnemy(new Point(1100, 523), Direction.RIGHT));
-        waves.add(wave7);
-
-        // Define Wave 8
-        ArrayList<Enemy> wave8 = new ArrayList<>();
-        wave8.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave8.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave8.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave8.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave8.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave8.add(new BaseAlien(new Point(1900, 523), Direction.RIGHT));
-        wave8.add(new BaseAlien(new Point(1800, 523), Direction.RIGHT));
-        wave8.add(new BaseAlien(new Point(1700, 523), Direction.RIGHT));
-        wave8.add(new StrongHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave8.add(new StrongHumanEnemy(new Point(1600, 523), Direction.RIGHT));
-        wave8.add(new ZoomerHumanEnemy(new Point(600, 523), Direction.LEFT));
-        wave8.add(new ZoomerHumanEnemy(new Point(1500, 523), Direction.RIGHT));
-        waves.add(wave8);
-
-        ArrayList<Enemy> wave9 = new ArrayList<>();
-        wave9.add(new BaseAlien(new Point(100, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(200, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(300, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(400, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(700, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(900, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(800, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(850, 523), Direction.LEFT));
-        wave9.add(new BaseAlien(new Point(2300, 523), Direction.RIGHT));
-        wave9.add(new BaseAlien(new Point(2200, 523), Direction.RIGHT));
-        wave9.add(new BaseAlien(new Point(2100, 523), Direction.RIGHT));
-        wave9.add(new BaseAlien(new Point(2000, 523), Direction.RIGHT));
-        wave9.add(new BaseAlien(new Point(2400, 523), Direction.RIGHT));
-        wave9.add(new BaseAlien(new Point(2500, 523), Direction.RIGHT));
-        wave9.add(new StrongHumanEnemy(new Point(1700, 523), Direction.RIGHT));
-        wave9.add(new StrongHumanEnemy(new Point(1800, 523), Direction.RIGHT));
-        wave9.add(new StrongHumanEnemy(new Point(500, 523), Direction.LEFT));
-        wave9.add(new StrongHumanEnemy(new Point(1600, 523), Direction.RIGHT));
-        wave9.add(new ZoomerHumanEnemy(new Point(600, 523), Direction.LEFT));
-        wave9.add(new ZoomerHumanEnemy(new Point(1500, 523), Direction.RIGHT));
-        wave9.add(new ZoomerHumanEnemy(new Point(750, 523), Direction.LEFT));
-        wave9.add(new ZoomerHumanEnemy(new Point(1650, 523), Direction.RIGHT));
-
-       return waves;
-   }
+      return wave;
+  }
 }
