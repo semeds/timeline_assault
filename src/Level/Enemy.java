@@ -54,6 +54,11 @@ public class Enemy extends MapEntity {
             isInvincible = false;
         }
 
+        if (hitPoints <= 0 && mapEntityStatus != MapEntityStatus.REMOVED) {
+            mapEntityStatus = MapEntityStatus.REMOVED;
+        }
+    
+
         moveTowardsPlayer(player);
 
     }
@@ -92,6 +97,7 @@ public class Enemy extends MapEntity {
                 map.spawnpowerup(this.getX(), this.getY());
             }
             map.removeEnemy(this);
+            mapEntityStatus = MapEntityStatus.REMOVED;
         }
     }
 

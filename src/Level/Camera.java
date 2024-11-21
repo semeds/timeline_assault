@@ -98,24 +98,23 @@ public class Camera extends Rectangle {
 
    // determine which enemies are active (exist and are within range of the camera)
    private ArrayList<Enemy> loadActiveEnemies() {
-       ArrayList<Enemy> activeEnemies = new ArrayList<>();
-       for (int i = map.getEnemies().size() - 1; i >= 0; i--) {
-           Enemy enemy = map.getEnemies().get(i);
+    ArrayList<Enemy> activeEnemies = new ArrayList<>();
+    for (int i = map.getEnemies().size() - 1; i >= 0; i--) {
+        Enemy enemy = map.getEnemies().get(i);
 
-
-           if (isMapEntityActive(enemy)) {
-               activeEnemies.add(enemy);
-               if (enemy.mapEntityStatus == MapEntityStatus.INACTIVE) {
-                   enemy.setMapEntityStatus(MapEntityStatus.ACTIVE);
-               }
-           } else if (enemy.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
-               enemy.setMapEntityStatus(MapEntityStatus.INACTIVE);
-           } else if (enemy.getMapEntityStatus() == MapEntityStatus.REMOVED) {
-               map.getEnemies().remove(i);
-           }
-       }
-       return activeEnemies;
-   }
+        if (enemy.getMapEntityStatus() == MapEntityStatus.REMOVED) {
+            map.getEnemies().remove(i); // Remove defeated enemies
+        } else if (isMapEntityActive(enemy)) {
+            activeEnemies.add(enemy);
+            if (enemy.getMapEntityStatus() == MapEntityStatus.INACTIVE) {
+                enemy.setMapEntityStatus(MapEntityStatus.ACTIVE); // Mark as active
+            }
+        } else if (enemy.getMapEntityStatus() == MapEntityStatus.ACTIVE) {
+            enemy.setMapEntityStatus(MapEntityStatus.INACTIVE); // Mark as inactive
+        }
+    }
+    return activeEnemies;
+}
 
 
    // determine which enhanced map tiles are active (exist and are within range of the camera)

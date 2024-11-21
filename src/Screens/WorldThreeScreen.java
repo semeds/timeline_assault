@@ -179,7 +179,7 @@ public static int ashotgunAmmo;
                map.update(player);
 
 
-                if (map.isWaveComplete()) {
+                if (map.isLastWaveComplete()) {
                 //switch to Game Complete
                 System.out.println("Game finished..");
                 screenCoordinator.setGameState(GameState.GAMECOMPLETE);

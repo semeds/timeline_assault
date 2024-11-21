@@ -26,7 +26,7 @@ public class StrongAlien extends Enemy {
     private AirGroundState airGroundState;
 
     public StrongAlien(Point location, Direction facingDirection) {
-        super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
+        super(location.x, location.y, new SpriteSheet(ImageLoader.load("alien.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
         this.hitPoints = 6;
         this.initialize();
@@ -156,26 +156,6 @@ public class StrongAlien extends Enemy {
                     new FrameBuilder(spriteSheet.getSprite(0,3),25)
                             .withScale(1)
                             .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,4),25)
-                            .withScale(1)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,5),25)
-                            .withScale(1)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,6),25)
-                            .withScale(1)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,7),25)
-                            .withScale(1)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,8),25)
-                            .withScale(1)
-                            .withBounds(20,20,20,20)
                             .build()
                  });
 
@@ -191,31 +171,6 @@ public class StrongAlien extends Enemy {
                             .withBounds(20,20,20,20)
                             .build(),
                     new FrameBuilder(spriteSheet.getSprite(0,3),25)
-                            .withScale(1)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,4),25)
-                            .withScale(1)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,5),25)
-                            .withScale(1)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,6),25)
-                            .withScale(1)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,7),25)
-                            .withScale(1)
-                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                            .withBounds(20,20,20,20)
-                            .build(),
-                    new FrameBuilder(spriteSheet.getSprite(0,8),25)
                             .withScale(1)
                             .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                             .withBounds(20,20,20,20)

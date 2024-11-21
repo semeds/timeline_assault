@@ -180,9 +180,8 @@ public class WorldOneScreen extends Screen implements PlayerListener {
                map.update(player);
 
 
-               if (map.isWaveComplete()) {
-                System.out.println("Level 1 done switching to 2...");
-                screenCoordinator.setGameState(GameState.WORLDTWO);// Manually trigger level completion
+                if (map.isLastWaveComplete()) {
+                 screenCoordinator.setGameState(GameState.WORLDTWO);// Manually trigger level completion
             }
                // Handle reloading and shooting
                if (reloading) {
@@ -262,6 +261,8 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             
            case PURCHASE:
                purchaseScreen.update();
+
+               break;
 
        }
    }
@@ -394,6 +395,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             
             case PURCHASE:
                purchaseScreen.draw(graphicsHandler);
+               break;
        }
    }
   

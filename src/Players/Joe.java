@@ -480,7 +480,7 @@ public void draw(GraphicsHandler graphicsHandler) {
 
   @Override
   public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        if (isAShotgunEquipped == false) {
+        if (isAPistolEquipped == false) {
                 return new HashMap<String, Frame[]>() {
                         {
                             put("STAND_RIGHT", new Frame[] {
@@ -668,10 +668,10 @@ public void draw(GraphicsHandler graphicsHandler) {
                         }
                     };
                 }
-                else if(isAShotgunEquipped == true) {
+                else if(isAPistolEquipped == true) {
                         return new HashMap<String, Frame[]>() {
                                 {
-                                    put("STAND_RIGHT", new Frame[] {
+                                    put("STAND_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(7, 0))
                                                     .withScale(3)
                                                     .withBounds(8, 9, 8, 9)
@@ -681,7 +681,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("STAND_LEFT", new Frame[] {
+                                    put("STAND_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(7, 0))
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -692,7 +692,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("WALK_RIGHT", new Frame[] {
+                                    put("WALK_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(8, 0), 14)
                                                     .withScale(3)
                                                     .withBounds(8, 9, 8, 9)
@@ -714,7 +714,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("WALK_LEFT", new Frame[] {
+                                    put("WALK_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(8, 0), 14)
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -740,7 +740,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("JUMP_RIGHT", new Frame[] {
+                                    put("JUMP_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(9, 0))
                                                     .withScale(3)
                                                     .withBounds(8, 9, 8, 9)
@@ -750,7 +750,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("JUMP_LEFT", new Frame[] {
+                                    put("JUMP_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(9, 0))
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -761,7 +761,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("FALL_RIGHT", new Frame[] {
+                                    put("FALL_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(10, 0))
                                                     .withScale(3)
                                                     .withBounds(8, 9, 8, 9)
@@ -771,7 +771,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("FALL_LEFT", new Frame[] {
+                                    put("FALL_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(10, 0))
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -782,7 +782,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("CROUCH_RIGHT", new Frame[] {
+                                    put("CROUCH_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(11, 0))
                                                     .withScale(3)
                                                     .withBounds(8, 12, 8, 6)
@@ -792,7 +792,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("CROUCH_LEFT", new Frame[] {
+                                    put("CROUCH_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(11, 0))
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -803,7 +803,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("DEATH_RIGHT", new Frame[] {
+                                    put("DEATH_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(12, 0), 8)
                                                     .withScale(3)
                                                     .build(),
@@ -818,7 +818,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("DEATH_LEFT", new Frame[] {
+                                    put("DEATH_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(12, 0), 8)
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
@@ -836,7 +836,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("SWIM_STAND_RIGHT", new Frame[] {
+                                    put("SWIM_STAND_RIGHT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(6, 0))
                                                     .withScale(3)
                                                     .withBounds(8, 9, 8, 9)
@@ -846,7 +846,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                       
                       
                       
-                                    put("SWIM_STAND_LEFT", new Frame[] {
+                                    put("SWIM_STAND_LEFT_2", new Frame[] {
                                             new FrameBuilder(spriteSheet.getSprite(6, 0))
                                                     .withScale(3)
                                                     .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
