@@ -252,6 +252,7 @@ public static int ashotgunAmmo;
            case LEVEL_LOSE:
                level3LoseScreen.update();
                resetWeaponStatus();
+               resetOverlays();
                break;
             
             case PAUSED:

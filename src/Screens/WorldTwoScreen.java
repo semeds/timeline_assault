@@ -258,6 +258,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                                 case LEVEL_LOSE:
                                     level2LoseScreen.update();
                                     resetWeaponStatus();
+                                    resetOverlays();
                                     break;
                                  
                                  case PAUSED:

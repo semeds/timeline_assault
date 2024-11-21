@@ -36,7 +36,7 @@ public class ScreenCoordinator extends Screen {
 		this.gameState = gameState;
 	}
 
-	private void resetOverlays() {
+	public void resetOverlays() {
 		showFPistolOverlay = false;
 		showFAssaultRifleOverlay = false;
 		showFShotgunOverlay = false;

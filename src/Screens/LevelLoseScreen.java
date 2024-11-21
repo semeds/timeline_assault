@@ -14,19 +14,45 @@ public class LevelLoseScreen extends Screen {
     protected WorldTwoScreen playLevelScreen2;
     protected WorldThreeScreen playLevelScreen3;
 
+   private boolean showFPistolOverlay = false;
+   private boolean showFAssaultRifleOverlay = false;
+   private boolean showFShotgunOverlay = false;
+   private boolean showAPistolOverlay = false;
+   private boolean showAAssaultRifleOverlay = false;
+   private boolean showAShotgunOverlay = false;
+   private boolean showMPistolOverlay = false;
+   private boolean showMAssaultRifleOverlay = false;
+   private boolean showMShotgunOverlay = false;
+
+   public void resetOverlays() {
+    showFPistolOverlay = false;
+    showFAssaultRifleOverlay = false;
+    showFShotgunOverlay = false;
+    showAPistolOverlay = false;
+    showAAssaultRifleOverlay = false;
+    showAShotgunOverlay = false;
+    showMPistolOverlay = false;
+    showMAssaultRifleOverlay = false;
+    showMShotgunOverlay = false;
+
+}
+
     public LevelLoseScreen(WorldOneScreen playLevelScreen) {
         this.playLevelScreen = playLevelScreen;
         initialize();
+        resetOverlays();
     }
 
     public LevelLoseScreen(WorldTwoScreen playLevelScreen2) {
         this.playLevelScreen2 = playLevelScreen2;
         initialize();
+        resetOverlays();
     }
 
     public LevelLoseScreen(WorldThreeScreen playLevelScreen3) {
         this.playLevelScreen3 = playLevelScreen3;
         initialize();
+        resetOverlays();
     }
 
     @Override
