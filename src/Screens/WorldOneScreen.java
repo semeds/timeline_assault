@@ -263,6 +263,8 @@ public class WorldOneScreen extends Screen implements PlayerListener {
            case PURCHASE:
                purchaseScreen.update();
 
+               break;
+
        }
    }
   
@@ -394,6 +396,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             
             case PURCHASE:
                purchaseScreen.draw(graphicsHandler);
+               break;
        }
    }
   

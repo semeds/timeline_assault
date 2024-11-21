@@ -44,6 +44,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
    protected LevelClearedScreen levelClearedScreen;
    protected PauseScreen pauseScreen;
    protected Level2LoseScreen level2LoseScreen;
+   protected PurchaseScreen purchaseScreen;
    protected boolean levelCompletedStateChangeStart;
 
 
@@ -126,6 +127,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                             levelClearedScreen = new LevelClearedScreen();
                             level2LoseScreen = new Level2LoseScreen(this);
                             pauseScreen = new PauseScreen();
+                            purchaseScreen = new PurchaseScreen();
                      
                      
                             this.playLevelScreenState = PlayLevelScreenState.RUNNING;
@@ -148,6 +150,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                      
                         public void update() {
                          updatePauseState();
+                         completePurchase();
                      
                             switch (playLevelScreenState) {
                                 case RUNNING:
@@ -261,10 +264,12 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                                     resetOverlays();
                                     break;
                                  
-                                 case PAUSED:
-                                 //   updatePauseState();
+                                case PAUSED:
                                    pauseScreen.update();
                                    
+                                case PURCHASE:
+                                    purchaseScreen.update();
+
                                     break;
                      
                             }
@@ -296,6 +301,23 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
                         }
                        
                        
+                        private void completePurchase() {
+                            if (Keyboard.isKeyDown(Key.SPACE) && !keyLocker.isKeyLocked(Key.SPACE)) {
+                                //isGamePaused = !isGamePaused;
+                                keyLocker.lockKey(Key.SPACE);
+                                if (isGamePaused == true) {
+                                    playLevelScreenState = PlayLevelScreenState.PURCHASE;
+                                }
+                                else {
+                                    playLevelScreenState = PlayLevelScreenState.RUNNING;
+                                }
+                                
+                            }
+                    
+                            if (Keyboard.isKeyUp(pauseKey)) {
+                                keyLocker.unlockKey(pauseKey);
+                            }
+                        }
                        
                      
                      
@@ -373,6 +395,10 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
 
             case PAUSED:
                pauseScreen.draw(graphicsHandler);
+               break;
+            
+            case PURCHASE:
+               purchaseScreen.draw(graphicsHandler);
                break;
        }
    }
@@ -545,7 +571,7 @@ public class WorldTwoScreen extends Screen implements PlayerListener {
 
 
    private enum PlayLevelScreenState {
-       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
+       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED, PURCHASE
 };
 
 
