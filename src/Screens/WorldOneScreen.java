@@ -24,21 +24,9 @@ import java.awt.image.BufferedImage;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
 import NPCs.AShotgunPickup;
-import NPCs.MAssaultRiflePickup;
-import NPCs.MPistolPickup;
-import NPCs.MShotgunPickup;
-import NPCs.FPistolPickup;
-import NPCs.FAssaultRiflePickup;
-import NPCs.FShotgunPickup;
 import Engine.APistolOverlay;
 import Engine.AAsaultrifleOverlay;
 import Engine.AShotgunOverlay;
-import Engine.MPistolOverlay;
-import Engine.MShotgunOverlay;
-import Engine.MAssaultRifleOverlay;
-import Engine.FAssaultRifleOverlay;
-import Engine.FPistolOverlay;
-import Engine.FShotgunOverlay;
 import java.awt.Color;
 import java.awt.Font;
 import Engine.Key;
@@ -55,6 +43,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
    protected int screenTimer;
    protected LevelClearedScreen levelClearedScreen;
    protected PauseScreen pauseScreen;
+   protected PurchaseScreen purchaseScreen;
    protected LevelLoseScreen levelLoseScreen;
    protected boolean levelCompletedStateChangeStart;
 
@@ -79,40 +68,23 @@ public class WorldOneScreen extends Screen implements PlayerListener {
    private boolean isAPistolickedUp = false;
    private boolean isAAssaultRiflePickedUp = false; 
    private boolean isAShotgunPickedUp = false;
-   private boolean isMPistolickedUp = false;
-   private boolean isMAssaultRiflePickedUp = false; 
-   private boolean isMShotgunPickedUp = false; 
-   private boolean isFPistolPickedup = false;
-   private boolean isFAssaultRiflePickedUp = false;
-   private boolean isFShotgunPickedUp = false;
 
    private boolean showAPistolOverlay = false;
    private boolean showAAssaultRifleOverlay = false;
    private boolean showAShotgunOverlay = false;
-   private boolean showMPistolOverlay = false;
-   private boolean showMAssaultRifleOverlay = false;
-   private boolean showMShotgunOverlay = false;
-   private boolean showFPistolOverlay = false;
-   private boolean showFAssaultRifleOverlay = false;
-   private boolean showFShotgunOverlay = false;
+
 
    private APistolOverlay apistolOverlay;
    private AAsaultrifleOverlay aassaultRifleOverlay;
    private AShotgunOverlay ashotgunOverlay;
-   private MPistolOverlay mPistolOverlay;
-   private MShotgunOverlay mShotgunOverlay;
-   private MAssaultRifleOverlay mAssaultRifleOverlay;
-   private FPistolOverlay fPistolOverlay;
-   private FAssaultRifleOverlay fAssaultRifleOverlay;
-   private FShotgunOverlay fShotgunOverlay;
 
    private int coinCount = 0;
-   public static int currentAmmo = 12; // Current bullets for pistol
-   public static final int MAX_AMMO = 12; // Ammo in a pistol magazine
-   public static int assaultRifleAmmo = 30; // Assault rifle current bullets
-   public static final int ASSAULT_RIFLE_MAX_AMMO = 30; // Assault rifle max ammo
-   public static int shotgunAmmo = 8; // Shotgun current bullets
-   public static final int SHOTGUN_MAX_AMMO = 8; // Shotgun max ammo
+   public static int apistolAmmo = 12; // Current bullets for pistol
+   public static final int APISTOL_MAX_AMMO = 12; // Ammo in a pistol magazine
+   public static int aassaultRifleAmmo = 30; // Assault rifle current bullets
+   public static final int AASSAULT_RIFLE_MAX_AMMO = 30; // Assault rifle max ammo
+   public static int ashotgunAmmo = 8; // Shotgun current bullets
+   public static final int AASHOTGUN_MAX_AMMO = 8; // Shotgun max ammo
    private boolean canShoot = true; // Flag to prevent multiple shots per SPACE press
    public static boolean reloading = false; // Flag to indicate if reload is in progress
    private int reloadTimer = 0; // Reload delay
@@ -132,12 +104,6 @@ public class WorldOneScreen extends Screen implements PlayerListener {
        apistolOverlay = new APistolOverlay();
        aassaultRifleOverlay = new AAsaultrifleOverlay(); 
        ashotgunOverlay = new AShotgunOverlay(); 
-       mPistolOverlay = new MPistolOverlay();
-       mAssaultRifleOverlay = new MAssaultRifleOverlay();
-       mShotgunOverlay = new MShotgunOverlay();
-       fPistolOverlay = new FPistolOverlay();
-       fAssaultRifleOverlay = new FAssaultRifleOverlay();
-       fShotgunOverlay = new FShotgunOverlay();
    }
 
 
@@ -157,6 +123,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
        levelClearedScreen = new LevelClearedScreen();
        levelLoseScreen = new LevelLoseScreen(this);
        pauseScreen = new PauseScreen();
+       purchaseScreen = new PurchaseScreen();
 
 
        this.playLevelScreenState = PlayLevelScreenState.RUNNING;
@@ -179,6 +146,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
    public void update() {
     updatePauseState();
+    completePurchase();
 
        switch (playLevelScreenState) {
            case RUNNING:
@@ -188,92 +156,19 @@ public class WorldOneScreen extends Screen implements PlayerListener {
                    showAPistolOverlay = true;
                    showAAssaultRifleOverlay = false;
                    showAShotgunOverlay = false;
-                   showMAssaultRifleOverlay = false;
-                   showMPistolOverlay = false;
-                   showMShotgunOverlay = false;
                } else if (AAsaultRiflePickup.weaponPickedUp && !isAAssaultRiflePickedUp) {
                 isAAssaultRiflePickedUp = true;
                 resetOverlays();
                 showAPistolOverlay = false;
                 showAAssaultRifleOverlay = true;
                 showAShotgunOverlay = false;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = false;
                } else if (AShotgunPickup.weaponPickedUp && !isAShotgunPickedUp) {
                 isAShotgunPickedUp = true;
                 resetOverlays();
                 showAPistolOverlay = false;
                 showAAssaultRifleOverlay = false;
                 showAShotgunOverlay = true;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = false;
-               } else if (MPistolPickup.weaponPickedUp && !isMPistolickedUp) {
-                isMPistolickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMPistolOverlay = true;
-                showMAssaultRifleOverlay = false;
-                showMShotgunOverlay = false;
-            }
-             else if (MAssaultRiflePickup.weaponPickedUp && !isMAssaultRiflePickedUp) {
-                isMAssaultRiflePickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMPistolOverlay = false;
-                showMAssaultRifleOverlay = true;
-                showMShotgunOverlay = false;
-            } else if (MShotgunPickup.weaponPickedUp && !isMShotgunPickedUp) {
-                isMShotgunPickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = true;
-            } else if (FPistolPickup.weaponPickedUp && !isFPistolPickedup) {
-                isFPistolPickedup = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = false;
-                showFPistolOverlay = true;
-                showFAssaultRifleOverlay = false;
-                showFShotgunOverlay = false;
-            } else if (FAssaultRiflePickup.weaponPickedUp && !isAAssaultRiflePickedUp) {
-                isAAssaultRiflePickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = false;
-                showFPistolOverlay = false;
-                showFAssaultRifleOverlay = true;
-                showFShotgunOverlay = false;
-            } else if (FShotgunPickup.weaponPickedUp && !isFShotgunPickedUp) {
-                isFShotgunPickedUp = true;
-                resetOverlays();
-                showAPistolOverlay = false;
-                showAAssaultRifleOverlay = false;
-                showAShotgunOverlay = false;
-                showMAssaultRifleOverlay = false;
-                showMPistolOverlay = false;
-                showMShotgunOverlay = false;
-                showFPistolOverlay = false;
-                showFAssaultRifleOverlay = false;
-                showFShotgunOverlay = true;
-            }
+               }
 
 
                if (Keyboard.isKeyDown(Key.R) && !reloading) { // Replace with the desired key
@@ -304,43 +199,19 @@ public class WorldOneScreen extends Screen implements PlayerListener {
                    shotgunCooldownTimer++;
   
                    if (Keyboard.isKeyDown(Key.SPACE) && canShoot) {
-                       if (isAPistolickedUp && currentAmmo > 0) {
-                           currentAmmo--;
+                       if (isAPistolickedUp && apistolAmmo > 0) {
+                           apistolAmmo--;
                            canShoot = false;
                            spawnFireball();
-                       } else if (isAAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-                           assaultRifleAmmo--;
+                       } else if (isAAssaultRiflePickedUp && aassaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+                           aassaultRifleAmmo--;
                            fireCooldownTimer = 0;
                            spawnFireball();
-                       } else if (isAShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-                           shotgunAmmo--;
+                       } else if (isAShotgunPickedUp && ashotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+                           ashotgunAmmo--;
                            shotgunCooldownTimer = 0;
                            spawnFireball();
-                       } else if (isMPistolickedUp && currentAmmo >0) {
-                            currentAmmo--;
-                           canShoot = false;
-                           spawnFireball();
-                       } else if (isMAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-                           assaultRifleAmmo--;
-                           fireCooldownTimer = 0;
-                           spawnFireball();
-                       } else if (isMShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-                        shotgunAmmo--;
-                        shotgunCooldownTimer = 0;
-                        spawnFireball();
-                       } else if (isFPistolPickedup && currentAmmo >0) {
-                        currentAmmo--;
-                       canShoot = false;
-                       spawnFireball();
-                   } else if (isFAssaultRiflePickedUp && assaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-                       assaultRifleAmmo--;
-                       fireCooldownTimer = 0;
-                       spawnFireball();
-                   } else if (isFShotgunPickedUp && shotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-                    shotgunAmmo--;
-                    shotgunCooldownTimer = 0;
-                    spawnFireball();
-                   }
+                       }
                    }
                    if (!Keyboard.isKeyDown(Key.SPACE)) {
                        canShoot = true;
@@ -387,6 +258,9 @@ public class WorldOneScreen extends Screen implements PlayerListener {
               pauseScreen.update();
               
                break;
+            
+           case PURCHASE:
+               purchaseScreen.update();
 
        }
    }
@@ -410,6 +284,24 @@ public class WorldOneScreen extends Screen implements PlayerListener {
         }
     }
 
+
+    private void completePurchase() {
+        if (Keyboard.isKeyDown(Key.SPACE) && !keyLocker.isKeyLocked(Key.SPACE)) {
+            //isGamePaused = !isGamePaused;
+            keyLocker.lockKey(Key.SPACE);
+            if (isGamePaused == true) {
+                playLevelScreenState = PlayLevelScreenState.PURCHASE;
+            }
+            else {
+                playLevelScreenState = PlayLevelScreenState.RUNNING;
+            }
+            
+        }
+
+        if (Keyboard.isKeyUp(pauseKey)) {
+            keyLocker.unlockKey(pauseKey);
+        }
+    }
     
   
   
@@ -447,24 +339,12 @@ public class WorldOneScreen extends Screen implements PlayerListener {
    public static void finishReload() {
        reloading = false;
        if (AAsaultRiflePickup.weaponPickedUp) { // Assault rifle reload
-           assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
+           aassaultRifleAmmo = AASSAULT_RIFLE_MAX_AMMO;
        } else if (APistolPickup.weaponPickedUp) { // Pistol reload
-           currentAmmo = MAX_AMMO;
+           apistolAmmo = APISTOL_MAX_AMMO;
        } else if (AShotgunPickup.weaponPickedUp) { // Shotgun reload
-           shotgunAmmo = SHOTGUN_MAX_AMMO;
-       } else if (MPistolPickup.weaponPickedUp) { // Pistol reload
-        currentAmmo = MAX_AMMO;
-    } else if (MAssaultRiflePickup.weaponPickedUp) { // Pistol reload
-        assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
-    } else if (MShotgunPickup.weaponPickedUp) { // Shotgun reload
-        shotgunAmmo = SHOTGUN_MAX_AMMO;
-   } else if (FPistolPickup.weaponPickedUp) { // Pistol reload
-    currentAmmo = MAX_AMMO;
-} else if (FAssaultRiflePickup.weaponPickedUp) { // Pistol reload
-    assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
-} else if (FShotgunPickup.weaponPickedUp) { // Shotgun reload
-    shotgunAmmo = SHOTGUN_MAX_AMMO;
-}
+           ashotgunAmmo = AASHOTGUN_MAX_AMMO;
+       } 
 }
   
   
@@ -480,45 +360,18 @@ public class WorldOneScreen extends Screen implements PlayerListener {
   
                if (showAPistolOverlay) {
                    apistolOverlay.draw(graphicsHandler.getGraphics());
-                   drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); 
+                   drawAmmoCount(graphicsHandler, apistolAmmo, APISTOL_MAX_AMMO); 
                }
               
                if (showAAssaultRifleOverlay) {
                    aassaultRifleOverlay.draw(graphicsHandler.getGraphics());
-                   drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO); 
+                   drawAmmoCount(graphicsHandler, aassaultRifleAmmo, AASSAULT_RIFLE_MAX_AMMO); 
                }
               
                if (showAShotgunOverlay) {
                    ashotgunOverlay.draw(graphicsHandler.getGraphics());
-                   drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO); 
+                   drawAmmoCount(graphicsHandler, ashotgunAmmo, AASHOTGUN_MAX_AMMO); 
                }
-               if (showMPistolOverlay) {
-                mPistolOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); 
-            }
-            
-            if (showMAssaultRifleOverlay) {
-                mAssaultRifleOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO); 
-            }
-            
-            if (showMShotgunOverlay) {
-                mShotgunOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO); 
-            } if (showFPistolOverlay) {
-                fPistolOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, currentAmmo, MAX_AMMO); 
-            }
-            
-            if (showFAssaultRifleOverlay) {
-                fAssaultRifleOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, assaultRifleAmmo, ASSAULT_RIFLE_MAX_AMMO); 
-            }
-            
-            if (showFShotgunOverlay) {
-                fShotgunOverlay.draw(graphicsHandler.getGraphics());
-                drawAmmoCount(graphicsHandler, shotgunAmmo, SHOTGUN_MAX_AMMO); 
-            }
             
   
                drawHitpoints(graphicsHandler);
@@ -537,12 +390,15 @@ public class WorldOneScreen extends Screen implements PlayerListener {
             case PAUSED:
                pauseScreen.draw(graphicsHandler);
                break;
+            
+            case PURCHASE:
+               purchaseScreen.draw(graphicsHandler);
        }
    }
   
 
 
-   private void drawAmmoCount(GraphicsHandler graphicsHandler, int currentAmmo, int maxAmmo) {
+   private void drawAmmoCount(GraphicsHandler graphicsHandler, int apistolAmmo, int maxAmmo) {
        Graphics2D g2d = (Graphics2D) graphicsHandler.getGraphics();
        g2d.setColor(Color.WHITE);
        g2d.setFont(new Font("Arial", Font.BOLD, 14));
@@ -559,28 +415,10 @@ public class WorldOneScreen extends Screen implements PlayerListener {
        } else if (isAPistolickedUp) {
            ammoX = apistolOverlay.getX() + 72;
            ammoY = apistolOverlay.getY() + 25;
-       } else if (isMPistolickedUp) {
-        ammoX = mPistolOverlay.getX() + 72;
-        ammoY = mPistolOverlay.getY() + 25;
-    } else if (isMAssaultRiflePickedUp) {
-        ammoX = mAssaultRifleOverlay.getX() + 72;
-        ammoY = mAssaultRifleOverlay.getY() + 25;
-    } else if (isMShotgunPickedUp) {
-        ammoX = ashotgunOverlay.getX() +72;
-        ammoY = ashotgunOverlay.getY() + 25;
-    } else if (isFPistolPickedup) {
-        ammoX = fPistolOverlay.getX() + 72;
-        ammoY = fPistolOverlay.getY() + 25;
-    } else if (isFAssaultRiflePickedUp) {
-        ammoX = fAssaultRifleOverlay.getX() + 72;
-        ammoY = fAssaultRifleOverlay.getY() + 25;
-    } else if (isFShotgunPickedUp) {
-        ammoX = fShotgunOverlay.getX() +72;
-        ammoY = fShotgunOverlay.getY() + 25;
-    }
+       }
 
 
-       g2d.drawString(currentAmmo + "/" + maxAmmo, ammoX, ammoY);
+       g2d.drawString(apistolAmmo + "/" + maxAmmo, ammoX, ammoY);
    }
 
    private void drawCoinCount(GraphicsHandler graphicsHandler) {
@@ -715,7 +553,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
 
 
    private enum PlayLevelScreenState {
-       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED
+       RUNNING, LEVEL_COMPLETED, LEVEL_LOSE, PAUSED, PURCHASE
 };
 
 
@@ -723,12 +561,6 @@ public class WorldOneScreen extends Screen implements PlayerListener {
     showAPistolOverlay = false;
     showAAssaultRifleOverlay = false;
     showAShotgunOverlay = false;
-    showMPistolOverlay = false;
-    showMAssaultRifleOverlay = false;
-    showMShotgunOverlay = false;
-    showFPistolOverlay = false;
-    showFAssaultRifleOverlay = false;
-    showFShotgunOverlay = false;
 }
 
 
@@ -736,33 +568,15 @@ public class WorldOneScreen extends Screen implements PlayerListener {
        APistolPickup.showOverlay = false;
        AAsaultRiflePickup.showOverlay = false;
        AShotgunPickup.showOverlay = false;
-       MPistolPickup.showOverlay = false;
-       MAssaultRiflePickup.showOverlay = false;
-       MShotgunPickup.showOverlay = false;
-       FPistolPickup.showOverlay = false;
-       FAssaultRiflePickup.showOverlay = false;
-       FShotgunPickup.showOverlay = false;
        APistolPickup.weaponPickedUp = false;
        AAsaultRiflePickup.weaponPickedUp = false;
        AShotgunPickup.weaponPickedUp = false;
-       MPistolPickup.weaponPickedUp = false;
-       MAssaultRiflePickup.weaponPickedUp = false;
-       MShotgunPickup.weaponPickedUp = false;
-       FPistolPickup.weaponPickedUp = false;
-       FAssaultRiflePickup.weaponPickedUp = false;
-       FShotgunPickup.weaponPickedUp = false;
        isAPistolickedUp = false;
        isAAssaultRiflePickedUp = false;
        isAShotgunPickedUp = false;
-       isMPistolickedUp = false;
-       isMAssaultRiflePickedUp = false;
-       isMShotgunPickedUp = false;
-       isFPistolPickedup = false;
-       isFAssaultRiflePickedUp = false;
-       isFShotgunPickedUp = false;
-       currentAmmo = MAX_AMMO;
-       assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;
-       shotgunAmmo = SHOTGUN_MAX_AMMO;
+       apistolAmmo = APISTOL_MAX_AMMO;
+       aassaultRifleAmmo = AASSAULT_RIFLE_MAX_AMMO;
+       ashotgunAmmo = AASHOTGUN_MAX_AMMO;
        reloading = false;
        reloadTimer = 0;
    }

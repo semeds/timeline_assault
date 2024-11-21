@@ -17,6 +17,16 @@ public class ScreenCoordinator extends Screen {
 	protected GameState gameState;
 	protected GameState previousGameState;
 
+   private boolean showFPistolOverlay = false;
+   private boolean showFAssaultRifleOverlay = false;
+   private boolean showFShotgunOverlay = false;
+   private boolean showAPistolOverlay = false;
+   private boolean showAAssaultRifleOverlay = false;
+   private boolean showAShotgunOverlay = false;
+   private boolean showMPistolOverlay = false;
+   private boolean showMAssaultRifleOverlay = false;
+   private boolean showMShotgunOverlay = false;
+
 	public GameState getGameState() {
 		return gameState;
 	}
@@ -24,6 +34,19 @@ public class ScreenCoordinator extends Screen {
 	// Other Screens can set the gameState of this class to force it to change the currentScreen
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
+	}
+
+	private void resetOverlays() {
+		showFPistolOverlay = false;
+		showFAssaultRifleOverlay = false;
+		showFShotgunOverlay = false;
+		showAPistolOverlay = false;
+   	    showAAssaultRifleOverlay = false;
+        showAShotgunOverlay = false;
+		showMPistolOverlay = false;
+        showMAssaultRifleOverlay = false;
+        showMShotgunOverlay = false;
+
 	}
 
 	@Override
@@ -41,21 +64,27 @@ public class ScreenCoordinator extends Screen {
 				switch(gameState) {
 					case MENU:
 						currentScreen = new MenuScreen(this);
+						resetOverlays();
 						break;
 					case LEVEL:
 						currentScreen = new WorldOneScreen(this);
+						resetOverlays();
 						break;
 					case WORLDTWO:
 						currentScreen = new WorldTwoScreen(this);
+						resetOverlays();
 						break;
 					case WORLDTHREE:
 						currentScreen = new WorldThreeScreen(this);
+						resetOverlays();
 						break;
 					case GAMECOMPLETE:
 						currentScreen = new GameCompleteScreen(this);
+						resetOverlays();
 						break;
 					case CREDITS:
 						currentScreen = new CreditsScreen(this);
+						resetOverlays();
 						break;
 				}
 				currentScreen.initialize();

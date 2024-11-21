@@ -13,6 +13,8 @@ import GameObject.ImageEffect;
 import GameObject.SpriteSheet;
 import Level.Player;
 import Enemies.Fireball;
+import Enemies.ModernBullets;
+import Enemies.FutureBullets;
 import NPCs.APistolPickup;
 import NPCs.AAsaultRiflePickup;
 import NPCs.AShotgunPickup;
@@ -23,6 +25,8 @@ import NPCs.FAssaultRiflePickup;
 import NPCs.FPistolPickup;
 import NPCs.FShotgunPickup;
 import Screens.WorldOneScreen;
+import Screens.WorldThreeScreen;
+import Screens.WorldTwoScreen;
 import Utils.Point;
 
 
@@ -36,35 +40,86 @@ import java.util.HashMap;
 
 public class Joe extends Player {
   private ArrayList<Fireball> fireballs = new ArrayList<>(); // Store fired fireballs
+  private ArrayList<ModernBullets> modernBullet = new ArrayList<>(); 
+  private ArrayList<FutureBullets> futureBullet = new ArrayList<>(); 
   private boolean facingRight = true; // Track direction Joe is facing
-  private int currentAmmo = 12; // Tracks bullets for the pistol
-  private static final int MAX_AMMO = 12; // Max ammo for the pistol
-  private int assaultRifleAmmo = 30; // Tracks bullets for the assault rifle
-  private static final int ASSAULT_RIFLE_MAX_AMMO = 30; // Max ammo for the assault rifle
-  private int shotgunAmmo = 8; // Tracks bullets for the shotgun
-  private static final int SHOTGUN_MAX_AMMO = 8; // Max ammo for the shotgun
-  private boolean isPistolEquipped = false; // Tracks if pistol is equipped
-  private boolean isAssaultRifleEquipped = false; // Tracks if assault rifle is equipped
-  private boolean isShotgunEquipped = false; // Tracks if shotgun is equipped
+
+  private int apistolAmmo = 12; // Tracks bullets for the pistol
+  private int mpistolAmmo = 12;
+  private int fpistolAmmo = 12;
+  private static final int APISTOL_MAX_AMMO = 12;
+  private static final int MPISTOL_MAX_AMMO = 12;
+  private static final int FPISTOL_MAX_AMMO = 12;
+
+  private int aassaultRifleAmmo = 30; // Tracks bullets for the assault rifle
+  private int massaultRifleAmmo = 30;
+  private int fassaultRifleAmmo = 30;
+  private static final int AASSAULT_RIFLE_MAX_AMMO = 30; // Max ammo for the assault rifle
+  private static final int MASSAULT_RIFLE_MAX_AMMO = 30;
+  private static final int FASSAULT_RIFLE_MAX_AMMO = 30;
+
+  private int ashotgunAmmo = 8; // Tracks bullets for the shotgun
+  private int mshotgunAmmo = 8;
+  private int fshotgunAmmo = 8;
+  private static final int ASHOTGUN_MAX_AMMO = 8; // Max ammo for the shotgun
+  private static final int MSHOTGUN_MAX_AMMO = 8;
+  private static final int FSHOTGUN_MAX_AMMO = 8;
+
+  private boolean isAPistolEquipped = false; // Tracks if pistol is equipped
+  private boolean isMPistolEquipped = false;
+  private boolean isFPistolEquipped = false;
+
+  private boolean isAAssaultRifleEquipped = false; // Tracks if assault rifle is equipped
+  private boolean isMAssaultRifleEquipped = false;
+  private boolean isFAssaultRifleEquipped = false;
+
+  private boolean isAShotgunEquipped = false; // Tracks if shotgun is equipped
+  private boolean isMShotgunEquipped = false;
+  private boolean isFShotgunEquipped = false;
+
   private boolean canShoot = true; // Prevents continuous shooting with pistol
   private boolean reloading = false; // Reload is in progress
   private int reloadTimer = 0; // Reload delay
   private static final int RELOAD_DELAY = 60; // Reload delay in frames
 
 
-  public int getCurrentAmmo() {
-   return currentAmmo;
+public int getAPistolCurrentAmmo() {
+   return apistolAmmo;
 }
 
+public int getMPistolCurrentAmmo() {
+        return mpistolAmmo;
+     }
 
-public int getAssaultRifleAmmo() {
-   return assaultRifleAmmo;
+public int getFPistolCurrentAmmo() {
+        return fpistolAmmo;
+     }
+
+
+public int getAAssaultRifleAmmo() {
+   return aassaultRifleAmmo;
 }
 
+public int getMAssaultRifleAmmo() {
+        return massaultRifleAmmo;
+     }
 
-public int getShotgunAmmo() {
-   return shotgunAmmo;
+public int getFAssaultRifleAmmo() {
+        return fassaultRifleAmmo;
+     }
+
+
+public int getAShotgunAmmo() {
+   return ashotgunAmmo;
 }
+
+public int getMShotgunAmmo() {
+        return mshotgunAmmo;
+     }
+
+     public int getFShotgunAmmo() {
+        return fshotgunAmmo;
+     }
 
 
 
@@ -79,12 +134,30 @@ public int getShotgunAmmo() {
 
 
   private void resetWeaponStatus() {
-   isPistolEquipped = false;
-   isAssaultRifleEquipped = false;
-   isShotgunEquipped = false;
-   currentAmmo = MAX_AMMO; // Reset ammo for pistol
-   assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO; // Reset ammo for assault rifle
-   shotgunAmmo = SHOTGUN_MAX_AMMO; // Reset ammo for shotgun
+   isAPistolEquipped = false;
+   isMPistolEquipped = false;
+   isFPistolEquipped = false;
+   
+   isAAssaultRifleEquipped = false;
+   isMAssaultRifleEquipped = false;
+   isFAssaultRifleEquipped = false;
+
+   isAShotgunEquipped = false;
+   isMShotgunEquipped = false;
+   isFShotgunEquipped = false;
+
+   apistolAmmo = APISTOL_MAX_AMMO; // Reset ammo for pistol
+   mpistolAmmo = MPISTOL_MAX_AMMO;
+   fpistolAmmo = FPISTOL_MAX_AMMO;
+
+   aassaultRifleAmmo = AASSAULT_RIFLE_MAX_AMMO; // Reset ammo for assault rifle
+   massaultRifleAmmo = MASSAULT_RIFLE_MAX_AMMO;
+   fassaultRifleAmmo = FASSAULT_RIFLE_MAX_AMMO;
+
+   ashotgunAmmo = ASHOTGUN_MAX_AMMO; // Reset ammo for shotgun
+   mshotgunAmmo = MSHOTGUN_MAX_AMMO;
+   fshotgunAmmo = FSHOTGUN_MAX_AMMO;
+
    APistolPickup.weaponPickedUp = false;
    AAsaultRiflePickup.weaponPickedUp = false;
    AShotgunPickup.weaponPickedUp = false;
@@ -129,31 +202,31 @@ public int getShotgunAmmo() {
    // Equip the correct weapon and reset others
    if (APistolPickup.weaponPickedUp) {
        resetWeaponStatus();
-       isPistolEquipped = true;
+       isAPistolEquipped = true;
    } else if (AAsaultRiflePickup.weaponPickedUp) {
        resetWeaponStatus();
-       isAssaultRifleEquipped = true;
+       isAAssaultRifleEquipped = true;
    } else if (AShotgunPickup.weaponPickedUp) {
        resetWeaponStatus();
-       isShotgunEquipped = true;
+       isAShotgunEquipped = true;
    } else if (MPistolPickup.weaponPickedUp) {
         resetWeaponStatus();
-        isPistolEquipped = true;
+        isMPistolEquipped = true;
    } else if (MAssaultRiflePickup.weaponPickedUp) {
         resetWeaponStatus();
-        isAssaultRifleEquipped = true;
+        isMAssaultRifleEquipped = true;
    } else if (MShotgunPickup.weaponPickedUp) {
         resetWeaponStatus();
-        isShotgunEquipped = true;
+        isMShotgunEquipped = true;
    } else if (FPistolPickup.weaponPickedUp) {
         resetWeaponStatus();
-        isPistolEquipped = true;
+        isFPistolEquipped = true;
    } else if (FAssaultRiflePickup.weaponPickedUp) {
         resetWeaponStatus();
-        isAssaultRifleEquipped = true;
+        isFAssaultRifleEquipped = true;
    } else if (FShotgunPickup.weaponPickedUp) {
         resetWeaponStatus();
-        isShotgunEquipped = true;
+        isFShotgunEquipped = true;
    }
 
 
@@ -169,25 +242,54 @@ public int getShotgunAmmo() {
        shotgunCooldownTimer++;
 
 
-        if (isPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && currentAmmo > 0) {
-           shootFireball(240);
-           currentAmmo--;
-           canShoot = false;
-       } else if (isAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) && assaultRifleAmmo > 0
-       && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
-   shootFireball(240); // Fire a projectile with a 240-frame lifetime
-   assaultRifleAmmo--; // Reduce ammo count by 1
-   WorldOneScreen.assaultRifleAmmo = assaultRifleAmmo; // Sync display ammo count for assault rifle
-   fireCooldownTimer = 0; // Reset cooldown timer
-}
-
-      
-       else if (isShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) && shotgunAmmo > 0
-       && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
-   shootFireball(40);
-   shotgunAmmo--;
-   shotgunCooldownTimer = 0;
-}
+       if (isAPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && apistolAmmo > 0) {
+        shootFireball(240);
+        apistolAmmo--;
+        canShoot = false;
+    } else if (isAAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && aassaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+        shootFireball(240); // Fire a projectile with a 240-frame lifetime
+        aassaultRifleAmmo--; // Reduce ammo count by 1
+        WorldOneScreen.aassaultRifleAmmo = aassaultRifleAmmo; // Sync display ammo count for assault rifle
+        fireCooldownTimer = 0; // Reset cooldown timer
+    } else if (isAShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && ashotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+        shootFireball(40);
+        ashotgunAmmo--;
+        shotgunCooldownTimer = 0;
+    } else if (isMPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && mpistolAmmo > 0) {
+        shootModernBullets(240);
+        mpistolAmmo--;
+        canShoot = false;
+    } else if (isMAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && massaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+        shootModernBullets(240); // Fire a projectile with a 240-frame lifetime
+        massaultRifleAmmo--; // Reduce ammo count by 1
+       WorldTwoScreen.aassaultRifleAmmo = aassaultRifleAmmo; // Sync display ammo count for assault rifle
+        fireCooldownTimer = 0; // Reset cooldown timer
+    } else if (isMShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && mshotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+        shootModernBullets(240);
+        mshotgunAmmo--;
+        shotgunCooldownTimer = 0;
+    } else if (isFPistolEquipped && Keyboard.isKeyDown(Key.SPACE) && canShoot && fpistolAmmo > 0) {
+        shootFutureBullets(240);
+        fpistolAmmo--;
+        canShoot = false;
+    } else if (isFAssaultRifleEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && fassaultRifleAmmo > 0 && fireCooldownTimer >= FIRE_COOLDOWN_DELAY) {
+        shootFutureBullets(240); // Fire a projectile with a 240-frame lifetime
+        fassaultRifleAmmo--; // Reduce ammo count by 1
+        WorldThreeScreen.fassaultRifleAmmo = fassaultRifleAmmo; // Sync display ammo count for assault rifle
+        fireCooldownTimer = 0; // Reset cooldown timer
+    } else if (isFShotgunEquipped && Keyboard.isKeyDown(Key.SPACE) 
+            && fshotgunAmmo > 0 && shotgunCooldownTimer >= SHOTGUN_COOLDOWN_DELAY) {
+        shootFutureBullets(40);
+        fshotgunAmmo--;
+        shotgunCooldownTimer = 0;
+    }
+    
+    
 
 
 
@@ -213,6 +315,16 @@ public int getShotgunAmmo() {
        fireball.update(this);
    }
    fireballs.removeIf(fireball -> fireball.getMapEntityStatus() == Level.MapEntityStatus.REMOVED);
+
+   for (ModernBullets modernBullets : modernBullet) {
+        modernBullets.update(this);
+    }
+    modernBullet.removeIf(modernBullets -> modernBullets.getMapEntityStatus() == Level.MapEntityStatus.REMOVED);
+
+    for (FutureBullets futureBullets : futureBullet) {
+        futureBullets.update(this);
+    }
+    futureBullet.removeIf(futureBullets -> futureBullets.getMapEntityStatus() == Level.MapEntityStatus.REMOVED);
 }
 
 
@@ -235,17 +347,38 @@ public int getShotgunAmmo() {
 
   public void finishReload() {
    reloading = false;  // Reset reloading state
-   if (isPistolEquipped) {
-       currentAmmo = MAX_AMMO;  // Reset pistol ammo
-   } else if (isAssaultRifleEquipped) {
-       assaultRifleAmmo = ASSAULT_RIFLE_MAX_AMMO;  // Reset assault rifle ammo
-   } else if (isShotgunEquipped) {
-       shotgunAmmo = SHOTGUN_MAX_AMMO;  // Reset shotgun ammo
+   if (isAPistolEquipped) {
+        apistolAmmo = APISTOL_MAX_AMMO;  // Reset pistol ammo
+   } else if (isAAssaultRifleEquipped) {
+        aassaultRifleAmmo = AASSAULT_RIFLE_MAX_AMMO;  // Reset assault rifle ammo
+   } else if (isAShotgunEquipped) {
+        ashotgunAmmo = ASHOTGUN_MAX_AMMO;  // Reset shotgun ammo
+   } else if (isMPistolEquipped) {
+        mpistolAmmo = MPISTOL_MAX_AMMO;  // Reset pistol ammo
+   } else if (isMAssaultRifleEquipped) {
+        massaultRifleAmmo = MASSAULT_RIFLE_MAX_AMMO;  // Reset assault rifle ammo
+   } else if (isMShotgunEquipped) {
+        mshotgunAmmo = MSHOTGUN_MAX_AMMO;  // Reset shotgun ammo
+   } else if (isFPistolEquipped) {
+        fpistolAmmo = FPISTOL_MAX_AMMO;  // Reset pistol ammo
+   } else if (isFAssaultRifleEquipped) {
+        fassaultRifleAmmo = FASSAULT_RIFLE_MAX_AMMO;  // Reset assault rifle ammo
+   } else if (isFShotgunEquipped) {
+        fshotgunAmmo = FSHOTGUN_MAX_AMMO;  // Reset shotgun ammo
    }
    // Ensure that the ammo count for display is updated here if it's a static variable
-   WorldOneScreen.currentAmmo = currentAmmo;  // Update display for pistol
-   WorldOneScreen.assaultRifleAmmo = assaultRifleAmmo;  // Update display for assault rifle
-   WorldOneScreen.shotgunAmmo = shotgunAmmo;  // Update display for shotgun
+   WorldOneScreen.apistolAmmo = apistolAmmo;  // Update display for pistol
+   WorldOneScreen.aassaultRifleAmmo = aassaultRifleAmmo;  // Update display for assault rifle
+   WorldOneScreen.ashotgunAmmo = ashotgunAmmo;  // Update display for shotgun
+
+   WorldTwoScreen.apistolAmmo = mpistolAmmo;
+   WorldTwoScreen.aassaultRifleAmmo = massaultRifleAmmo;
+   WorldTwoScreen.ashotgunAmmo = mshotgunAmmo;
+
+   WorldThreeScreen.apistolAmmo = fpistolAmmo;
+   WorldThreeScreen.aassaultRifleAmmo = fassaultRifleAmmo;
+   WorldThreeScreen.ashotgunAmmo = fshotgunAmmo;
+
 }
 
 
@@ -273,6 +406,40 @@ private void shootFireball(int lifetime) {
    fireballs.add(fireball);
 }
 
+private void shootModernBullets(int lifetime) {
+        Point ModernBulletsStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
+        float ModernBulletSpeed = 5.0f; 
+        float movementSpeed = facingRight ? ModernBulletSpeed : -ModernBulletSpeed;
+     
+     
+        ModernBullets modernBullets = new ModernBullets(ModernBulletsStart, movementSpeed, lifetime);
+     
+        if (map != null) {
+        modernBullets.setMap(map);
+            map.addProjectile(modernBullets);
+        }
+     
+     
+        modernBullet.add(modernBullets);
+     }
+
+     private void shootFutureBullets(int lifetime) {
+        Point FutureBulletsStart = new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
+        float FutureBulletSpeed = 5.0f; 
+        float movementSpeed = facingRight ? FutureBulletSpeed : -FutureBulletSpeed;
+     
+     
+        FutureBullets futureBullets = new FutureBullets(FutureBulletsStart, movementSpeed, lifetime);
+     
+        if (map != null) {
+                futureBullets.setMap(map);
+            map.addProjectile(futureBullets);
+        }
+     
+     
+        futureBullet.add(futureBullets);
+     }
+
 
 
 
@@ -296,6 +463,14 @@ public void draw(GraphicsHandler graphicsHandler) {
    for (Fireball fireball : fireballs) {
        fireball.draw(graphicsHandler);
    }
+
+   for( ModernBullets modernBullets : modernBullet) {
+        modernBullets.draw(graphicsHandler);
+   }
+
+   for(FutureBullets futureBullets : futureBullet) {
+        futureBullets.draw(graphicsHandler);
+   }
 }
 
 
@@ -305,7 +480,7 @@ public void draw(GraphicsHandler graphicsHandler) {
 
   @Override
   public HashMap<String, Frame[]> loadAnimations(SpriteSheet spriteSheet) {
-        if (isShotgunEquipped == false) {
+        if (isAShotgunEquipped == false) {
                 return new HashMap<String, Frame[]>() {
                         {
                             put("STAND_RIGHT", new Frame[] {
@@ -493,7 +668,7 @@ public void draw(GraphicsHandler graphicsHandler) {
                         }
                     };
                 }
-                else if(isShotgunEquipped == true) {
+                else if(isAShotgunEquipped == true) {
                         return new HashMap<String, Frame[]>() {
                                 {
                                     put("STAND_RIGHT", new Frame[] {
