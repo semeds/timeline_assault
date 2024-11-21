@@ -14,7 +14,9 @@ import Utils.Direction;
 import java.util.HashMap;
 import java.util.Random;
 
-// This class is for the base human enemy that shoots bullets straight in whichever direction it is facing
+// This class is for the black bug enemy
+// enemy behaves like a Mario goomba -- walks forward until it hits a solid map tile, and then turns around
+// if it ends up in the air from walking off a cliff, it will fall down until it hits the ground again, and then will continue walking
 public class BaseHumanEnemy extends Enemy {
 
     private float gravity = .5f;
@@ -22,7 +24,7 @@ public class BaseHumanEnemy extends Enemy {
     private Direction startFacingDirection;
     private Direction facingDirection;
     private AirGroundState airGroundState;
-    private HumanState currentState;
+    private AlienState currentState;
     private int chaseDelayTimer = 60; // Timer for delaying the chase state
 
     protected Point startLocation;
@@ -30,17 +32,17 @@ public class BaseHumanEnemy extends Enemy {
 
     protected int shootWaitTimer;
     protected int shootTimer;
-    protected HumanState HumanState;
-    protected HumanState previousHumanState;
+    protected AlienState alienState;
+    protected AlienState previousAlienState;
 
     public BaseHumanEnemy(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
         this.hitPoints = 4;
-        this.currentState = HumanState.WALK;
+        this.currentState = AlienState.WALK;
         this.initialize();
-        this.startLocation = location;
-        this.endLocation = null;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
         this.startFacingDirection = facingDirection;
     }
 
@@ -77,7 +79,7 @@ public class BaseHumanEnemy extends Enemy {
     public void initialize() {
         super.initialize();
         facingDirection = startFacingDirection;
-        previousHumanState = HumanState;
+        previousAlienState = alienState;
         if (facingDirection == Direction.RIGHT) {
             currentAnimationName = "WALK_RIGHT";
         } else if (facingDirection == Direction.LEFT) {
@@ -99,18 +101,18 @@ public class BaseHumanEnemy extends Enemy {
         // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
         if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
             if (chaseDelayTimer == 0) {
-                currentState = HumanState.CHASE;
+                currentState = AlienState.CHASE;
             } else {
                 chaseDelayTimer--;
             }
         } else {
-            currentState = HumanState.WALK;
+            currentState = AlienState.WALK;
             chaseDelayTimer = 60; // Reset delay timer when not in chase range
         }
 
         // Movement logic
-        if (currentState == HumanState.WALK || currentState == HumanState.CHASE) {
-            if (currentState == HumanState.CHASE) {
+        if (currentState == AlienState.WALK || currentState == AlienState.CHASE) {
+            if (currentState == AlienState.CHASE) {
                 // Adjust facing direction towards player
                 facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
             }
@@ -121,24 +123,24 @@ public class BaseHumanEnemy extends Enemy {
         }
 
         // Shooting logic
-        if (shootWaitTimer == 0 && HumanState != HumanState.SHOOT_WAIT) {
-            HumanState = HumanState.SHOOT_WAIT;
+        if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
+            alienState = AlienState.SHOOT_WAIT;
         } else {
             shootWaitTimer--;
         }
 
-        if (HumanState == HumanState.SHOOT_WAIT) {
-            if (previousHumanState == HumanState.WALK) {
+        if (alienState == AlienState.SHOOT_WAIT) {
+            if (previousAlienState == AlienState.WALK) {
                 shootTimer = 65;
                 currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
             } else if (shootTimer == 0) {
-                HumanState = HumanState.SHOOT;
+                alienState = AlienState.SHOOT;
             } else {
                 shootTimer--;
             }
         }
 
-        if (HumanState == HumanState.SHOOT) {
+        if (alienState == AlienState.SHOOT) {
             int modernBulletsX;
             float projectileSpeed;
             if (facingDirection == Direction.RIGHT) {
@@ -152,14 +154,14 @@ public class BaseHumanEnemy extends Enemy {
             int modernBulletsY = Math.round(getY()) + 4;
 
             // Create enemy projectile with updated constructor
-             ModernBullets modernBullets = new  ModernBullets(
+            ModernBullets modernBullets = new ModernBullets(
                 new Point(modernBulletsX, modernBulletsY),
                 projectileSpeed,
                 300
             );
 
             map.addEnemy(modernBullets);
-            HumanState = HumanState.WALK;
+            alienState = AlienState.WALK;
             shootWaitTimer = 400;
         }
 
@@ -290,7 +292,7 @@ public class BaseHumanEnemy extends Enemy {
         };
     }
 
-    public enum HumanState {
+    public enum AlienState {
         WALK, SHOOT_WAIT, SHOOT, CHASE
     }
 }
