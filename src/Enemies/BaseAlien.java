@@ -120,10 +120,10 @@ public class BaseAlien extends Enemy {
     float movementSpeed;
     if (facingDirection == Direction.RIGHT) {
         enemyProjectilesX = Math.round(getX()) + getWidth();
-        movementSpeed = 1.0f;
+        movementSpeed = 2.5f;
     } else {
         enemyProjectilesX = Math.round(getX() - 21);
-        movementSpeed = 1.0f;
+        movementSpeed = 2.5f;
     }
 
     int enemyProjectilesY = Math.round(getY()) + 4;
