@@ -116,6 +116,7 @@ public class Camera extends Rectangle {
     return activeEnemies;
 }
 
+
    // determine which enhanced map tiles are active (exist and are within range of the camera)
    private ArrayList<EnhancedMapTile> loadActiveEnhancedMapTiles() {
        ArrayList<EnhancedMapTile> activeEnhancedMapTiles = new ArrayList<>();

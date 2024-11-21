@@ -218,7 +218,7 @@ public class WorldOneScreen extends Screen implements PlayerListener {
                }
   
                // Check for any collisions and other actions
-               for (Enemy enemy : map.getEnemies()) {
+               for (Enemy enemy : map.getActiveEnemies()) {
                    enemy.update(player);
                    if (playerCollidesWith(enemy)) {
                        player.hurtPlayer(enemy);

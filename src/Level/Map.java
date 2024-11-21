@@ -133,12 +133,13 @@ public abstract class Map {
         for (Enemy enemy : wave.getEnemies()) {
             addEnemy(enemy);
         }
-        waveActive = true;
+        waveActive = true; // Mark the wave as active
     } else {
         waveActive = false;
         onAllWavesComplete();
     }
 }
+
 
 
    // sets up map by reading in the map file to create the tile map
@@ -546,15 +547,16 @@ public abstract class Map {
 
 
    public void update(Player player) {
-       if (adjustCamera) {
-           adjustMovementY(player);
-           adjustMovementX(player);
-       }
+    if (adjustCamera) {
+        adjustMovementY(player);
+        adjustMovementX(player);
+    }
 
-       if (isCurrentWaveComplete()) {
-        System.out.println(enemyWaves.size());
-        System.out.println("Wave " + currentWaveIndex + " completed.");
+    // Check if the current wave is complete
+    if (waveActive && isCurrentWaveComplete()) {
+        System.out.println("Wave " + (currentWaveIndex) + " completed.");
         waveActive = false;
+
         if (!isLastWave()) {
             spawnNextWave();
         } else {
@@ -563,16 +565,19 @@ public abstract class Map {
         }
     }
 
-       camera.update(player);
-   }
+    camera.update(player);
+}
 
-   private boolean isCurrentWaveComplete() {
-    return getEnemies().isEmpty() && waveActive;
+private boolean isCurrentWaveComplete() {
+    // Ensure all active enemies are defeated
+    return getActiveEnemies().isEmpty() && waveActive;
 }
 
 private boolean isLastWave() {
-    return currentWaveIndex == enemyWaves.size(); // Check if on the last wave
+    // Check if we are on the last wave
+    return currentWaveIndex >= enemyWaves.size();
 }
+
 
 public boolean isLastWaveComplete() {
     // Check if we're on the last wave and all enemies are defeated
