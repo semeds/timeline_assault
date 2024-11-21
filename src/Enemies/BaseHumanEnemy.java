@@ -24,31 +24,60 @@ public class BaseHumanEnemy extends Enemy {
     private AirGroundState airGroundState;
     private HumanState currentState;
     private int chaseDelayTimer = 60; // Timer for delaying the chase state
-    private int shootWaitTimer = 65;
-    private int shootTimer;
 
     protected Point startLocation;
     protected Point endLocation;
 
-    protected HumanState humanState;
+    protected int shootWaitTimer;
+    protected int shootTimer;
+    protected HumanState HumanState;
     protected HumanState previousHumanState;
 
     public BaseHumanEnemy(Point location, Direction facingDirection) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ZombieTrial.png"), 63, 58), "WALK_LEFT");
         this.startFacingDirection = facingDirection;
-        this.hitPoints = 3;
+        this.hitPoints = 4;
         this.currentState = HumanState.WALK;
         this.initialize();
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
+        this.startLocation = location;
+        this.endLocation = null;
         this.startFacingDirection = facingDirection;
+    }
+
+    // Method to hurt the enemy - Basically copied hurtPlayer()
+    public void hurtEnemy(Player player) {
+        if (hitPoints > 0) {
+            hitPoints--;
+
+            // Enemy Death
+            if (hitPoints <= 0) {
+                die();
+            }
+        }
+    }
+
+    public void die() {
+        Random random = new Random();
+        int chance = random.nextInt(10);
+
+        // Write the loot dropping logic here
+        if (map != null) { // Ensure the map is assigned to this enemy
+            if (chance < 9) {
+                // 90% chance enemy drops a coin
+                map.spawnCoin(this.getX(), this.getY());
+            } else {
+                // 10% chance it drops a powerup
+                map.spawnpowerup(this.getX(), this.getY());
+            }
+            map.removeEnemy(this);
+        }
     }
 
     @Override
     public void initialize() {
         super.initialize();
         facingDirection = startFacingDirection;
-        previousHumanState = humanState;
+        previousHumanState = HumanState;
         if (facingDirection == Direction.RIGHT) {
             currentAnimationName = "WALK_RIGHT";
         } else if (facingDirection == Direction.LEFT) {
@@ -92,46 +121,46 @@ public class BaseHumanEnemy extends Enemy {
         }
 
         // Shooting logic
-        if (shootWaitTimer == 0 && humanState != HumanState.SHOOT_WAIT) {
-            humanState = HumanState.SHOOT_WAIT;
+        if (shootWaitTimer == 0 && HumanState != HumanState.SHOOT_WAIT) {
+            HumanState = HumanState.SHOOT_WAIT;
         } else {
             shootWaitTimer--;
         }
 
-        if (humanState == HumanState.SHOOT_WAIT) {
+        if (HumanState == HumanState.SHOOT_WAIT) {
             if (previousHumanState == HumanState.WALK) {
                 shootTimer = 65;
                 currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
             } else if (shootTimer == 0) {
-                humanState = HumanState.SHOOT;
+                HumanState = HumanState.SHOOT;
             } else {
                 shootTimer--;
             }
         }
 
-        if (humanState == HumanState.SHOOT) {
-            int bulletX;
-            float bulletSpeed;
+        if (HumanState == HumanState.SHOOT) {
+            int modernBulletsX;
+            float projectileSpeed;
             if (facingDirection == Direction.RIGHT) {
-                bulletX = Math.round(getX()) + getWidth();
-                bulletSpeed = 3;
+                modernBulletsX = Math.round(getX()) + getWidth();
+                projectileSpeed = 3;
             } else {
-                bulletX = Math.round(getX() - 21);
-                bulletSpeed = -3;
+                modernBulletsX = Math.round(getX() - 21);
+                projectileSpeed = 3;
             }
 
-            int bulletY = Math.round(getY()) + 4;
+            int modernBulletsY = Math.round(getY()) + 4;
 
-            // Create bullet with updated constructor
-            HumanEnemyProjectiles bullet = new HumanEnemyProjectiles(
-                new Point(bulletX, bulletY),
-                bulletSpeed,
-                300, player = null
+            // Create enemy projectile with updated constructor
+             ModernBullets modernBullets = new  ModernBullets(
+                new Point(modernBulletsX, modernBulletsY),
+                projectileSpeed,
+                300
             );
 
-            map.addEnemy(bullet);
-            humanState = HumanState.WALK;
-            shootWaitTimer = 130;
+            map.addEnemy(modernBullets);
+            HumanState = HumanState.WALK;
+            shootWaitTimer = 400;
         }
 
         // Apply gravity and movement
@@ -154,7 +183,7 @@ public class BaseHumanEnemy extends Enemy {
 
     @Override
     public void onEndCollisionCheckY(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {
-        // if enemy is colliding with the ground, change its air ground state to GROUND
+        // if bug is colliding with the ground, change its air ground state to GROUND
         // if it is not colliding with the ground, it means that it's currently in the
         // air, so its air ground state is changed to AIR
         if (direction == Direction.DOWN) {
@@ -170,109 +199,95 @@ public class BaseHumanEnemy extends Enemy {
                         .withScale(1)
                         .withBounds(20,20,20,20)
                         .build()
-            });
+                });
 
             put("STAND_LEFT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(0,0))
+                    new FrameBuilder(spriteSheet.getSprite(0,0))
                         .withScale(1)
                         .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
                         .withBounds(20,20,20,20)
                         .build()
-            });
+                });
 
             put("WALK_RIGHT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(0,1),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,2),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,3),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,4),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,5),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,6),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,7),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,8),25)
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build()
-            });
+                    new FrameBuilder(spriteSheet.getSprite(0,1),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,2),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,3),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,4),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,5),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,6),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,7),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,8),25)
+                            .withScale(1)
+                            .withBounds(20,20,20,20)
+                            .build()
+                 });
 
             put("WALK_LEFT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(0,1),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,2),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,3),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,4),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,5),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,6),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,7),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build(),
-                new FrameBuilder(spriteSheet.getSprite(0,8),25)
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build()
-            });
-
-            put("SHOOT_RIGHT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(1,0))
-                        .withScale(1)
-                        .withBounds(20,20,20,20)
-                        .build()
-            });
-
-            put("SHOOT_LEFT", new Frame[] {
-                new FrameBuilder(spriteSheet.getSprite(1,0))
-                        .withScale(1)
-                        .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
-                        .withBounds(20,20,20,20)
-                        .build()
-            });
-        }};
+                    new FrameBuilder(spriteSheet.getSprite(0,1),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,2),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,3),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,4),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,5),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,6),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,7),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build(),
+                    new FrameBuilder(spriteSheet.getSprite(0,8),25)
+                            .withScale(1)
+                            .withImageEffect(ImageEffect.FLIP_HORIZONTAL)
+                            .withBounds(20,20,20,20)
+                            .build()
+                });
+            }
+        };
     }
 
     public enum HumanState {
