@@ -111,11 +111,13 @@ public class BaseHumanEnemy extends Enemy {
         // Movement logic
         if (currentState == HumanState.WALK || currentState == HumanState.CHASE) {
             if (currentState == HumanState.CHASE) {
-                // Adjust facing direction towards player
                 facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
-            }
-
-            if (airGroundState == AirGroundState.GROUND) {
+    
+                float chaseSpeed = 0.7f; 
+                if (Math.abs(distanceToPlayer) > chaseSpeed) {
+                    moveAmountX += (facingDirection == Direction.RIGHT ? chaseSpeed : -chaseSpeed);
+                }
+            } else {
                 moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
             }
         }

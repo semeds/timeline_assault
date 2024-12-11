@@ -91,88 +91,98 @@ public class BaseAlien extends Enemy {
     }
 
     @Override
-    public void update(Player player) {
-        float moveAmountX = 0;
-        float moveAmountY = 0;
+public void update(Player player) {
+    float moveAmountX = 0;
+    float moveAmountY = 0;
 
-        // Determine distance between enemy and player
-        float distanceToPlayer = player.getX() - getX();
+    // Determine distance between enemy and player
+    float distanceToPlayer = player.getX() - getX();
 
-        // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
-        if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
-            if (chaseDelayTimer == 0) {
-                currentState = AlienState.CHASE;
-            } else {
-                chaseDelayTimer--;
+    // Define chase speed (faster than walking speed)
+    float chaseSpeed = 1.8f; // Adjust as needed for faster/slower chase speed
+
+    // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
+    if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
+        if (chaseDelayTimer == 0) {
+            currentState = AlienState.CHASE;
+        } else {
+            chaseDelayTimer--;
+        }
+    } else {
+        currentState = AlienState.WALK;
+        chaseDelayTimer = 60; // Reset delay timer when not in chase range
+    }
+
+    // Movement logic
+    if (currentState == AlienState.WALK || currentState == AlienState.CHASE) {
+        if (currentState == AlienState.CHASE) {
+            // Adjust facing direction towards player
+            facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
+
+            // Use chase speed for movement
+            if (airGroundState == AirGroundState.GROUND) {
+                moveAmountX += (facingDirection == Direction.RIGHT ? chaseSpeed : -chaseSpeed);
             }
         } else {
-            currentState = AlienState.WALK;
-            chaseDelayTimer = 60; // Reset delay timer when not in chase range
-        }
-
-        // Movement logic
-        if (currentState == AlienState.WALK || currentState == AlienState.CHASE) {
-            if (currentState == AlienState.CHASE) {
-                // Adjust facing direction towards player
-                facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
-            }
-
+            // Use regular walking speed
             if (airGroundState == AirGroundState.GROUND) {
                 moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
             }
         }
-
-        // Shooting logic
-        if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
-            alienState = AlienState.SHOOT_WAIT;
-        } else {
-            shootWaitTimer--;
-        }
-
-        if (alienState == AlienState.SHOOT_WAIT) {
-            if (previousAlienState == AlienState.WALK) {
-                shootTimer = 65;
-                currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
-            } else if (shootTimer == 0) {
-                alienState = AlienState.SHOOT;
-            } else {
-                shootTimer--;
-            }
-        }
-
-        if (alienState == AlienState.SHOOT) {
-            int enemyProjectilesX;
-            float projectileSpeed;
-            if (facingDirection == Direction.RIGHT) {
-                enemyProjectilesX = Math.round(getX()) + getWidth();
-                projectileSpeed = 3;
-            } else {
-                enemyProjectilesX = Math.round(getX() - 21);
-                projectileSpeed = 3;
-            }
-
-            int enemyProjectilesY = Math.round(getY()) + 4;
-
-            // Create enemy projectile with updated constructor
-            EnemyProjectiles enemyProjectiles = new EnemyProjectiles(
-                new Point(enemyProjectilesX, enemyProjectilesY),
-                projectileSpeed,
-                300,
-                player // Pass the player as the target
-            );
-
-            map.addEnemy(enemyProjectiles);
-            alienState = AlienState.WALK;
-            shootWaitTimer = 400;
-        }
-
-        // Apply gravity and movement
-        moveAmountY += gravity;
-        moveYHandleCollision(moveAmountY);
-        moveXHandleCollision(moveAmountX);
-
-        super.update(player);
     }
+
+    // Shooting logic
+    if (shootWaitTimer == 0 && alienState != AlienState.SHOOT_WAIT) {
+        alienState = AlienState.SHOOT_WAIT;
+    } else {
+        shootWaitTimer--;
+    }
+
+    if (alienState == AlienState.SHOOT_WAIT) {
+        if (previousAlienState == AlienState.WALK) {
+            shootTimer = 65;
+            currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
+        } else if (shootTimer == 0) {
+            alienState = AlienState.SHOOT;
+        } else {
+            shootTimer--;
+        }
+    }
+
+    if (alienState == AlienState.SHOOT) {
+        int enemyProjectilesX;
+        float projectileSpeed;
+        if (facingDirection == Direction.RIGHT) {
+            enemyProjectilesX = Math.round(getX()) + getWidth();
+            projectileSpeed = 3;
+        } else {
+            enemyProjectilesX = Math.round(getX() - 21);
+            projectileSpeed = 3;
+        }
+
+        int enemyProjectilesY = Math.round(getY()) + 4;
+
+        // Create enemy projectile with updated constructor
+        EnemyProjectiles enemyProjectiles = new EnemyProjectiles(
+            new Point(enemyProjectilesX, enemyProjectilesY),
+            projectileSpeed,
+            300,
+            player // Pass the player as the target
+        );
+
+        map.addEnemy(enemyProjectiles);
+        alienState = AlienState.WALK;
+        shootWaitTimer = 400;
+    }
+
+    // Apply gravity and movement
+    moveAmountY += gravity;
+    moveYHandleCollision(moveAmountY);
+    moveXHandleCollision(moveAmountX);
+
+    super.update(player);
+}
+
 
     @Override
     public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {

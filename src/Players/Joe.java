@@ -180,7 +180,7 @@ public int getMShotgunAmmo() {
       terminalVelocityY = 6f;
       jumpHeight = 12.5f;
       jumpDegrade = .5f;
-      walkSpeed = 2.3f;
+      walkSpeed = 3.0f;
       momentumYIncrease = .5f;
   }
 
