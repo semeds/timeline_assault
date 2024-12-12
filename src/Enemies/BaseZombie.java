@@ -77,44 +77,54 @@ public class BaseZombie extends Enemy {
     }
 
     @Override
-    public void update(Player player) {
-        float moveAmountX = 0;
-        float moveAmountY = 0;
+public void update(Player player) {
+    float moveAmountX = 0;
+    float moveAmountY = 0;
 
-        // Determine distance between enemy and player
-        float distanceToPlayer = player.getX() - getX();
+    // Determine distance between enemy and player
+    float distanceToPlayer = player.getX() - getX();
 
-        // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
-        if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
-            if (chaseDelayTimer == 0) {
-                currentState = ZombieState.CHASE;
-            } else {
-                chaseDelayTimer--;
+    // Define chase speed (faster than walking speed)
+    float chaseSpeed = 0.4f; // Adjust as needed to make chasing faster or slower
+
+    // Chase logic with delay: If the player is within a certain distance, start chasing after a delay
+    if (Math.abs(distanceToPlayer) < 500) { // Adjust 500 as per the range you want
+        if (chaseDelayTimer == 0) {
+            currentState = ZombieState.CHASE;
+        } else {
+            chaseDelayTimer--;
+        }
+    } else {
+        currentState = ZombieState.WALK;
+        chaseDelayTimer = 60; // Reset delay timer when not in chase range
+    }
+
+    // Movement logic
+    if (currentState == ZombieState.WALK || currentState == ZombieState.CHASE) {
+        if (currentState == ZombieState.CHASE) {
+            // Adjust facing direction towards player
+            facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
+
+            // Use chase speed for movement
+            if (airGroundState == AirGroundState.GROUND) {
+                moveAmountX += (facingDirection == Direction.RIGHT ? chaseSpeed : -chaseSpeed);
             }
         } else {
-            currentState = ZombieState.WALK;
-            chaseDelayTimer = 60; // Reset delay timer when not in chase range
-        }
-
-        // Movement logic
-        if (currentState == ZombieState.WALK || currentState == ZombieState.CHASE) {
-            if (currentState == ZombieState.CHASE) {
-                // Adjust facing direction towards player
-                facingDirection = distanceToPlayer > 0 ? Direction.RIGHT : Direction.LEFT;
-            }
-
+            // Use regular walking speed
             if (airGroundState == AirGroundState.GROUND) {
                 moveAmountX += (facingDirection == Direction.RIGHT ? movementSpeed : -movementSpeed);
             }
         }
-
-        // Apply gravity and movement
-        moveAmountY += gravity;
-        moveYHandleCollision(moveAmountY);
-        moveXHandleCollision(moveAmountX);
-
-        super.update(player);
     }
+
+    // Apply gravity and movement
+    moveAmountY += gravity;
+    moveYHandleCollision(moveAmountY);
+    moveXHandleCollision(moveAmountX);
+
+    super.update(player);
+}
+
 
     @Override
     public void onEndCollisionCheckX(boolean hasCollided, Direction direction, MapEntity entityCollidedWith) {

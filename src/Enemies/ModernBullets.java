@@ -18,12 +18,20 @@ public class ModernBullets extends Enemy {
 
     private float movementSpeed;
     private int existenceFrames;
+    private Point position;
+    private float speed;
+    private float range;
 
     public ModernBullets(Point location, float movementSpeed, int existenceFrames) {
         super(location.x, location.y, new SpriteSheet(ImageLoader.load("ModernBullets.png"), 5, 5), "DEFAULT");
         this.movementSpeed = movementSpeed;
 
         this.existenceFrames = existenceFrames;
+        this.hitPoints = 1;
+
+        this.position = position;
+        this.speed = speed;
+        this.range = range;
 
         initialize();
     }
@@ -51,6 +59,7 @@ public class ModernBullets extends Enemy {
         if (!(player instanceof Joe)) {
             super.touchedPlayer(player);
             this.mapEntityStatus = MapEntityStatus.REMOVED;
+            map.removeEnemy(this);
         }
     }
 

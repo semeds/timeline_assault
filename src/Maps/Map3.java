@@ -1,9 +1,7 @@
 package Maps;
 
 
-import Enemies.BaseAlien;
-import Enemies.StrongAlien;
-import Enemies.ZoomerAlien;
+import Enemies.*;
 import Engine.ImageLoader;
 import EnhancedMapTiles.EndLevelBox;
 import EnhancedMapTiles.HorizontalMovingPlatform;
@@ -91,57 +89,32 @@ public class Map3 extends Map {
     
 
 
+ @Override
+    protected ArrayList<EnemyWave> loadEnemyWaves() {
+        ArrayList<EnemyWave> waves = new ArrayList<>();
 
+        // Define waves
+        waves.add(new EnemyWave(1,1000)
+                .addEnemy(new BaseAlien(new Point(200, 523), Direction.LEFT))
+                .addEnemy(new BaseAlien(new Point(300, 523), Direction.LEFT))
+        );
 
-   @Override
-   protected ArrayList<ArrayList<Enemy>> loadEnemyWaves() {
-       ArrayList<ArrayList<Enemy>> waves = new ArrayList<>();
+        waves.add(new EnemyWave(2,1000)
+                .addEnemy(new ZoomerAlien(new Point(400, 523), Direction.RIGHT))
+                .addEnemy(new BaseAlien(new Point(500, 523), Direction.RIGHT))
+        );
 
-      // Use a helper method to generate waves
-      waves.add(generateWave(5, BaseAlien.class, 300, 523, Direction.LEFT));
-      waves.add(generateWave(6, BaseAlien.class, 400, 523, Direction.RIGHT));
-      waves.add(generateWave(7, BaseAlien.class, 500, 523, Direction.LEFT));
+        waves.add(new EnemyWave(3,1000)
+                .addEnemy(new StrongAlien(new Point(600, 523), Direction.LEFT))
+                .addEnemy(new BaseAlien(new Point(700, 523), Direction.RIGHT))
+        );
 
-      // Add Zoomer Aliens starting in Wave 4
-      ArrayList<Enemy> wave4 = generateWave(4, BaseAlien.class, 200, 523, Direction.LEFT);
-      wave4.add(new ZoomerAlien(new Point(800, 523), Direction.RIGHT));
-      waves.add(wave4);
+        waves.add(new EnemyWave(4,1000) // Boss wave
+                .addEnemy(new StrongAlien(new Point(350, 523), Direction.RIGHT))
+                .addEnemy(new StrongAlien(new Point(500, 523), Direction.LEFT))
+        );
 
-      // Add more Zoomer Aliens and Base Aliens
-      ArrayList<Enemy> wave5 = generateWave(4, BaseAlien.class, 200, 523, Direction.RIGHT);
-      wave5.add(new ZoomerAlien(new Point(350, 523), Direction.LEFT));
-      wave5.add(new ZoomerAlien(new Point(450, 523), Direction.LEFT));
-      waves.add(wave5);
+        return waves;
+    }
 
-      // Add Strong Alien in later waves
-      ArrayList<Enemy> wave6 = generateWave(6, BaseAlien.class, 200, 523, Direction.LEFT);
-      wave6.add(new StrongAlien(new Point(650, 523), Direction.RIGHT));
-      wave6.add(new ZoomerAlien(new Point(750, 523), Direction.RIGHT));
-      waves.add(wave6);
-
-      // Boss Wave
-      ArrayList<Enemy> bossWave = new ArrayList<>();
-      bossWave.add(new StrongAlien(new Point(300, 523), Direction.RIGHT));
-      waves.add(bossWave);
-
-      return waves;
-  }
-
- 
-  private ArrayList<Enemy> generateWave(int count, Class<? extends Enemy> enemyType, int startX, int y, Direction direction) {
-      ArrayList<Enemy> wave = new ArrayList<>();
-      int spacing = 100; // Space between each enemy
-
-      for (int i = 0; i < count; i++) {
-          try {
-              Enemy enemy = enemyType.getConstructor(Point.class, Direction.class)
-                  .newInstance(new Point(startX + i * spacing, y), direction);
-              wave.add(enemy);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-      }
-
-      return wave;
-  }
 }
